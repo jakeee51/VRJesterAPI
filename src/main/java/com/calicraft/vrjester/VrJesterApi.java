@@ -1,4 +1,4 @@
-package com.calicraft.vrjesterapi;
+package com.calicraft.vrjester;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
