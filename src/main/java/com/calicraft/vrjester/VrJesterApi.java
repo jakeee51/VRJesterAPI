@@ -15,8 +15,8 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vivecraft.api.VRData;
 
+import java.lang.reflect.Method;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -37,16 +37,22 @@ public class VrJesterApi
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
+//        try {
+//            Class<?> VRData = Class.forName("org.vivecraft.api.VRData");
+//            isVivecraftLoaded = true;
+//            Class api = (Class) VRData.newInstance();
+//            System.out.println(VRData.getName() + "class has been loaded!");
+//            Method getPosition = VRData.getMethod("getPosition");
+//        } catch (ClassNotFoundException | NoSuchMethodException | NoClassDefFoundError e) {
+//            LOGGER.error("Failed to load Vivecraft!");
+//        } catch (InstantiationException e) {
+//            LOGGER.error("Failed to load Vivecraft!");
+//        } catch (IllegalAccessException e) {
+//            LOGGER.error("Failed to load Vivecraft!");
+//        }
+
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
-        try {
-            Class VRData = Class.forName("org.vivecraft.api.VRData");
-            isVivecraftLoaded = true;
-            System.out.println(VRData.getName() + "class has been loaded!");
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("Failed to load Vivecraft!");
-        }
     }
 
     private void setup(final FMLCommonSetupEvent event) {
