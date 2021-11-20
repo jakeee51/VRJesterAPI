@@ -1,0 +1,27 @@
+[
+{
+	"gesture1": {
+		"position1": {
+		"timedelta": 0,
+		"x": 0,
+		"y": 0,
+		"z": 0
+		},
+		"position2": {
+		"timedelta": 0.5,
+		"x": 0,
+		"y": 0,
+		"z": 0
+		},
+		"position3": {
+		"timedelta": 1,
+		"x": 0,
+		"y": 0,
+		"z": 0
+		}
+	}
+}
+]
+// Where to start gesture
+// Where to end gesture
+// Calibrate user
