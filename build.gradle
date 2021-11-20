@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0.0'
+version = '0.0.1'
 group = 'com.calicraft.vrjester' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'VRJesterAPI'
 
@@ -118,6 +118,7 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.0'
+    implementation files('libs/minecrift-1.16.5-jrbudda-7-6.jar')
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
