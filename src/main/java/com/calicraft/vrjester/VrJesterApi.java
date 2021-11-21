@@ -2,6 +2,8 @@ package com.calicraft.vrjester;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,9 +17,13 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vivecraft.api.VRData;
+import org.vivecraft.gameplay.VRPlayer;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.stream.Collectors;
+
+import static org.vivecraft.gameplay.screenhandlers.GuiHandler.mc;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("vrjester")
@@ -37,19 +43,41 @@ public class VrJesterApi
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
-//        try {
-//            Class<?> VRData = Class.forName("org.vivecraft.api.VRData");
-//            isVivecraftLoaded = true;
-//            Class api = (Class) VRData.newInstance();
-//            System.out.println(VRData.getName() + "class has been loaded!");
-//            Method getPosition = VRData.getMethod("getPosition");
-//        } catch (ClassNotFoundException | NoSuchMethodException | NoClassDefFoundError e) {
-//            LOGGER.error("Failed to load Vivecraft!");
-//        } catch (InstantiationException e) {
-//            LOGGER.error("Failed to load Vivecraft!");
-//        } catch (IllegalAccessException e) {
-//            LOGGER.error("Failed to load Vivecraft!");
-//        }
+        try {
+//            Class<?> vrData = Class.forName("org.vivecraft.api.VRData");
+            Class<?> vrPlayer = Class.forName("org.vivecraft.gameplay.VRPlayer");
+            isVivecraftLoaded = true;
+            System.out.println(vrPlayer.getName() + " class has been loaded!");
+            Field[] vrpf = vrPlayer.getFields();
+            System.out.println("VRPlayer Field 1: " + vrpf[0].toString());
+            Field vrdata_room_pre = vrPlayer.getDeclaredField("vrdata_room_pre");
+            vrdata_room_pre.setAccessible(true);
+            System.out.println("HERE 1");
+            Field[] devices = vrdata_room_pre.getClass().getFields();
+            for (Field device : devices) {
+                System.out.println("VIVECRAFT FIELD: " + device);
+            }
+            Field right_controller = vrdata_room_pre.getClass().getDeclaredField("c0");
+            right_controller.setAccessible(true);
+            System.out.println("HERE 2");
+            Method getPos = right_controller.getClass().getMethod("getPosition");
+            getPos.setAccessible(true);
+            System.out.println("HERE 3");
+            Vector3d rc_pos = (Vector3d) getPos.invoke(right_controller);
+            System.out.println("RIGHT CONTROLLER POS: " + rc_pos.toString());
+//            mc.vrPlayer.vrdata_room_pre.c0.getPosition();
+//            VRPlayer.get().vrdata_room_pre.c0.getPosition();
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            LOGGER.error("Failed to load Vivecraft class!");
+        } catch (InvocationTargetException e) {
+            LOGGER.error("Failed to invoke Vivecraft method!");
+        } catch (IllegalAccessException e) {
+            LOGGER.error("Failed to access Vivecraft!");
+        } catch (NoSuchFieldException e) {
+            LOGGER.error("Failed to get Vivecraft field!");
+        } catch (NoSuchMethodException e) {
+            LOGGER.error("Failed to get Method Vivecraft!");
+        }
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
