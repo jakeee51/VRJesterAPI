@@ -16,8 +16,6 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.vivecraft.api.VRData;
-import org.vivecraft.utils.math.Matrix4f;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -49,8 +47,9 @@ public class VrJesterApi
             Class<?> vrData = Class.forName("org.vivecraft.api.VRData");
             isVivecraftLoaded = true;
             System.out.println("Vivecraft has been loaded!");
+            System.out.println(PositionTracker.getVRPlayer());
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            LOGGER.error("Failed to load Vivecraft class!");
+            LOGGER.error("Failed to load Vivecraft!");
         }
     }
 
@@ -91,7 +90,7 @@ public class VrJesterApi
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
-            System.out.println(PositionTracker.getRC().toString());
+//            System.out.println(PositionTracker.getRC().toString());
         }
     }
 }
