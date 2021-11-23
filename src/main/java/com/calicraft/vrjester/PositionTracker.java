@@ -10,23 +10,23 @@ import org.vivecraft.utils.math.Matrix4f;
 
 import java.lang.reflect.*;
 
-//import static org.vivecraft.gameplay.screenhandlers.GuiHandler.mc;
-
 public class PositionTracker {
     private static final Logger LOGGER = LogManager.getLogger();
     public static Vector3d RC_POS, LC_POS;
-    public static Vector3d getVRPlayer() {
+    public VRPlayer vrPlayer;
+
+    public PositionTracker() {
         try {
 //            mc.vrPlayer.vrdata_room_pre.c0
             Class<?> mc = Class.forName("net.minecraft.client.Minecraft");
             System.out.println("HERE LOADED VIVECRAFT");
-            Field vrp = mc.getDeclaredField("vrPlayer");
+            Field vrPlayer_Field = mc.getDeclaredField("vrPlayer");
             System.out.println("HERE LOADED vrPlayer");
-            VRPlayer vrPlayer = (VRPlayer) vrp.get(Minecraft.getInstance());
+            VRPlayer vrPlayer_Object = (VRPlayer) vrPlayer_Field.get(Minecraft.getInstance());
             System.out.println("HERE vrPlayer");
-            System.out.println(vrPlayer);
+            System.out.println(vrPlayer_Object);
+            this.vrPlayer = vrPlayer_Object;
 
-            return new Vector3d(0,0,0);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             LOGGER.error("Failed to load Vivecraft class!");
         } catch ( NoSuchFieldException e) {
@@ -34,8 +34,10 @@ public class PositionTracker {
         } catch (IllegalAccessException e) {
             LOGGER.error("Failed to access Vivecraft object");
         }
+    }
 
-        return new Vector3d(0,0,0);
+    public VRPlayer getVRPlayer() {
+        return vrPlayer;
     }
     public static Vector3d getRC() { // Get Right Controller Position
         return new Vector3d(0,0,0);

@@ -2,6 +2,7 @@ package com.calicraft.vrjester;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -17,11 +18,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.stream.Collectors;
-
-import com.calicraft.vrjester.PositionTracker;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("vrjester")
@@ -29,27 +26,33 @@ public class VrJesterApi
 {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
-    private boolean isVivecraftLoaded = false;
+    private boolean vivecraftLoaded = false;
+    public static PositionTracker tracker;
 
     public VrJesterApi() {
-        // Register the setup getPos for modloading
+        // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        // Register the enqueueIMC getPos for modloading
+        // Register the enqueueIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        // Register the processIMC getPos for modloading
+        // Register the processIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        // Register the doClientStuff getPos for modloading
+        // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
         try {
-            Class<?> vrData = Class.forName("org.vivecraft.api.VRData");
-            isVivecraftLoaded = true;
+            Class.forName("org.vivecraft.api.VRData");
+            vivecraftLoaded = true;
             System.out.println("Vivecraft has been loaded!");
-            System.out.println(PositionTracker.getVRPlayer());
+            tracker = new PositionTracker();
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            LOGGER.error("Failed to load Vivecraft!");
+            LOGGER.error("Vivecraft has failed to load!");
+        }
+        if (vivecraftLoaded) {
+            MinecraftForge.EVENT_BUS.register(new TestEventHandler());
+            MinecraftForge.EVENT_BUS.register(new MyForgeEventHandler());
+            LOGGER.info("JAKE EVENTS REGISTERED");
+
         }
     }
 
@@ -57,11 +60,6 @@ public class VrJesterApi
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-    }
-
-    private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
-        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -75,22 +73,26 @@ public class VrJesterApi
                 map(m->m.getMessageSupplier().get()).
                 collect(Collectors.toList()));
     }
-    // You can use SubscribeEvent and let the Event Bus discover getPoss to call
+
+    private void doClientStuff(final FMLClientSetupEvent event) {
+        // do something that can only be done on the client
+        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
+    }
+    // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
         // do something when the server starts
         LOGGER.info("HELLO from server starting");
     }
 
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-    // Event bus for receiving Registry Events)
+    // You can use EventBusSubscriber to automatically subscribe events on the contained class
+    // (this is subscribing to the MOD Event bus for receiving Registry Events)
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
-//            System.out.println(PositionTracker.getRC().toString());
         }
     }
 }
