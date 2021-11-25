@@ -1,13 +1,15 @@
 package com.calicraft.vrjester;
 
+import com.calicraft.vrjester.handlers.TriggerEventHandler;
+import com.calicraft.vrjester.tracker.PositionTracker;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -22,12 +24,13 @@ import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("vrjester")
-public class VrJesterApi
-{
+public class VrJesterApi {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
     private boolean vivecraftLoaded = false;
-    public static PositionTracker tracker;
+    public static PositionTracker TRACKER;
+    public static String MOD_ID = "vrjester";
+    public static KeyBinding MOD_KEY = new KeyBinding("Jester Trigger", 71, MOD_ID);
 
     public VrJesterApi() {
         // Register the setup method for modloading
@@ -44,20 +47,17 @@ public class VrJesterApi
             Class.forName("org.vivecraft.api.VRData");
             vivecraftLoaded = true;
             System.out.println("Vivecraft has been loaded!");
-            tracker = new PositionTracker();
+            EventsLoader.register();
+            LOGGER.info("Events have been loaded!");
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             LOGGER.error("Vivecraft has failed to load!");
         }
-        if (vivecraftLoaded) {
-            MinecraftForge.EVENT_BUS.register(new TestEventHandler());
-            MinecraftForge.EVENT_BUS.register(new MyForgeEventHandler());
-            LOGGER.info("JAKE EVENTS REGISTERED");
-
-        }
+        MinecraftForge.EVENT_BUS.register(new TriggerEventHandler());
     }
 
     private void setup(final FMLCommonSetupEvent event) {
         // some preinit code
+        ClientRegistry.registerKeyBinding(MOD_KEY);
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
     }

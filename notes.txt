@@ -1,0 +1,7 @@
+supervised algo builds wait off of
+offset the data 
+linear regression
+flatten
+label the dataset ground truth for training
+x, y, z, ability
+cartisian coords
