@@ -36,18 +36,17 @@ public class TriggerEventHandler {
 //            data.add(VRDataAggregator.listen()); // Capture data real time
             if (file.createNewFile())
                 System.out.println("File Created!");
-            else
-                System.out.println("File not created!");
-            try (FileWriter writer = new FileWriter("VRJester_Data.txt")) {
-                writer.write("TEST\n");
+            System.out.println(VRDataAggregator.listen().getRc());
+            try (FileWriter writer = new FileWriter("VRJester_Data.txt", true)) {
+                writer.write(VRDataAggregator.listen().getRc().toString() + "\n");
                 writer.flush();
             }
             if (sleep % 20 == 0) // Print every 1 second
                 System.out.println("JESTER LISTENING");
             if (sleep == 0) { // Reset trigger when done
                 System.out.println("JESTER DONE LISTENING");
-                VRDataAggregator.send(data); // Trigger the gesture recognition phase
-                sleep = 2 * DELAY; listener = false; data.clear();
+//                VRDataAggregator.send(data); // Trigger the gesture recognition phase
+                sleep = 2 * DELAY; listener = false; //data.clear();
             }
             sleep--;
         }
