@@ -4,6 +4,7 @@ import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.utils.VRDataAggregator;
 import com.calicraft.vrjester.utils.VRDataState;
 import com.calicraft.vrjester.utils.VRDataWriter;
+import net.java.games.input.Keyboard;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -12,10 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class TriggerEventHandler {
-    private static VRDataState data_state;
     private static final ArrayList<VRDataState> data = new ArrayList<>();
     private static final VRDataWriter vrDataWriter = new VRDataWriter(
-            "VRJester_Data", new String[]{"rc"});
+            "VRJester_Data", new String[]{"hmd", "rc"});
     private static final int DELAY = 20; // 1 second
     private static int sleep = 2 * DELAY; // 2 seconds
     private static boolean listener = false;
@@ -38,7 +38,7 @@ public class TriggerEventHandler {
     public void onClientTick(TickEvent.ClientTickEvent event) throws IOException {
         // Listen for VR data after trigger
         if (listener) {
-            data_state = VRDataAggregator.listen();
+            VRDataState data_state = VRDataAggregator.listen();
 //            data.add(data_point); // Capture data real time
             vrDataWriter.write(data_state);
 //            if (sleep % 20 == 0) // Print every 1 second

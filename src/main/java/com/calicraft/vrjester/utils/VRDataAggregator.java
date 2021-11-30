@@ -1,7 +1,6 @@
 package com.calicraft.vrjester.utils;
 
 import com.calicraft.vrjester.VrJesterApi;
-import com.calicraft.vrjester.tracker.PositionTracker;
 import org.vivecraft.gameplay.VRPlayer;
 
 import java.util.ArrayList;

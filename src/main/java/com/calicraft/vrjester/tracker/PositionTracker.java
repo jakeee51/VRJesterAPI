@@ -57,7 +57,7 @@ public class PositionTracker {
         // Get the 3D positional coordinate of passed device
         // pos:(1.0, 2.0, 3.0) dir: (4.0, 5.0, 6.0)
         String pose = device.toString();
-        pose = pose.split("\\) dir: \\(")[0].replaceAll("(pos:\\(|\\)| )", "");
+        pose = pose.replaceAll("(Device: pos:\\(|\\) dir: \\(.+| )", "");
         String[] coords = pose.split(",");
 
         return new Vector3d(Double.parseDouble(coords[0]),
