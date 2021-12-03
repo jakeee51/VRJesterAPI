@@ -5,3 +5,5 @@ flatten
 label the dataset ground truth for training
 x, y, z, ability
 cartisian coords
+
+controller world size: 0.2157580554485321 (round up to .3 or .5)

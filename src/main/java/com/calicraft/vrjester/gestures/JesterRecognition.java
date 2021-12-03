@@ -9,6 +9,8 @@ import net.minecraft.util.text.StringTextComponent;
 public class JesterRecognition {
     // Class for handling gesture recognition phase
 
+    // TODO - Allow for specified device(s) to be passed here (pos & dir)
+
     public Vector3d[] data;
 
     public JesterRecognition (Vector3d[] data) {
@@ -17,7 +19,7 @@ public class JesterRecognition {
 
     public String getGesture() {
         String ret = "";
-        boolean res = LinearRecognition.recognize(data, .15f);
+        boolean res = LinearRecognition.recognize(data, .8f);
         ClientPlayerEntity player = Minecraft.getInstance().player;
         assert player != null;
         if (res) {
