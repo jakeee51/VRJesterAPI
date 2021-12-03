@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class VRDataWriter {
+    // Class for writing VRData to debug and analyze
+
     String file_name;
     ArrayList<File> files = new ArrayList<>();
 
-    public VRDataWriter(String file_name, String[] devices) {
+    public VRDataWriter(String file_name, String[] devices) { // Setup file objects to create & write to
         this.file_name = file_name; File file;
         for (String device : devices) {
             switch (device) {
@@ -36,7 +38,7 @@ public class VRDataWriter {
         }
     }
 
-    public void write(VRDataState record) throws IOException {
+    public void write(VRDataState record) throws IOException { // Write specified data to end of file
         this.create(); String clean_data;
         for (File file: files) {
             clean_data = this.clean(record, file.getName().substring(0,3).replaceAll("_", ""));
@@ -48,14 +50,14 @@ public class VRDataWriter {
         }
     }
 
-    private void create() throws IOException {
+    private void create() throws IOException { // Create VRData file
         for (File file: files) {
             if (file.createNewFile())
                 System.out.println(file.getName() + " file created!");
 
         }
     }
-    private String clean(VRDataState record, String device) {
+    private String clean(VRDataState record, String device) { // Clean VRData for specified device
         String ret = "N/A";
         switch (device) {
             case "hmd":

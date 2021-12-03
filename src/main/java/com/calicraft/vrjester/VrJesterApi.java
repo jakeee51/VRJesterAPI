@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("vrjester")
 public class VrJesterApi {
-    // Directly reference a log4j logger.
+    // Main entry point
     private static final Logger LOGGER = LogManager.getLogger();
     private boolean vivecraftLoaded = false;
     public static PositionTracker TRACKER;
@@ -43,7 +43,7 @@ public class VrJesterApi {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-        try {
+        try { // Check if Vivecraft is running
             Class.forName("org.vivecraft.api.VRData");
             vivecraftLoaded = true;
             System.out.println("Vivecraft has been loaded!");

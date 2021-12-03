@@ -8,6 +8,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class PlayerInitEvent {
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        // Initialize VR PositionTracker ONLY after this event is fired
         System.out.println("LOGIN EVENT FIRED");
         PositionTracker tracker = new PositionTracker();
         VrJesterApi.TRACKER = tracker;

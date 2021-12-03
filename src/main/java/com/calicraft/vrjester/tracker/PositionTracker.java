@@ -10,6 +10,8 @@ import org.vivecraft.gameplay.VRPlayer;
 import java.lang.reflect.*;
 
 public class PositionTracker {
+    // Class for consuming & tracking VRPlayer data from Vivecraft
+
     private static final Logger LOGGER = LogManager.getLogger();
     public VRPlayer vrPlayer;
     public VRData vrdata_world_pre;
@@ -59,7 +61,6 @@ public class PositionTracker {
         String pose = device.toString();
         pose = pose.replaceAll("(Device: pos:\\(|\\) dir: \\(.+| )", "");
         String[] coords = pose.split(",");
-
         return new Vector3d(Double.parseDouble(coords[0]),
                 Double.parseDouble(coords[1]),
                 Double.parseDouble(coords[2]));

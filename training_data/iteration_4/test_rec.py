@@ -12,7 +12,7 @@ class Vector3d:
       return f"<Vector3d([{val}])>"
    def __getitem__(self, idx):
       return self.point[idx]
-   
+
 def getSlope(p1: Vector3d, p2: Vector3d) -> float:
    xyd = abs(p1.x - p2.x)**2 + abs(p1.y - p2.y)**2
    run = math.sqrt(xyd)

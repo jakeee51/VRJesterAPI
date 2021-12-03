@@ -3,6 +3,8 @@ package com.calicraft.vrjester.utils;
 import org.vivecraft.api.VRData;
 
 public class VRDataState {
+    // Class for encapsulating VRData devices
+
     private VRData.VRDevicePose hmd;
     private VRData.VRDevicePose rc;
     private VRData.VRDevicePose lc;
