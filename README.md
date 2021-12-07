@@ -1,2 +1,2 @@
 # VR Jester API
-A VR API that allows gesture recognition for modders. (W.I.P.)
+A VR API that implements gesture recognition for Java developers. (W.I.P.)
