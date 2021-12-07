@@ -1,4 +1,4 @@
-package com.calicraft.vrjester.utils;
+package com.calicraft.vrjester.utils.vrdata;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -8,6 +8,8 @@ import java.util.Arrays;
 
 public class VRDataWriter {
     // Class for writing VRData to debug and analyze
+
+    // TODO - Make way to write direction
 
     String file_name;
     ArrayList<File> files = new ArrayList<>();

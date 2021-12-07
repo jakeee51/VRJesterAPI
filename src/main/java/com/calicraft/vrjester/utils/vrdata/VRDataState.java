@@ -1,4 +1,4 @@
-package com.calicraft.vrjester.utils;
+package com.calicraft.vrjester.utils.vrdata;
 
 import org.vivecraft.api.VRData;
 

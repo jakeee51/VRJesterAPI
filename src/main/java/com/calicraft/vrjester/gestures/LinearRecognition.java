@@ -1,28 +1,37 @@
 package com.calicraft.vrjester.gestures;
 
+import com.calicraft.vrjester.tracker.PositionTracker;
 import net.minecraft.util.math.vector.Vector3d;
+import org.vivecraft.api.VRData;
+
 import java.lang.Math;
 import java.util.ArrayList;
 
 public class LinearRecognition {
     // Class for recognizing linear gestures
 
-    public float velocity; // (total distance traveled / elapsed time)
-    public Vector3d direction;
+    public boolean recognized = false;
+    public double velocity; // (total distance traveled / elapsed time)
+    public Vector3d direction; // direction of last point
 
-    // TODO - Make class for non-static use.
-    //  Incorporate velocity & direction.
-
-    public static boolean recognize(Vector3d[] data, float tolerance) {
-        boolean ret = false;
+    public LinearRecognition(VRData.VRDevicePose[] device_data, float tolerance, long elapsed_time) {
+        // Collect position & direction data
+        Vector3d[] pos = new Vector3d[device_data.length];
+        Vector3d[] dir = new Vector3d[device_data.length];
+        for (int i = 0; i < device_data.length; i++) {
+            pos[i] = PositionTracker.getPosition(device_data[i]);
+            dir[i] = PositionTracker.getDirection(device_data[i]);
+        }
+        if (device_data.length > 0)
+            direction = dir[device_data.length - 1]; double total_distance = 0;
         // Initialize valid variables
         ArrayList<Vector3d> valid_vectors = new ArrayList<>();
-        if (data.length == 0)
-            return false;
-        Vector3d valid = data[0]; double valid_slope = 0;
+        Vector3d valid = pos[0]; double valid_slope = 0;
         valid_vectors.add(valid);
-        for (int i = 1; i < data.length - 1; i++) {
-            Vector3d vector = data[i]; // Current 3D point in iteration
+        // Populate valid values
+        for (int i = 1; i < pos.length - 1; i++) {
+            Vector3d vector = pos[i]; // Current 3D point in iteration
+            total_distance += vector.distanceTo(pos[i-1]);
             double slope = getSlope(valid, vector);
             if (valid_slope == 0) {
                 if (slope != 0) {
@@ -41,11 +50,14 @@ public class LinearRecognition {
                 break;
             }
         }
+        velocity = total_distance / elapsed_time;
+        System.out.println("VELOCITY: " + velocity);
         if (isCollinear(valid_vectors))
-            ret = true;
-        // TODO - Further adjust linear recognizer
+            recognized = true;
+    }
 
-        return ret;
+    public boolean isRecognized() {
+        return recognized;
     }
 
     private static boolean isCollinear(ArrayList<Vector3d> vectors) {
@@ -56,8 +68,6 @@ public class LinearRecognition {
         double s1 = getSlope(p1, p2);
         double s2 = getSlope(p1, p3);
         double dif = getDiff(s1, s2);
-        System.out.println("SLOPE 1: " + s1);
-        System.out.println("SLOPE 2: " + s2);
         System.out.println("VALID VECTORS LENGTH: " + vectors.size());
         System.out.println("COLLINEAR DIF: " + dif);
         if(dif < .15)
@@ -82,4 +92,5 @@ public class LinearRecognition {
             ret = rise / run;
         return ret;
     }
+
 }
