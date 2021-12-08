@@ -1,8 +1,9 @@
 package com.calicraft.vrjester.handlers;
 
 import com.calicraft.vrjester.VrJesterApi;
-import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
-import com.calicraft.vrjester.utils.vrdata.VRDataState;
+import com.calicraft.vrjester.gestures.JesterRecognition;
+import com.calicraft.vrjester.utils.vrdata.VRDevice;
+import com.calicraft.vrjester.utils.vrdata.VivecraftAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataWriter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -13,10 +14,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class TriggerEventHandler {
-    private static final ArrayList<VRDataState> data = new ArrayList<>();
+    private static final VivecraftAggregator data_aggregator = new VivecraftAggregator();
     private static final VRDataWriter vrDataWriter = new VRDataWriter(
             "VRJester_Data", new String[]{"rc"});
     private static final int DELAY = 20; // 1 second
@@ -39,8 +39,9 @@ public class TriggerEventHandler {
         } else { // Trigger the gesture recognition phase
             System.out.println("JESTER RELEASED");
             listener = false; elapsed_time = System.nanoTime() - elapsed_time;
-            VRDataAggregator.send(data, elapsed_time);
-            data.clear(); elapsed_time = 0;
+            JesterRecognition recognizer = new JesterRecognition(data_aggregator.getData(), elapsed_time);
+            recognizer.isLinearGesture(VRDevice.RC);
+            data_aggregator.clear(); elapsed_time = 0;
             // Fire event or trigger something based on recognized gesture
         }
     }
@@ -53,8 +54,7 @@ public class TriggerEventHandler {
 
         // Listen for VR data after trigger
         if (listener) { // Capture data in real time
-            VRDataState data_state = VRDataAggregator.listen();
-            data.add(data_state);
+            data_aggregator.listen();
 //            vrDataWriter.write(data_state); // Write data to file(s) to debug/analyze
 //            if (sleep % 20 == 0) // Print every 1 second
 //                System.out.println("JESTER LISTENING");

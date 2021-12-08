@@ -7,17 +7,17 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.vivecraft.gameplay.VRPlayer;
+import org.vivecraft.api.VRData;
 
 public class PickupEventHandler {
     @SubscribeEvent
     public void onPickUpEvent(EntityItemPickupEvent event) {
         String pos;
-        VRPlayer vrPlayer = VrJesterApi.TRACKER.getVrPlayer();
-        if (vrPlayer == null) {
+        VRData vrData = VrJesterApi.TRACKER.getVrData_Vivecraft116();
+        if (vrData == null) {
             pos = "null";
         } else {
-            pos = vrPlayer.vrdata_world_pre.c0.toString();
+            pos = vrData.c0.toString();
         }
         ClientPlayerEntity player = Minecraft.getInstance().player;
         ITextComponent text = new StringTextComponent("DEBUG: (Right Controller Position) " + pos);

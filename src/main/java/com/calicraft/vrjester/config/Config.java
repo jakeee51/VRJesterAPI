@@ -1,4 +1,4 @@
-package com.calicraft.vrjester.utils.config;
+package com.calicraft.vrjester.config;
 
 public class Config {
     // Read in from config & gesture_manifest.json files

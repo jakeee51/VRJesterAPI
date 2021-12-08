@@ -4,9 +4,11 @@ import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import org.vivecraft.api.VRData;
+
+import java.util.List;
 
 public class JesterRecognition {
     // Class for handling gesture recognition phase
@@ -14,7 +16,8 @@ public class JesterRecognition {
     // TODO - Create Context class that reads from config.
     //  It will specify which devices to aggregate to VRDataState,
     //  gestures to be bound to events, and w/e else that needs to
-    //  be specified based on mod and user
+    //  be specified based on mod and user.
+    //  Pass ctx on initialization or when calling recognizeGesture
 
     public VRDataState[] data;
     public int total_points;
@@ -25,14 +28,20 @@ public class JesterRecognition {
         this.elapsed_time = elapsed_time;
         total_points = data.length;
     }
+    public JesterRecognition (List<VRDataState> data, long elapsed_time) {
+        VRDataState[] vrData = new VRDataState[data.size()];
+        this.data =  data.toArray(vrData);
+        this.elapsed_time = elapsed_time;
+        total_points = data.size();
+    }
 
     private void fireAway() { // Post GestureEvent
         // Specify which gesture was recognized
         // and what it's bound to
     }
 
-    public boolean isGesture() {
-        boolean ret = false;
+    public String recognizeGesture() {
+        String ret = null;
 
         return ret;
     }
@@ -43,7 +52,7 @@ public class JesterRecognition {
             return false;
         ClientPlayerEntity player = Minecraft.getInstance().player;
         assert player != null;
-        VRData.VRDevicePose[] device_data = this.getDeviceData(device);
+        Vector3d[][] device_data = this.getDeviceData(device);
         try {
             LinearRecognition result = new LinearRecognition(device_data, .8f, elapsed_time);
             if (result.isRecognized()) {
@@ -60,8 +69,8 @@ public class JesterRecognition {
         return ret;
     }
 
-    private VRData.VRDevicePose[] getDeviceData(String device) {
-        VRData.VRDevicePose[] device_data = new VRData.VRDevicePose[this.total_points];
+    private Vector3d[][] getDeviceData(String device) {
+        Vector3d[][] device_data = new Vector3d[4][this.total_points];
         for (int i = 0; i < this.total_points; i++) {
             switch (device) {
                 case VRDevice.HMD:

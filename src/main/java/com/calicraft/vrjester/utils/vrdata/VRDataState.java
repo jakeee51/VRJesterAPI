@@ -1,21 +1,24 @@
 package com.calicraft.vrjester.utils.vrdata;
 
+import com.calicraft.vrjester.tracker.Tracker;
+import net.minecraft.util.math.vector.Vector3d;
 import org.vivecraft.api.VRData;
 
 public class VRDataState {
     // Class for encapsulating VRData devices
 
-    private VRData.VRDevicePose hmd;
-    private VRData.VRDevicePose rc;
-    private VRData.VRDevicePose lc;
-    private VRData.VRDevicePose c2;
+    private final Vector3d[] hmd;
+    private final Vector3d[] rc;
+    private final Vector3d[] lc;
+    private final Vector3d[] c2;
 
+    // TODO - Add another constructor with new params for upward compatibility
     public VRDataState(VRData.VRDevicePose head_mounted_display, VRData.VRDevicePose right_controller,
                        VRData.VRDevicePose left_controller, VRData.VRDevicePose extra_tracker) {
-        hmd = head_mounted_display;
-        rc = right_controller;
-        lc = left_controller;
-        c2 = extra_tracker;
+        hmd = Tracker.getPose(head_mounted_display);
+        rc = Tracker.getPose(right_controller);
+        lc = Tracker.getPose(left_controller);
+        c2 = Tracker.getPose(extra_tracker);
     }
 
     @Override
@@ -27,16 +30,16 @@ public class VRDataState {
                 "\r\n \t c2: " + c2;
     }
 
-    public VRData.VRDevicePose getHmd() {
+    public Vector3d[] getHmd() {
         return hmd;
     }
-    public VRData.VRDevicePose getRc() {
+    public Vector3d[] getRc() {
         return rc;
     }
-    public VRData.VRDevicePose getLc() {
+    public Vector3d[] getLc() {
         return lc;
     }
-    public VRData.VRDevicePose getC2() {
+    public Vector3d[] getC2() {
         return c2;
     }
 }

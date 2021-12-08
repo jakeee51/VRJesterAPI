@@ -13,10 +13,10 @@ public class PlayerInitEvent {
         PositionTracker tracker = new PositionTracker();
         VrJesterApi.TRACKER = tracker;
         String pos;
-        if (tracker.getVrPlayer() == null)
+        if (tracker.getVrData_Vivecraft116() == null)
             pos = "null";
         else
-            pos = tracker.vrPlayer.toString();
+            pos = tracker.getVrData_Vivecraft116().toString();
         System.out.println("LOGIN EVENT TRACKER " + pos);
     }
 }

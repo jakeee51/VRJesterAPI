@@ -1,8 +1,6 @@
 package com.calicraft.vrjester.gestures;
 
-import com.calicraft.vrjester.tracker.PositionTracker;
 import net.minecraft.util.math.vector.Vector3d;
-import org.vivecraft.api.VRData;
 
 import java.lang.Math;
 import java.util.ArrayList;
@@ -14,16 +12,12 @@ public class LinearRecognition {
     public double velocity; // (total distance traveled / elapsed time)
     public Vector3d direction; // direction of last point
 
-    public LinearRecognition(VRData.VRDevicePose[] device_data, float tolerance, long elapsed_time) {
+    public LinearRecognition(Vector3d[][] device_data, float tolerance, long elapsed_time) {
         // Collect position & direction data
-        Vector3d[] pos = new Vector3d[device_data.length];
-        Vector3d[] dir = new Vector3d[device_data.length];
-        for (int i = 0; i < device_data.length; i++) {
-            pos[i] = PositionTracker.getPosition(device_data[i]);
-            dir[i] = PositionTracker.getDirection(device_data[i]);
-        }
-        if (device_data.length > 0)
-            direction = dir[device_data.length - 1]; double total_distance = 0;
+        Vector3d[] pos = device_data[0];
+        Vector3d[] dir = device_data[1];
+        direction = dir[device_data.length - 1];
+        double total_distance = 0;
         // Initialize valid variables
         ArrayList<Vector3d> valid_vectors = new ArrayList<>();
         Vector3d valid = pos[0]; double valid_slope = 0;
