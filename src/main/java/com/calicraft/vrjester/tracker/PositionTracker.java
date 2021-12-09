@@ -1,12 +1,13 @@
 package com.calicraft.vrjester.tracker;
 
-import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.vivecraft.api.VRData;
 import org.vivecraft.gameplay.VRPlayer;
 
 import java.lang.reflect.*;
+
+import static com.calicraft.vrjester.VrJesterApi.getMCI;
 
 public class PositionTracker implements Tracker {
     // Class for consuming & tracking VRPlayer data from Vivecraft
@@ -20,7 +21,7 @@ public class PositionTracker implements Tracker {
 //            mc.vrPlayer.vrdata_world_pre.c0
             Class<?> mc = Class.forName("net.minecraft.client.Minecraft");
             Field vrPlayer_field = mc.getDeclaredField("vrPlayer");
-            VRPlayer vrPlayer = (VRPlayer) vrPlayer_field.get(Minecraft.getInstance());
+            VRPlayer vrPlayer = (VRPlayer) vrPlayer_field.get(getMCI());
             if (vrPlayer != null) {
                 vrdata_world_pre = vrPlayer.vrdata_world_pre;
             } else {
@@ -35,7 +36,7 @@ public class PositionTracker implements Tracker {
         }
     }
 
-    public VRData getVrData_Vivecraft116() {
+    public VRData getVRData() {
         return vrdata_world_pre;
     }
 }

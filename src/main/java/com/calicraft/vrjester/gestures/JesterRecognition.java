@@ -2,13 +2,14 @@ package com.calicraft.vrjester.gestures;
 
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 import java.util.List;
+
+import static com.calicraft.vrjester.VrJesterApi.getMCI;
 
 public class JesterRecognition {
     // Class for handling gesture recognition phase
@@ -50,7 +51,7 @@ public class JesterRecognition {
         boolean ret = false;
         if (total_points < 0)
             return false;
-        ClientPlayerEntity player = Minecraft.getInstance().player;
+        ClientPlayerEntity player = getMCI().player;
         assert player != null;
         Vector3d[][] device_data = this.getDeviceData(device);
         try {

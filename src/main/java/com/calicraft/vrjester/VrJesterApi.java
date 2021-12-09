@@ -4,6 +4,7 @@ import com.calicraft.vrjester.handlers.TriggerEventHandler;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -27,9 +28,9 @@ import java.util.stream.Collectors;
 public class VrJesterApi {
     // Main entry point
     private static final Logger LOGGER = LogManager.getLogger();
-    private boolean vivecraftLoaded = false;
+    public static boolean VIVECRAFTLOADED = false;
     public static PositionTracker TRACKER;
-    public static String MOD_ID = "vrjester";
+    public static final String MOD_ID = "vrjester";
     public static KeyBinding MOD_KEY = new KeyBinding("Jester Trigger", 71, MOD_ID);
 
     public VrJesterApi() {
@@ -43,9 +44,11 @@ public class VrJesterApi {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        // Register deferred register for custom particles
+//        PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());
         try { // Check if Vivecraft is running
             Class.forName("org.vivecraft.api.VRData");
-            vivecraftLoaded = true;
+            VIVECRAFTLOADED = true;
             System.out.println("Vivecraft has been loaded!");
             EventsLoader.register();
             LOGGER.info("Events have been loaded!");
@@ -53,6 +56,10 @@ public class VrJesterApi {
             LOGGER.error("Vivecraft has failed to load!");
         }
         MinecraftForge.EVENT_BUS.register(new TriggerEventHandler());
+    }
+
+    public static Minecraft getMCI() {
+        return Minecraft.getInstance();
     }
 
     private void setup(final FMLCommonSetupEvent event) {

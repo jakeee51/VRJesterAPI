@@ -9,7 +9,7 @@ public interface Tracker {
     //      - Implement another getVrData with new return type
     //      - Overload static methods with new parameters
 
-    VRData getVrData_Vivecraft116();
+    VRData getVRData();
 
     static Vector3d getPosition(VRData.VRDevicePose device) {
         // Get the 3D positional coordinate of passed device
