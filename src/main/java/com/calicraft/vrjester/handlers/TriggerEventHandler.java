@@ -2,19 +2,22 @@ package com.calicraft.vrjester.handlers;
 
 import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.gestures.JesterRecognition;
-import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataWriter;
+import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
 import java.io.IOException;
+import java.util.Random;
 
 import static com.calicraft.vrjester.VrJesterApi.VIVECRAFTLOADED;
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
@@ -28,6 +31,8 @@ public class TriggerEventHandler {
     private static boolean listener = false;
     private long elapsed_time = 0;
 
+    ClientWorld clientWorld; Random rand; Vector3d eyePos, newPos;
+    double motionX, motionY,  motionZ, mosX, mosY; Vector2f rotVec;
     // TODO - Set maximum listening time
 
     @SubscribeEvent
@@ -56,15 +61,37 @@ public class TriggerEventHandler {
             if (VrJesterApi.MOD_KEY.isDown()) {
                 ClientPlayerEntity player = getMCI().player;
                 assert player != null;
+                eyePos = player.getEyePosition((1f));
+                rotVec = player.getRotationVector();
                 Vector3d p = player.position();
-                ClientWorld clientWorld = (ClientWorld) player.getCommandSenderWorld();
+                mosX = getMCI().mouseHandler.xpos();
+                mosY = getMCI().mouseHandler.ypos();
+                newPos = sphere(eyePos, rotVec);
+                clientWorld = (ClientWorld) player.getCommandSenderWorld();
                 for (int i = 0; i < 20; i++) {
+                    rand = new Random();
+                    motionX = rand.nextGaussian() * 0.0025D;
+                    motionY = rand.nextGaussian() * 0.0025D;
+                    motionZ = rand.nextGaussian() * 0.0025D;
                     clientWorld.addParticle(ParticleTypes.FLAME,
-                            p.x, p.y - 0.25D, p.z,
-                            0, 0, 0);
+                            newPos.x, newPos.y, newPos.z,
+                            motionX, motionY, motionZ);
+//                    clientWorld.addParticle(ParticleTypes.SOUL_FIRE_FLAME,
+//                            (eyePos.x), (eyePos.y), (eyePos.z),
+//                            motionX, motionY, motionZ);
                 }
             }
         }
+    }
+
+    private static Vector3d sphere(Vector3d center, Vector2f rotation) {
+        double radius = 1F, x, y, z;
+
+        x = center.x + radius * Math.cos(rotation.x) * Math.sin(rotation.y);
+        y = center.y + radius * Math.sin(rotation.x) * Math.sin(rotation.y);
+        z = center.z + radius * Math.cos(rotation.y);
+
+        return new Vector3d(x, y, z);
     }
 
     @SubscribeEvent

@@ -14,18 +14,17 @@ public class LinearRecognition {
 
     public LinearRecognition(Vector3d[][] device_data, float tolerance, long elapsed_time) {
         // Collect position & direction data
-        Vector3d[] pos = device_data[0];
-        Vector3d[] dir = device_data[1];
-        direction = dir[device_data.length - 1];
+        Vector3d pos = device_data[0][0];
+        direction = device_data[device_data.length - 1][1];
         double total_distance = 0;
         // Initialize valid variables
         ArrayList<Vector3d> valid_vectors = new ArrayList<>();
-        Vector3d valid = pos[0]; double valid_slope = 0;
+        Vector3d valid = device_data[0][0]; double valid_slope = 0;
         valid_vectors.add(valid);
         // Populate valid values
-        for (int i = 1; i < pos.length - 1; i++) {
-            Vector3d vector = pos[i]; // Current 3D point in iteration
-            total_distance += vector.distanceTo(pos[i-1]);
+        for (int i = 1; i < device_data.length - 1; i++) {
+            Vector3d vector = device_data[i][0]; // Current 3D point in iteration
+            total_distance += vector.distanceTo(device_data[i-1][0]);
             double slope = getSlope(valid, vector);
             if (valid_slope == 0) {
                 if (slope != 0) {

@@ -7,6 +7,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
@@ -71,7 +72,7 @@ public class JesterRecognition {
     }
 
     private Vector3d[][] getDeviceData(String device) {
-        Vector3d[][] device_data = new Vector3d[4][this.total_points];
+        Vector3d[][] device_data = new Vector3d[this.total_points][2];
         for (int i = 0; i < this.total_points; i++) {
             switch (device) {
                 case VRDevice.HMD:
