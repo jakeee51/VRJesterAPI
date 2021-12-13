@@ -2,6 +2,7 @@ package com.calicraft.vrjester;
 
 import com.calicraft.vrjester.handlers.TriggerEventHandler;
 import com.calicraft.vrjester.tracker.PositionTracker;
+import com.calicraft.vrjester.utils.tools.EventsLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -28,10 +29,10 @@ import java.util.stream.Collectors;
 public class VrJesterApi {
     // Main entry point
     private static final Logger LOGGER = LogManager.getLogger();
-    public static boolean VIVECRAFTLOADED = false;
     public static PositionTracker TRACKER;
+    public static boolean VIVECRAFTLOADED = false;
     public static final String MOD_ID = "vrjester";
-    public static KeyBinding MOD_KEY = new KeyBinding("Jester Trigger", 71, MOD_ID);
+    public static final KeyBinding MOD_KEY = new KeyBinding("Jester Trigger", 71, MOD_ID);
 
     public VrJesterApi() {
         // Register the setup method for modloading

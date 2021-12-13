@@ -5,7 +5,7 @@ import com.calicraft.vrjester.tracker.PositionTracker;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class PlayerInitEvent {
+public class PlayerInitHandler {
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         // Initialize VR PositionTracker ONLY after this event is fired
@@ -16,7 +16,7 @@ public class PlayerInitEvent {
         if (tracker.getVRData() == null)
             pos = "null";
         else
-            pos = tracker.getVRData().toString();
+            pos = tracker.vrPlayer.toString();
         System.out.println("LOGIN EVENT TRACKER " + pos);
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +31,7 @@ public class JesterRecognition {
         this.elapsed_time = elapsed_time;
         total_points = data.length;
     }
-    public JesterRecognition (List<VRDataState> data, long elapsed_time) {
+    public JesterRecognition (@NotNull List<VRDataState> data, long elapsed_time) {
         VRDataState[] vrData = new VRDataState[data.size()];
         this.data =  data.toArray(vrData);
         this.elapsed_time = elapsed_time;
