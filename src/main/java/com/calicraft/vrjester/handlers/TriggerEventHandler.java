@@ -5,8 +5,10 @@ import com.calicraft.vrjester.gestures.JesterRecognition;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
+import com.calicraft.vrjester.vox.Vox;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.event.InputEvent;
@@ -17,7 +19,7 @@ import java.io.IOException;
 
 import static com.calicraft.vrjester.VrJesterApi.VIVECRAFTLOADED;
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
-import static com.calicraft.vrjester.utils.tools.SpawnParticles.fireball;
+import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
 public class TriggerEventHandler {
     private static final VRDataAggregator data_aggregator = new VRDataAggregator();
@@ -27,6 +29,8 @@ public class TriggerEventHandler {
     private static int sleep = 2 * DELAY; // 2 seconds
     private static boolean listener = false;
     private long elapsed_time = 0;
+    private static Vector3d origin;
+    private static Vox originVox;
 
     // TODO - Set maximum listening time
 
@@ -45,6 +49,7 @@ public class TriggerEventHandler {
             } else { // Trigger the gesture recognition phase
                 System.out.println("JESTER RELEASED");
                 listener = false;
+                origin = null; originVox = null;
                 elapsed_time = System.nanoTime() - elapsed_time;
                 JesterRecognition recognizer = new JesterRecognition(data_aggregator.getData(), elapsed_time);
                 recognizer.isLinearGesture(VRDevice.RC);
@@ -61,11 +66,20 @@ public class TriggerEventHandler {
         //  after being idle for some time
 
         if (VrJesterApi.MOD_KEY.isDown() && !VIVECRAFTLOADED)
-            fireball(ParticleTypes.FLAME, null);
+            createParticles(ParticleTypes.FLAME, null);
         // Listen for VR data after trigger
         if (listener) { // Capture data in real time
             VRDataState vrDataState = data_aggregator.listen();
-            fireball(ParticleTypes.FLAME, vrDataState.getRc());
+            if (origin == null && originVox == null) {
+                origin = vrDataState.getRc()[0];
+                originVox = new Vox(origin);
+            }
+            if (origin != null && originVox != null) {
+                if (originVox.hasPoint(vrDataState.getRc()[0]))
+                    createParticles(ParticleTypes.FLAME, vrDataState.getRc());
+                else
+                    createParticles(ParticleTypes.SOUL_FIRE_FLAME, vrDataState.getRc());
+            }
 //            vrDataWriter.write(data_state); // Write data to file(s) to debug/analyze
 //            if (sleep % 20 == 0) // Print every 1 second
 //                System.out.println("JESTER LISTENING");
