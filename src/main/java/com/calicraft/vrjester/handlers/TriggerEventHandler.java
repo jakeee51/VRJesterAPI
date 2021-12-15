@@ -31,28 +31,31 @@ public class TriggerEventHandler {
     private long elapsed_time = 0;
     private static Vector3d origin;
     private static Vox originVox;
+    private static ClientPlayerEntity player;
 
     // TODO - Set maximum listening time
 
     @SubscribeEvent
     public void onJesterTrigger(InputEvent.KeyInputEvent event) {
+        if (player == null)
+            player = getMCI().player;
         // Trigger the gesture listening phase
         if (VIVECRAFTLOADED) {
             if (VrJesterApi.MOD_KEY.isDown() && !listener) {
                 System.out.println("JESTER TRIGGERED");
                 listener = true;
                 elapsed_time = System.nanoTime();
-                ClientPlayerEntity player = getMCI().player;
-                ITextComponent text = new StringTextComponent("Listening for gesture...");
-                assert player != null;
-                player.sendMessage(text, player.getUUID());
+//                ClientPlayerEntity player = getMCI().player;
+//                ITextComponent text = new StringTextComponent("Listening for gesture...");
+//                assert player != null;
+//                player.sendMessage(text, player.getUUID());
             } else { // Trigger the gesture recognition phase
                 System.out.println("JESTER RELEASED");
                 listener = false;
                 origin = null; originVox = null;
                 elapsed_time = System.nanoTime() - elapsed_time;
-                JesterRecognition recognizer = new JesterRecognition(data_aggregator.getData(), elapsed_time);
-                recognizer.isLinearGesture(VRDevice.RC);
+//                JesterRecognition recognizer = new JesterRecognition(data_aggregator.getData(), elapsed_time);
+//                recognizer.isLinearGesture(VRDevice.RC);
                 data_aggregator.clear(); elapsed_time = 0;
                 // Fire event or trigger something based on recognized gesture
             }
@@ -75,11 +78,14 @@ public class TriggerEventHandler {
                 originVox = new Vox(origin);
             }
             if (origin != null && originVox != null) {
+                // Note: The getDeltaMovement() initially returns player position like a susy baka
+                originVox.updateVox(player.getDeltaMovement());
                 if (originVox.hasPoint(vrDataState.getRc()[0]))
                     createParticles(ParticleTypes.FLAME, vrDataState.getRc());
                 else
                     createParticles(ParticleTypes.SOUL_FIRE_FLAME, vrDataState.getRc());
             }
+
 //            vrDataWriter.write(data_state); // Write data to file(s) to debug/analyze
 //            if (sleep % 20 == 0) // Print every 1 second
 //                System.out.println("JESTER LISTENING");
