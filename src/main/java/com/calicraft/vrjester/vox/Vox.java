@@ -12,12 +12,17 @@ public class Vox {
     private Vector3d p6;
     private Vector3d p7;
     private Vector3d p8;
+    private int[] id = new int[3];
+    public int[] front, back, left, right, up, down; // Neighboring Voxes based on face
     public Vector3d d1, d2, centroid, playerOrigin;
     public final float LENGTH = Constants.VOX_LENGTH;
 
     public Vox(Vector3d centroid) {
         // Initialize Center of Vox
         this.centroid = centroid;
+
+        // Initialize Neighboring Vox Location ID's
+        setVoxNeighbors(); // TODO - Implement this method
 
         // Initialize all points of Vox
         this.updateVox(centroid);
@@ -55,5 +60,17 @@ public class Vox {
         p6 = centroid.add((0), (LENGTH/2), (LENGTH/2));
         p7 = centroid.add((LENGTH/2), (0), (LENGTH/2));
         p8 = d2;
+    }
+
+    public int[] getId() {
+        return id;
+    }
+
+    public void setId(int[] id) {
+         this.id = id;
+    }
+
+    private void setVoxNeighbors() {
+
     }
 }

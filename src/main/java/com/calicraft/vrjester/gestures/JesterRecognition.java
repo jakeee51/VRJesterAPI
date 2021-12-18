@@ -8,7 +8,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
@@ -49,7 +48,7 @@ public class JesterRecognition {
         return ret;
     }
 
-    public boolean isLinearGesture(String device) {
+    public boolean isLinearGesture(VRDevice device) {
         boolean ret = false;
         if (total_points < 0)
             return false;
@@ -72,17 +71,17 @@ public class JesterRecognition {
         return ret;
     }
 
-    private Vector3d[][] getDeviceData(String device) {
+    private Vector3d[][] getDeviceData(VRDevice device) {
         Vector3d[][] device_data = new Vector3d[this.total_points][2];
         for (int i = 0; i < this.total_points; i++) {
             switch (device) {
-                case VRDevice.HMD:
+                case HMD:
                     device_data[i] = data[i].getHmd(); break;
-                case VRDevice.RC:
+                case RC:
                     device_data[i] = data[i].getRc(); break;
-                case VRDevice.LC:
+                case LC:
                     device_data[i] = data[i].getLc(); break;
-                case VRDevice.C2:
+                case C2:
                     device_data[i] = data[i].getC2(); break;
             }
         }

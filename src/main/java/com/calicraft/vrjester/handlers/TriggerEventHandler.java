@@ -6,6 +6,7 @@ import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.vox.Vox;
+import com.calicraft.vrjester.vox.VoxNet;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.vector.Vector3d;
@@ -16,6 +17,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.calicraft.vrjester.VrJesterApi.VIVECRAFTLOADED;
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
@@ -31,6 +34,7 @@ public class TriggerEventHandler {
     private long elapsed_time = 0;
     private static Vector3d origin;
     private static Vox originVox;
+    private static VoxNet voxNet;
     private static ClientPlayerEntity player;
 
     // TODO - Set maximum listening time
@@ -52,7 +56,20 @@ public class TriggerEventHandler {
             } else { // Trigger the gesture recognition phase
                 System.out.println("JESTER RELEASED");
                 listener = false;
-                origin = null; originVox = null;
+                if (voxNet != null) {
+                    ArrayList<Vox> voxList = voxNet.get();
+                    for (Vox vox: voxList) {
+                        // VOX ID: {3, 8 ,26}
+                        System.out.println("VOX ID: " + Arrays.toString(vox.getId()));
+                        for (VRDataState vrDataState : data_aggregator.getData()) {
+                            System.out.println("VOX: " + vox.centroid);
+                            System.out.println("RC: " + vrDataState.getRc()[0]);
+                            if (vox.hasPoint(vrDataState.getRc()[0]))
+                                createParticles(ParticleTypes.FLAME, vrDataState.getRc());
+                        }
+                    }
+                }
+                origin = null; originVox = null; voxNet = null;
                 elapsed_time = System.nanoTime() - elapsed_time;
 //                JesterRecognition recognizer = new JesterRecognition(data_aggregator.getData(), elapsed_time);
 //                recognizer.isLinearGesture(VRDevice.RC);
@@ -73,18 +90,23 @@ public class TriggerEventHandler {
         // Listen for VR data after trigger
         if (listener) { // Capture data in real time
             VRDataState vrDataState = data_aggregator.listen();
-            if (origin == null && originVox == null) {
+            if (origin == null &&  voxNet == null) {
                 origin = vrDataState.getRc()[0];
-                originVox = new Vox(origin);
+                voxNet = new VoxNet(origin);
             }
-            if (origin != null && originVox != null) {
+
+//            if (origin == null && originVox == null) {
+//                origin = vrDataState.getRc()[0];
+//                originVox = new Vox(origin);
+//            }
+//            if (origin != null && originVox != null) {
                 // Note: The getDeltaMovement() initially returns player position like a susy baka
-                originVox.updateVox(player.getDeltaMovement());
-                if (originVox.hasPoint(vrDataState.getRc()[0]))
-                    createParticles(ParticleTypes.FLAME, vrDataState.getRc());
-                else
-                    createParticles(ParticleTypes.SOUL_FIRE_FLAME, vrDataState.getRc());
-            }
+//                originVox.updateVox(player.getDeltaMovement());
+//                if (originVox.hasPoint(vrDataState.getRc()[0]))
+//                    createParticles(ParticleTypes.FLAME, vrDataState.getRc());
+//                else
+//                    createParticles(ParticleTypes.SOUL_FIRE_FLAME, vrDataState.getRc());
+//            }
 
 //            vrDataWriter.write(data_state); // Write data to file(s) to debug/analyze
 //            if (sleep % 20 == 0) // Print every 1 second
