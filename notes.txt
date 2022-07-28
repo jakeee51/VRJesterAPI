@@ -7,3 +7,8 @@ x, y, z, ability
 cartisian coords
 
 controller world size: 0.2157580554485321 (round up to .3 or .5)
+
+- keep VoxNet at origin postion if VRDevice still within origin Vox
+
+- create new Vox whenever leaving origin Vox
+- using arithmetic and basing it off of which side the VRDevice exited the origin Vox

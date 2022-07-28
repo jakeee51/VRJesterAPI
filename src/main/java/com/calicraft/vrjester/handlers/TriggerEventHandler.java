@@ -27,7 +27,7 @@ import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 public class TriggerEventHandler {
     private static final VRDataAggregator data_aggregator = new VRDataAggregator();
     //    private static final VRDataWriter vrDataWriter = new VRDataWriter(
-//            "VRJester_Data", new String[]{"rc"});
+    //            "VRJester_Data", new String[]{"rc"});
     private static final int DELAY = 20; // 1 second
     private static int sleep = 2 * DELAY; // 2 seconds
     private static boolean listener = false;
@@ -35,6 +35,8 @@ public class TriggerEventHandler {
     private static Vector3d origin;
     private static Vox originVox;
     private static VoxNet voxNet;
+    private static int[] previousId;
+    private static ArrayList<int[]> voxIds = new ArrayList<>();
     private static ClientPlayerEntity player;
 
     // TODO - Set maximum listening time
@@ -53,23 +55,23 @@ public class TriggerEventHandler {
 //                ITextComponent text = new StringTextComponent("Listening for gesture...");
 //                assert player != null;
 //                player.sendMessage(text, player.getUUID());
-            } else { // Trigger the gesture recognition phase
+            } else { // Trigger the gesture recognition phase after key is released
                 System.out.println("JESTER RELEASED");
                 listener = false;
-                if (voxNet != null) {
-                    ArrayList<Vox> voxList = voxNet.get();
-                    for (Vox vox: voxList) {
-                        // VOX ID: {3, 8 ,26}
-                        System.out.println("VOX ID: " + Arrays.toString(vox.getId()));
-                        for (VRDataState vrDataState : data_aggregator.getData()) {
-                            System.out.println("VOX: " + vox.centroid);
-                            System.out.println("RC: " + vrDataState.getRc()[0]);
-                            if (vox.hasPoint(vrDataState.getRc()[0]))
-                                createParticles(ParticleTypes.FLAME, vrDataState.getRc());
-                        }
-                    }
-                }
-                origin = null; originVox = null; voxNet = null;
+//                if (voxNet != null) {
+//                    ArrayList<Vox> voxList = voxNet.get();
+//                    for (Vox vox: voxList) {
+//                        // VOX ID: {3, 8 , 26}
+//                        System.out.println("VOX ID: " + Arrays.toString(vox.getId()));
+//                        for (VRDataState vrDataState : data_aggregator.getData()) {
+//                            System.out.println("VOX: " + vox.centroid);
+//                            System.out.println("RC: " + vrDataState.getRc()[0]);
+//                            if (vox.hasPoint(vrDataState.getRc()[0]))
+//                                createParticles(ParticleTypes.FLAME, vrDataState.getRc());
+//                        }
+//                    }
+//                }
+                origin = null; originVox = null; voxNet = null; voxIds.clear();
                 elapsed_time = System.nanoTime() - elapsed_time;
 //                JesterRecognition recognizer = new JesterRecognition(data_aggregator.getData(), elapsed_time);
 //                recognizer.isLinearGesture(VRDevice.RC);
@@ -90,31 +92,56 @@ public class TriggerEventHandler {
         // Listen for VR data after trigger
         if (listener) { // Capture data in real time
             VRDataState vrDataState = data_aggregator.listen();
-            if (origin == null &&  voxNet == null) {
+            //            * Single Vox Recognition Working
+            if (origin == null && originVox == null) {
                 origin = vrDataState.getRc()[0];
-                voxNet = new VoxNet(origin);
+                originVox = new Vox(origin);
+                previousId = originVox.getId();
+            } else {
+                // Note: The getDeltaMovement() initially returns player position like a sussy baka
+                originVox.updateVox(player.getDeltaMovement()); // Try hardcoding a set # of vox#.updateVox()
+                int[] currentId = originVox.updateVoxId(vrDataState.getRc()[0]);
+                if (!Arrays.equals(previousId, currentId)) {
+                    voxIds.add(currentId); previousId = currentId;
+                }
+                System.out.println("VOX IDS TRACED:");
+                for (int[] voxId: voxIds) { // Loop through current mapped trace of Vox Id's
+                    System.out.println(Arrays.toString(voxId));
+                    if (originVox.hasPoint(vrDataState.getRc()[0]))
+                        createParticles(ParticleTypes.FLAME, vrDataState.getRc());
+                    else
+                        createParticles(ParticleTypes.SOUL_FIRE_FLAME, vrDataState.getRc());
+                }
             }
 
-//            if (origin == null && originVox == null) {
+
+
+//            if (origin == null && voxNet == null) {
 //                origin = vrDataState.getRc()[0];
-//                originVox = new Vox(origin);
-//            }
-//            if (origin != null && originVox != null) {
-                // Note: The getDeltaMovement() initially returns player position like a susy baka
-//                originVox.updateVox(player.getDeltaMovement());
-//                if (originVox.hasPoint(vrDataState.getRc()[0]))
-//                    createParticles(ParticleTypes.FLAME, vrDataState.getRc());
-//                else
-//                    createParticles(ParticleTypes.SOUL_FIRE_FLAME, vrDataState.getRc());
+//                voxNet = new VoxNet(origin);
+//            } else {
+//                voxNet.updateVoxNet(player.getDeltaMovement()); // Update voxNet's position
+//                ArrayList<Vox> voxList = voxNet.get();
+//                for (Vox vox: voxList) {
+//                    if (VoxNet.compareVector3d(origin, vox.centroid))
+//                        continue;
+//                    System.out.println("VOX ID: " + Arrays.toString(vox.getId()));
+//                    System.out.println("VOX: " + vox.centroid);
+//                    System.out.println("RC: " + vrDataState.getRc()[0]);
+//                    if (vox.hasPoint(vrDataState.getRc()[0]))
+//                        createParticles(ParticleTypes.SOUL_FIRE_FLAME, vrDataState.getRc());
+//                }
 //            }
 
-//            vrDataWriter.write(data_state); // Write data to file(s) to debug/analyze
+
+
+//            * Write data to file(s) to debug/analyze
+//            vrDataWriter.write(data_state);
 //            if (sleep % 20 == 0) // Print every 1 second
 //                System.out.println("JESTER LISTENING");
 //            if (sleep == 0) { // Reset trigger when done
 //                System.out.println("JESTER DONE LISTENING");
 //                sleep = 2 * DELAY;
-//                VRDataAggregator.send(data);
 //                data.clear(); listener = false;
 //            }
 //            sleep--;

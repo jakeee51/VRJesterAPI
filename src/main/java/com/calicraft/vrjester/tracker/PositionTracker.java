@@ -8,7 +8,7 @@ import org.vivecraft.gameplay.VRPlayer;
 
 import java.lang.reflect.*;
 
-public class PositionTracker implements Tracker {
+public class PositionTracker {
     // Class for consuming & tracking VRPlayer data from Vivecraft
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -23,7 +23,7 @@ public class PositionTracker implements Tracker {
             Field vrPlayer = mc.getDeclaredField("vrPlayer");
             this.vrPlayer = (VRPlayer) vrPlayer.get(Minecraft.getInstance());
             if (this.vrPlayer != null) {
-                vrDataSource = "vivecraft";
+                vrDataSource = "vivecraft_116";
             } else {
                 LOGGER.debug("vrPlayer null");
             }
