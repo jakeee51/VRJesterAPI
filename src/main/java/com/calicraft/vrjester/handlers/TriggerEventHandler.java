@@ -98,19 +98,21 @@ public class TriggerEventHandler {
                 originVox = new Vox(origin);
                 previousId = originVox.getId();
             } else {
-                // Note: The getDeltaMovement() initially returns player position like a sussy baka
+                // Note: The getDeltaMovement() initially returns player position before returning the actual delta movement like a sussy baka
                 originVox.updateVox(player.getDeltaMovement()); // Try hardcoding a set # of vox#.updateVox()
                 int[] currentId = originVox.updateVoxId(vrDataState.getRc()[0]);
+                System.out.println("PREVIOUS ID: " + Arrays.toString(previousId));
+                System.out.println("CURRENT ID: " + Arrays.toString(currentId));
                 if (!Arrays.equals(previousId, currentId)) {
                     voxIds.add(currentId); previousId = currentId;
                 }
+                if (originVox.hasPoint(vrDataState.getRc()[0]))
+                    createParticles(ParticleTypes.FLAME, vrDataState.getRc());
+                else
+                    createParticles(ParticleTypes.SOUL_FIRE_FLAME, vrDataState.getRc());
                 System.out.println("VOX IDS TRACED:");
                 for (int[] voxId: voxIds) { // Loop through current mapped trace of Vox Id's
-                    System.out.println(Arrays.toString(voxId));
-                    if (originVox.hasPoint(vrDataState.getRc()[0]))
-                        createParticles(ParticleTypes.FLAME, vrDataState.getRc());
-                    else
-                        createParticles(ParticleTypes.SOUL_FIRE_FLAME, vrDataState.getRc());
+                    System.out.println("--> " + Arrays.toString(voxId));
                 }
             }
 
