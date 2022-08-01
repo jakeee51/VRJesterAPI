@@ -58,19 +58,11 @@ public class Vox {
 
     public int[] updateVoxId(Vector3d point) { // Generates new Vox position and returns new Id if VRDevice is outside Vox
         if (!this.hasPoint(point)) {
-            System.out.println("VOX ID: " + Arrays.toString(this.getId()));
-            System.out.println("VOX ID 2: " + Arrays.toString(this.id));
             int[] newVoxId = this.getNeighborVoxId(point);
-            System.out.println("VOX ID 3: " + Arrays.toString(this.getId()));
-            System.out.println("VOX ID[1]: " + this.id[1]);
-            System.out.println("VOX ID[1] DIFF: " + (newVoxId[1] - this.id[1]));
-            System.out.println("NEW VOX ID: " + Arrays.toString(newVoxId));
-            System.out.println("newY CALC HERE: " + (LENGTH * (newVoxId[1] - this.id[1])));
             double newX = LENGTH * (newVoxId[0] - this.id[0]);
             double newY = LENGTH * (newVoxId[1] - this.id[1]);
             double newZ = LENGTH * (newVoxId[2] - this.id[2]);
             Vector3d newPointDiff = new Vector3d(newX, newY, newZ);
-            System.out.println("NEW POINT DIFF: " + newPointDiff);
             this.updateVox(newPointDiff);
             this.setId(newVoxId);
         }
@@ -78,11 +70,12 @@ public class Vox {
     }
 
     public void updateVox(Vector3d dif) { // Update Vox position values based on player delta movement
-        if (dif.x == 0 || dif.y == 0 || dif.z == 0)
+        if (dif.x == 0 && dif.y == 0 && dif.z == 0)
             return;
-        if (dif.x > 100) // Ignore initial player position
+        if (dif.x > 100)// Ignore initial player position
             dif = dif.multiply((0),(0),(0));
-//        dif = dif.multiply((1),(0),(1));
+        if (Math.abs(dif.y) <= 0.09) // Temporary strange Y delta value solution
+            dif = dif.multiply((1),(0),(1));
 
         // Center of Vox
         this.centroid = centroid.add(dif);
