@@ -8,6 +8,7 @@ import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.vox.Vox;
 import com.calicraft.vrjester.vox.VoxNet;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
@@ -34,9 +35,14 @@ public class TriggerEventHandler {
     private long elapsed_time = 0;
     private static Vector3d origin;
     private static Vox originVox;
-    private static VoxNet voxNet;
     private static int[] previousId;
-    private static ArrayList<int[]> voxIds = new ArrayList<>();
+    private static int particle = 0;
+    private static final BasicParticleType[] particleTypes = new BasicParticleType[]{ParticleTypes.FLAME, ParticleTypes.CLOUD,
+            ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.PORTAL};
+    private static final ArrayList<int[]> voxIds = new ArrayList<>();
+    private static String trace = "";
+    private static final String[] gestures = new String[]{"[0, 0, 0][1, 0, 0][1, 1, 0]", "[0, 0, 0][-1, 0, 0][-1, 1, 0]",
+                                                          "[0, 0, 0][0, 0, 1][0, 1, 1]", "[0, 0, 0][0, 0, -1][0, 1, -1]"};
     private static ClientPlayerEntity player;
 
     // TODO - Set maximum listening time
@@ -71,7 +77,7 @@ public class TriggerEventHandler {
 //                        }
 //                    }
 //                }
-                origin = null; originVox = null; voxNet = null; voxIds.clear();
+                origin = null; originVox = null; voxIds.clear();
                 elapsed_time = System.nanoTime() - elapsed_time;
 //                JesterRecognition recognizer = new JesterRecognition(data_aggregator.getData(), elapsed_time);
 //                recognizer.isLinearGesture(VRDevice.RC);
@@ -97,43 +103,43 @@ public class TriggerEventHandler {
                 origin = vrDataState.getRc()[0];
                 originVox = new Vox(origin);
                 previousId = originVox.getId();
+                particle = 0; trace = "[0, 0, 0]";
                 voxIds.add(previousId);
             } else {
                 // Note: The getDeltaMovement() initially returns player position before returning the actual delta movement like a sussy baka
                 originVox.updateVox(player.getDeltaMovement()); // Try hardcoding a set # of vox#.updateVox()
                 int[] currentId = originVox.updateVoxId(vrDataState.getRc()[0]);
                 if (!Arrays.equals(previousId, currentId)) {
-                    voxIds.add(currentId); previousId = currentId;
-                    createParticles(ParticleTypes.SOUL_FIRE_FLAME, vrDataState.getRc());
+                    voxIds.add(currentId);
+                    trace += Arrays.toString(currentId);
+                    previousId = currentId;
+                    if (particle < particleTypes.length-1)
+                        particle++;
+                    else
+                        particle = 0;
+                    System.out.println("TRACE: " + trace);
+                    System.out.println("SET PARTICLE: " + particleTypes[particle].writeToString());
                 } else {
-                    createParticles(ParticleTypes.FLAME, vrDataState.getRc());
+                    createParticles(particleTypes[particle], vrDataState.getRc());
                 }
-                // TODO - Implement way to track which VOX VRDevice is in based on VOX ID
+                for (int i = 0; i < gestures.length; i++) {
+                    if (trace.equals(gestures[i])) {
+                        particle = 4; trace = "[0, 0, 0]";
+                        ClientPlayerEntity player = getMCI().player;
+                        ITextComponent text = new StringTextComponent("UPPERCUT RECOGNIZED!");
+                        assert player != null;
+                        player.sendMessage(text, player.getUUID());
+                        for (int j = 0; j < 5; j++) {
+                            createParticles(particleTypes[particle], vrDataState.getRc());
+                        }
+                        break;
+                    }
+                }
                 System.out.println("VOX IDS TRACED:");
-                for (int[] voxId: voxIds) { // Loop through current mapped trace of Vox Id's
+                for (int[] voxId : voxIds) { // Loop through current mapped trace of Vox Id's
                     System.out.println("--> " + Arrays.toString(voxId));
                 }
             }
-
-
-
-//            if (origin == null && voxNet == null) {
-//                origin = vrDataState.getRc()[0];
-//                voxNet = new VoxNet(origin);
-//            } else {
-//                voxNet.updateVoxNet(player.getDeltaMovement()); // Update voxNet's position
-//                ArrayList<Vox> voxList = voxNet.get();
-//                for (Vox vox: voxList) {
-//                    if (VoxNet.compareVector3d(origin, vox.centroid))
-//                        continue;
-//                    System.out.println("VOX ID: " + Arrays.toString(vox.getId()));
-//                    System.out.println("VOX: " + vox.centroid);
-//                    System.out.println("RC: " + vrDataState.getRc()[0]);
-//                    if (vox.hasPoint(vrDataState.getRc()[0]))
-//                        createParticles(ParticleTypes.SOUL_FIRE_FLAME, vrDataState.getRc());
-//                }
-//            }
-
 
 
 //            * Write data to file(s) to debug/analyze

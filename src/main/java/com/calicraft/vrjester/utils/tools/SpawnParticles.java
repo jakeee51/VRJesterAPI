@@ -3,6 +3,7 @@ package com.calicraft.vrjester.utils.tools;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.Random;
@@ -42,9 +43,18 @@ public class SpawnParticles {
                     motionX = rand.nextGaussian() * 0.0004D;
                     motionY = rand.nextGaussian() * 0.0004D;
                     motionZ = rand.nextGaussian() * 0.0004D;
-                    clientWorld.addParticle(type,
-                            newPos.x, newPos.y, newPos.z,
-                            motionX, motionY, motionZ);
+                    if (type == ParticleTypes.PORTAL) {
+                        motionX = rand.nextGaussian() * 0.002D;
+                        motionY = rand.nextGaussian() * 0.002D;
+                        motionZ = rand.nextGaussian() * 0.002D;
+                        clientWorld.addParticle(type,
+                                newPos.x, newPos.y, newPos.z,
+                                motionX, motionY, motionZ);
+                    } else {
+                        clientWorld.addParticle(type,
+                                newPos.x, newPos.y, newPos.z,
+                                motionX, motionY, motionZ);
+                    }
                 }
             }
         }
