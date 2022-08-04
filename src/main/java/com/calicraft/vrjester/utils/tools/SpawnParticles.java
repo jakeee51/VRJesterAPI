@@ -17,7 +17,7 @@ public class SpawnParticles {
         double motionX, motionY, motionZ;
         ClientPlayerEntity player = getMCI().player;
         assert player != null;
-        if (pose == null) {
+        if (pose == null) { // Non-VR
             pose = new Vector3d[]{player.position(), player.getLookAngle()};
             pose[1] = pose[1].scale(1).add((0), (player.getEyeHeight() - .5), (0));
             Vector3d newPos = pose[1].add(pose[0]);
@@ -33,29 +33,43 @@ public class SpawnParticles {
                             motionX, motionY, motionZ);
                 }
             }
-        } else {
-//            Vector3d newPos = pose[1].add(pose[0]);
+        } else { // VR
             Vector3d newPos = pose[0];
             if (player.getCommandSenderWorld().isClientSide()) {
                 ClientWorld clientWorld = (ClientWorld) player.getCommandSenderWorld();
                 for (int i = 0; i < 20; i++) {
                     rand = new Random();
-                    motionX = rand.nextGaussian() * 0.0004D;
-                    motionY = rand.nextGaussian() * 0.0004D;
-                    motionZ = rand.nextGaussian() * 0.0004D;
-                    if (type == ParticleTypes.PORTAL) {
-                        motionX = rand.nextGaussian() * 0.002D;
-                        motionY = rand.nextGaussian() * 0.002D;
-                        motionZ = rand.nextGaussian() * 0.002D;
+                    if (type == ParticleTypes.BUBBLE) {
+                        motionX = rand.nextGaussian() * 0.004D;
+                        motionY = rand.nextGaussian() * 0.004D;
+                        motionZ = rand.nextGaussian() * 0.004D;
                         clientWorld.addParticle(type,
                                 newPos.x, newPos.y, newPos.z,
                                 motionX, motionY, motionZ);
                     } else {
+                        motionX = rand.nextGaussian() * 0.0004D;
+                        motionY = rand.nextGaussian() * 0.0004D;
+                        motionZ = rand.nextGaussian() * 0.0004D;
                         clientWorld.addParticle(type,
                                 newPos.x, newPos.y, newPos.z,
                                 motionX, motionY, motionZ);
                     }
                 }
+            }
+        }
+    }
+
+    public static void createParticles(Vector3d pose) {
+        Random rand;
+        double motionX, motionY, motionZ;
+        ClientPlayerEntity player = getMCI().player;
+        assert player != null;
+        if (player.getCommandSenderWorld().isClientSide()) {
+            ClientWorld clientWorld = (ClientWorld) player.getCommandSenderWorld();
+            for (int i = 0; i < 20; i++) {
+                clientWorld.addParticle(ParticleTypes.BUBBLE,
+                        pose.x, pose.y, pose.z,
+                        (0.0D), (0.0D), (0.0D));
             }
         }
     }

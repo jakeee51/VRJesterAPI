@@ -1,12 +1,9 @@
 package com.calicraft.vrjester.handlers;
 
 import com.calicraft.vrjester.VrJesterApi;
-import com.calicraft.vrjester.gestures.JesterRecognition;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
-import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.vox.Vox;
-import com.calicraft.vrjester.vox.VoxNet;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
@@ -37,8 +34,9 @@ public class TriggerEventHandler {
     private static Vox originVox;
     private static int[] previousId;
     private static int particle = 0;
-    private static final BasicParticleType[] particleTypes = new BasicParticleType[]{ParticleTypes.FLAME, ParticleTypes.CLOUD,
-            ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.PORTAL};
+    private static final BasicParticleType[] particleTypes = new BasicParticleType[]{ParticleTypes.FLAME,
+            ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.BUBBLE, ParticleTypes.BUBBLE_POP,
+            ParticleTypes.CLOUD};
     private static final ArrayList<int[]> voxIds = new ArrayList<>();
     private static String trace = "";
     private static final String[] gestures = new String[]{"[0, 0, 0][1, 0, 0][1, 1, 0]", "[0, 0, 0][-1, 0, 0][-1, 1, 0]",
@@ -107,13 +105,13 @@ public class TriggerEventHandler {
                 voxIds.add(previousId);
             } else {
                 // Note: The getDeltaMovement() initially returns player position before returning the actual delta movement like a sussy baka
-                originVox.updateVox(player.getDeltaMovement()); // Try hardcoding a set # of vox#.updateVox()
-                int[] currentId = originVox.updateVoxId(vrDataState.getRc()[0]);
+                originVox.updateVoxPosition(player.getDeltaMovement()); // Try hardcoding a set # of vox#.updateVox()
+                int[] currentId = originVox.updateVox(vrDataState.getRc()[0]);
                 if (!Arrays.equals(previousId, currentId)) {
                     voxIds.add(currentId);
                     trace += Arrays.toString(currentId);
                     previousId = currentId;
-                    if (particle < particleTypes.length-1)
+                    if (particle < particleTypes.length-2)
                         particle++;
                     else
                         particle = 0;
@@ -122,16 +120,13 @@ public class TriggerEventHandler {
                 } else {
                     createParticles(particleTypes[particle], vrDataState.getRc());
                 }
-                for (int i = 0; i < gestures.length; i++) {
+                for (int i = 0; i < gestures.length; i++) { // CHECK SINGLE GESTURE (UPPERCUT PUNCH)
                     if (trace.equals(gestures[i])) {
-                        particle = 4; trace = "[0, 0, 0]";
+                        particle = particleTypes.length - 1; trace = "[0, 0, 0]";
                         ClientPlayerEntity player = getMCI().player;
                         ITextComponent text = new StringTextComponent("UPPERCUT RECOGNIZED!");
                         assert player != null;
                         player.sendMessage(text, player.getUUID());
-                        for (int j = 0; j < 5; j++) {
-                            createParticles(particleTypes[particle], vrDataState.getRc());
-                        }
                         break;
                     }
                 }
