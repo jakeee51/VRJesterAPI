@@ -11,17 +11,16 @@ out
 *.ipr
 *.iws
 *.iml
-.idea
+.idea/
 
 # gradle
-build
+build/
 .gradle
 
 # other
-eclipse
-run
+eclipse/
+run/
+dev/
 
 # Files from Forge MDK
 forge*changelog.txt
-Test.java
-Test.class

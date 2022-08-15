@@ -40,9 +40,9 @@ public class SpawnParticles {
                 for (int i = 0; i < 20; i++) {
                     rand = new Random();
                     if (type == ParticleTypes.BUBBLE) {
-                        motionX = rand.nextGaussian() * 0.004D;
-                        motionY = rand.nextGaussian() * 0.004D;
-                        motionZ = rand.nextGaussian() * 0.004D;
+                        motionX = rand.nextGaussian() * 0.04D;
+                        motionY = rand.nextGaussian() * 0.04D;
+                        motionZ = rand.nextGaussian() * 0.04D;
                         clientWorld.addParticle(type,
                                 newPos.x, newPos.y, newPos.z,
                                 motionX, motionY, motionZ);
@@ -66,7 +66,7 @@ public class SpawnParticles {
         assert player != null;
         if (player.getCommandSenderWorld().isClientSide()) {
             ClientWorld clientWorld = (ClientWorld) player.getCommandSenderWorld();
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 5; i++) {
                 clientWorld.addParticle(ParticleTypes.BUBBLE,
                         pose.x, pose.y, pose.z,
                         (0.0D), (0.0D), (0.0D));

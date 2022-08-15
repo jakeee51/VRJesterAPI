@@ -7,12 +7,14 @@ import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
 public class Vox {
     private int[] id = new int[3];
+    private String category; // TODO - Sub Voxes
     private int[] front, back, left, right, up, down; // Neighboring Voxes based on face
     private Vector3d p1, p2, p3, p4, p5, p6, p7, p8;
     public Vector3d d1, d2, centroid;
     public final float LENGTH = Constants.VOX_LENGTH;
 
     public Vox(Vector3d centroid) {
+
         // Initialize Center of Vox
         this.centroid = centroid;
 
@@ -88,6 +90,8 @@ public class Vox {
         p6 = centroid.add(-(LENGTH/2), -(LENGTH/2), (LENGTH/2));
         p7 = centroid.add((LENGTH/2), -(LENGTH/2), (LENGTH/2));
         p8 = d2;
+
+        p1 = p1.yRot(.5F);
 
         this.displayVox();
     }
