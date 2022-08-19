@@ -26,8 +26,8 @@ import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
 public class TriggerEventHandler {
     private static final VRDataAggregator data_aggregator = new VRDataAggregator();
-    private static final VRDataWriter vrDataWriter = new VRDataWriter("VRJester_Data", new String[]{"rc"});
-    private static final VRDataWriter voxDataWriter = new VRDataWriter();
+    private static final VRDataWriter vrDataWriter = new VRDataWriter("VRJester_Data", new String[]{"rc"}, 0);
+    private static VRDataWriter voxDataWriter;
     private static final int DELAY = 20; // 1 second
     private static int sleep = 2 * DELAY; // 2 seconds
     private static boolean listener = false;
@@ -104,6 +104,7 @@ public class TriggerEventHandler {
                 previousId = activeVattice.getId();
                 particle = 0; trace = "[0, 0, 0]";
                 voxIds.add(previousId);
+                voxDataWriter = new VRDataWriter();
                 voxDataWriter.write("[0, 0, 0]");
             } else {
                 vrDataWriter.write(vrDataState);

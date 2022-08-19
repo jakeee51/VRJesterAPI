@@ -13,14 +13,18 @@ import java.util.Scanner;
 public class VRDataWriter {
     // Class for writing VRData to debug and analyze
 
-    // TODO - Make way to write direction
+    // TODO - write data in iterations
+    //      - write data to dev/archive
+    //      - make flag to disable writing
+    //      - Setup Config.java
 
+    public int pose; // pose = 0 (position) | pose = 1 (direction)
+    public String fileName;
+    public JSONObject config;
+    public ArrayList<File> files = new ArrayList<>();
 
-    String fileName;
-    JSONObject config;
-    ArrayList<File> files = new ArrayList<>();
-    public VRDataWriter(String fileName, String[] devices) { // Setup file objects to create & write VRDevice data
-        this.fileName = fileName;
+    public VRDataWriter(String fileName, String[] devices, int pose) { // Setup file objects to create & write VRDevice data
+        this.fileName = fileName; this.pose = pose;
         for (String device : devices) {
             switch (device) {
                 case "hmd":
@@ -46,7 +50,7 @@ public class VRDataWriter {
     }
 
     public VRDataWriter() { // Setup file objects to create & write Vox data
-        readConfig("src/main/resources/config.json");
+        readConfig("config/VRJesterAPI.cfg");
         fileName = config.getString("gesture");
         files.add(new File("vox_trace_data_" + fileName + ".csv"));
     }
@@ -54,7 +58,7 @@ public class VRDataWriter {
     public void write(VRDataState record) throws IOException { // Write specified VRDataState data to end of file
         this.create(); String cleanData;
         for (File file: files) {
-            cleanData = this.clean(record, file.getName().substring(0,3).replaceAll("_", ""));
+            cleanData = this.parse(record, file.getName().substring(0,3).replaceAll("_", ""), pose);
             System.out.println(file.getName() + " -> " + cleanData);
             try (FileWriter writer = new FileWriter(file.getName(), true)) {
                 writer.write(cleanData + "\n");
@@ -82,19 +86,19 @@ public class VRDataWriter {
         }
     }
 
-    private String clean(VRDataState record, String device) { // Clean VRData for specified device
+    private String parse(VRDataState record, String device, int pose) { // Parse VRData for specified device & pose
         String ret = "N/A";
         switch (device) {
             case "hmd":
-                ret = record.getHmd().toString(); break;
+                ret = record.getHmd()[pose].toString(); break;
             case "rc":
-                ret = record.getRc().toString(); break;
+                ret = record.getRc()[pose].toString(); break;
             case "lc":
-                ret = record.getLc().toString(); break;
+                ret = record.getLc()[pose].toString(); break;
             case "c2":
-                ret = record.getC2().toString(); break;
+                ret = record.getC2()[pose].toString(); break;
         }
-        ret = ret.replaceAll("(Device: pos:\\(|\\) dir: \\(.+| )", "");
+        ret = ret.replaceAll("(\\(|\\)| )", "");
         return ret;
     }
     
