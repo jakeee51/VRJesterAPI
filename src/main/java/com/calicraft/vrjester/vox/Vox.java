@@ -1,7 +1,9 @@
 package com.calicraft.vrjester.vox;
 
-import com.calicraft.vrjester.utils.tools.Constants;
+import com.calicraft.vrjester.config.Config;
+import com.calicraft.vrjester.config.Constants;
 import net.minecraft.util.math.vector.Vector3d;
+import org.json.JSONObject;
 
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
@@ -11,9 +13,17 @@ public class Vox {
     private int[] front, back, left, right, up, down; // Neighboring Voxes based on face
     private Vector3d p1, p2, p3, p4, p5, p6, p7, p8;
     public Vector3d d1, d2, centroid;
-    public final float LENGTH = Constants.VOX_LENGTH;
+    public float LENGTH = Constants.VOX_LENGTH;
+    public final JSONObject config = new Config().readConfig();
 
     public Vox(Vector3d centroid) {
+        // Overwrite defaults
+        if (config.has("VOX_LENGTH")) {
+            float configFloat = Float.parseFloat(config.getString("VOX_LENGTH"));
+            System.out.println("CONFIG FLOAT: " + configFloat);
+            if (configFloat != LENGTH)
+                LENGTH = configFloat;
+        }
 
         // Initialize Center of Vox
         this.centroid = centroid;

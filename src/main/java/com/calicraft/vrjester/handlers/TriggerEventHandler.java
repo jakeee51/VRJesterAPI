@@ -1,17 +1,16 @@
 package com.calicraft.vrjester.handlers;
 
 import com.calicraft.vrjester.VrJesterApi;
+import com.calicraft.vrjester.config.Config;
+import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDataWriter;
 import com.calicraft.vrjester.vox.Vattice;
-import com.calicraft.vrjester.vox.Vox;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,12 +25,14 @@ import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
 public class TriggerEventHandler {
     private static final VRDataAggregator data_aggregator = new VRDataAggregator();
-    private static final VRDataWriter vrDataWriter = new VRDataWriter("VRJester_Data", new String[]{"rc"}, 0);
-    private static VRDataWriter voxDataWriter;
+    private static Config config = new Config(Constants.DEV_CONFIG_PATH);
+//    private static final VRDataWriter vrDataWriter = new VRDataWriter("VRJester_Data", new String[]{"rc"}, 0);
+//    private static VRDataWriter voxDataWriter;
     private static final int DELAY = 20; // 1 second
     private static int sleep = 2 * DELAY; // 2 seconds
     private static boolean listener = false;
     private long elapsed_time = 0;
+
     private static Vector3d origin;
     private static Vattice activeVattice;
     private static int[] previousId;
@@ -44,7 +45,6 @@ public class TriggerEventHandler {
                                                           "[0, 0, 0][0, 0, 1][0, 1, 1]", "[0, 0, 0][0, 0, -1][0, 1, -1]"};
     private static ClientPlayerEntity player;
 
-    // TODO - Set maximum listening time
 
     @SubscribeEvent
     public void onJesterTrigger(InputEvent.KeyInputEvent event) {
@@ -56,10 +56,6 @@ public class TriggerEventHandler {
                 System.out.println("JESTER TRIGGERED");
                 listener = true;
                 elapsed_time = System.nanoTime();
-//                ClientPlayerEntity player = getMCI().player;
-//                ITextComponent text = new StringTextComponent("Listening for gesture...");
-//                assert player != null;
-//                player.sendMessage(text, player.getUUID());
             } else { // Trigger the gesture recognition phase after key is released
                 System.out.println("JESTER RELEASED");
                 listener = false;
@@ -104,16 +100,16 @@ public class TriggerEventHandler {
                 previousId = activeVattice.getId();
                 particle = 0; trace = "[0, 0, 0]";
                 voxIds.add(previousId);
-                voxDataWriter = new VRDataWriter();
-                voxDataWriter.write("[0, 0, 0]");
+//                voxDataWriter = new VRDataWriter();
+//                voxDataWriter.write("[0, 0, 0]");
             } else {
-                vrDataWriter.write(vrDataState);
+//                vrDataWriter.write(vrDataState);
 
                 // Note: The getDeltaMovement() initially returns player position before returning the actual delta movement like a sussy baka
                 activeVattice.updateVoxPosition(player.getDeltaMovement()); // Try hardcoding a set # of vox#.updateVox()
                 int[] currentId = activeVattice.updateVox(vrDataState.getRc()[0]);
                 if (!Arrays.equals(previousId, currentId)) { // Update Vox Trace
-                    voxDataWriter.write(Arrays.toString(currentId));
+//                    voxDataWriter.write(Arrays.toString(currentId));
                     voxIds.add(currentId);
                     trace += Arrays.toString(currentId);
                     previousId = currentId;

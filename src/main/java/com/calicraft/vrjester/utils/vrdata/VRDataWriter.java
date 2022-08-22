@@ -1,14 +1,13 @@
 package com.calicraft.vrjester.utils.vrdata;
 
+import com.calicraft.vrjester.config.Config;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class VRDataWriter {
     // Class for writing VRData to debug and analyze
@@ -50,7 +49,7 @@ public class VRDataWriter {
     }
 
     public VRDataWriter() { // Setup file objects to create & write Vox data
-        readConfig("config/VRJesterAPI.cfg");
+        config = new Config().readConfig();
         fileName = config.getString("gesture");
         files.add(new File("vox_trace_data_" + fileName + ".csv"));
     }
@@ -100,23 +99,5 @@ public class VRDataWriter {
         }
         ret = ret.replaceAll("(\\(|\\)| )", "");
         return ret;
-    }
-    
-    public void readConfig(String fileName) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            File configFile = new File(fileName);
-            Scanner myReader = new Scanner(configFile);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                sb.append(data);
-                System.out.println("CONFIG: " + data);
-            }
-            myReader.close();
-            config = new JSONObject(sb.toString());
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred!");
-            e.printStackTrace();
-        }
     }
 }
