@@ -26,7 +26,7 @@ public class Config {
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 sb.append(data);
-                System.out.println("CONFIG: " + data);
+//                System.out.println("CONFIG: " + data);
             }
             myReader.close();
             return new JSONObject(sb.toString());

@@ -5,8 +5,9 @@ import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
+import com.calicraft.vrjester.utils.vrdata.VRDataType;
 import com.calicraft.vrjester.utils.vrdata.VRDataWriter;
-import com.calicraft.vrjester.vox.Vattice;
+import com.calicraft.vrjester.vox.Vox;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
@@ -22,9 +23,11 @@ import java.util.Arrays;
 import static com.calicraft.vrjester.VrJesterApi.VIVECRAFTLOADED;
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
+import static com.calicraft.vrjester.utils.vrdata.VRDataType.VRDATA_ROOM_PRE;
 
 public class TriggerEventHandler {
-    private static final VRDataAggregator data_aggregator = new VRDataAggregator();
+    private static final VRDataAggregator preRoomDataAggregator = new VRDataAggregator(VRDataType.VRDATA_ROOM_PRE, false);
+    private static final VRDataAggregator preWorldDataAggregator = new VRDataAggregator(VRDataType.VRDATA_WORLD_PRE, false);
     private static Config config = new Config(Constants.DEV_CONFIG_PATH);
 //    private static final VRDataWriter vrDataWriter = new VRDataWriter("VRJester_Data", new String[]{"rc"}, 0);
 //    private static VRDataWriter voxDataWriter;
@@ -34,7 +37,7 @@ public class TriggerEventHandler {
     private long elapsed_time = 0;
 
     private static Vector3d origin;
-    private static Vattice activeVattice;
+    private static Vox activeVox;
     private static int[] previousId;
     private static int particle = 0;
     private static final BasicParticleType[] particleTypes = new BasicParticleType[]{ParticleTypes.FLAME,
@@ -64,7 +67,7 @@ public class TriggerEventHandler {
 //                    for (Vox vox: voxList) {
 //                        // VOX ID: {3, 8 , 26}
 //                        System.out.println("VOX ID: " + Arrays.toString(vox.getId()));
-//                        for (VRDataState vrDataState : data_aggregator.getData()) {
+//                        for (VRDataState vrDataState : preRoomDataAggregator.getData()) {
 //                            System.out.println("VOX: " + vox.centroid);
 //                            System.out.println("RC: " + vrDataState.getRc()[0]);
 //                            if (vox.hasPoint(vrDataState.getRc()[0]))
@@ -72,11 +75,11 @@ public class TriggerEventHandler {
 //                        }
 //                    }
 //                }
-                origin = null; activeVattice = null; voxIds.clear();
+                origin = null; activeVox = null; voxIds.clear();
                 elapsed_time = System.nanoTime() - elapsed_time;
-//                JesterRecognition recognizer = new JesterRecognition(data_aggregator.getData(), elapsed_time);
+//                JesterRecognition recognizer = new JesterRecognition(preRoomDataAggregator.getData(), elapsed_time);
 //                recognizer.isLinearGesture(VRDevice.RC);
-                data_aggregator.clear(); elapsed_time = 0;
+                preRoomDataAggregator.clear(); elapsed_time = 0;
                 // Fire event or trigger something based on recognized gesture
             }
         }
@@ -90,24 +93,24 @@ public class TriggerEventHandler {
 
         if (VrJesterApi.MOD_KEY.isDown() && !VIVECRAFTLOADED)
             createParticles(ParticleTypes.FLAME, null);
-        // Listen for VR data after trigger
-        if (listener) { // Capture data in real time
-            VRDataState vrDataState = data_aggregator.listen();
-            //            * Single Vox Recognition Working
-            if (origin == null && activeVattice == null) {
-                origin = vrDataState.getRc()[0];
-                activeVattice = new Vattice(origin);
-                previousId = activeVattice.getId();
+
+        if (listener) { // Capture VR data in real time after trigger
+            VRDataState vrDataRoomPre = preRoomDataAggregator.listen();
+            VRDataState vrDataWorldPre = preWorldDataAggregator.listen();
+            if (origin == null && activeVox == null) {
+                origin = vrDataRoomPre.getRc()[0];
+                activeVox = new Vox(origin, false);
+                previousId = activeVox.getId();
                 particle = 0; trace = "[0, 0, 0]";
                 voxIds.add(previousId);
 //                voxDataWriter = new VRDataWriter();
 //                voxDataWriter.write("[0, 0, 0]");
             } else {
-//                vrDataWriter.write(vrDataState);
+//                vrDataWriter.write(vrDataRoomPre);
 
                 // Note: The getDeltaMovement() initially returns player position before returning the actual delta movement like a sussy baka
-                activeVattice.updateVoxPosition(player.getDeltaMovement()); // Try hardcoding a set # of vox#.updateVox()
-                int[] currentId = activeVattice.updateVox(vrDataState.getRc()[0]);
+//                activeVox.updateVoxPosition(player.getDeltaMovement());
+                int[] currentId = activeVox.updateVox(vrDataRoomPre.getRc()[0]);
                 if (!Arrays.equals(previousId, currentId)) { // Update Vox Trace
 //                    voxDataWriter.write(Arrays.toString(currentId));
                     voxIds.add(currentId);
@@ -119,8 +122,10 @@ public class TriggerEventHandler {
                         particle = 0;
                     System.out.println("TRACE: " + trace);
                 } else {
-                    createParticles(particleTypes[particle], vrDataState.getRc());
+                    createParticles(particleTypes[particle], vrDataWorldPre.getRc());
                 }
+
+
 //                for (int i = 0; i < gestures.length; i++) { // CHECK SINGLE GESTURE (UPPERCUT PUNCH)
 //                    if (trace.equals(gestures[i])) {
 //                        particle = particleTypes.length - 1; trace = "[0, 0, 0]";
@@ -139,8 +144,7 @@ public class TriggerEventHandler {
             }
 
 
-//            * Write data to file(s) to debug/analyze
-//            vrDataWriter.write(vrDataState);
+
 //            if (sleep % 20 == 0) // Print every 1 second
 //                System.out.println("JESTER LISTENING");
 //            if (sleep == 0) { // Reset trigger when done

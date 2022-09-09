@@ -13,7 +13,7 @@ public class PlayerInitHandler {
         PositionTracker tracker = new PositionTracker();
         VrJesterApi.TRACKER = tracker;
         String pos;
-        if (tracker.getVRData() == null)
+        if (tracker.getVRDataRoomPre() == null)
             pos = "null";
         else
             pos = tracker.vrPlayer.toString();

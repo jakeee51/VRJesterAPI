@@ -10,23 +10,26 @@ import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 public class Vox {
     private int[] id = new int[3];
     private String category; // TODO - Sub Voxes
+    private boolean display;
     private int[] front, back, left, right, up, down; // Neighboring Voxes based on face
     private Vector3d p1, p2, p3, p4, p5, p6, p7, p8;
     public Vector3d d1, d2, centroid;
     public float LENGTH = Constants.VOX_LENGTH;
     public final JSONObject config = new Config().readConfig();
 
-    public Vox(Vector3d centroid) {
-        // Overwrite defaults
+    public Vox(Vector3d centroid, boolean display) {
+        // Override defaults
         if (config.has("VOX_LENGTH")) {
             float configFloat = Float.parseFloat(config.getString("VOX_LENGTH"));
-            System.out.println("CONFIG FLOAT: " + configFloat);
             if (configFloat != LENGTH)
                 LENGTH = configFloat;
         }
 
         // Initialize Center of Vox
         this.centroid = centroid;
+
+        // Initialize display flag
+        this.display = display;
 
         // Initialize Diagonals of Vox
         this.d1 = this.centroid.subtract((LENGTH/2), (LENGTH/2), (LENGTH/2));
@@ -62,7 +65,7 @@ public class Vox {
     }
 
     public int[] updateVox(Vector3d point) { // Generates new Vox position and returns new Id if VRDevice is outside Vox
-        if (!this.hasPoint(point)) {
+        if (!this.hasPoint(point)) { // Check if point is outside of Vox
             int[] newVoxId = this.getNeighborVoxId(point);
             double newX = LENGTH * (newVoxId[0] - this.id[0]);
             double newY = LENGTH * (newVoxId[1] - this.id[1]);
@@ -75,6 +78,7 @@ public class Vox {
     }
 
     public void updateVoxPosition(Vector3d dif) { // Update Vox position values based on player delta movement
+        // TODO - Try anchoring to hmd world position by taking delta between the hmd positions and adding it to the vox
         if (dif.x == 0 && dif.y == 0 && dif.z == 0)
             return;
         if (dif.x > 100)// Ignore initial player position
@@ -101,9 +105,8 @@ public class Vox {
         p7 = centroid.add((LENGTH/2), -(LENGTH/2), (LENGTH/2));
         p8 = d2;
 
-        p1 = p1.yRot(.5F);
-
-        this.displayVox();
+        if (display)
+            this.displayVox();
     }
 
     private void displayVox() {

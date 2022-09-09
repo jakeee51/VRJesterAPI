@@ -10,20 +10,33 @@ public class VRDataAggregator {
     // Class for consuming VR Data from Vivecraft Tracker
     // to later pass to gesture recognition phase
     private final List<VRDataState> data = new ArrayList<>();
+    private VRDataType vrDataType;
+    private boolean saveState;
     public Context ctx;
 
-    public VRDataAggregator() {
+    public VRDataAggregator(VRDataType vrDataType, boolean saveState) {
+        this.vrDataType = vrDataType;
+        this.saveState = saveState;
     }
 
     public List<VRDataState> getData() {
         return data;
     }
 
-    public VRDataState listen() { // Consume VRDevicePose data from TRACKER
-        VRData vrData = VrJesterApi.TRACKER.getVRData();
+    public VRDataState listen() { // Consume Vivecraft VRDevicePose data from TRACKER
+        VRData vrData;
+        switch(vrDataType) {
+            case VRDATA_ROOM_PRE:
+                vrData = VrJesterApi.TRACKER.getVRDataRoomPre(); break;
+            case VRDATA_WORLD_PRE:
+                vrData = VrJesterApi.TRACKER.getVRDataWorldPre(); break;
+            default:
+                vrData = null;
+        }
         assert vrData != null;
         VRDataState dataState = new VRDataState(vrData.hmd, vrData.c0, vrData.c1, vrData.c2);
-        data.add(dataState);
+        if (saveState)
+            data.add(dataState);
         return dataState;
     }
 

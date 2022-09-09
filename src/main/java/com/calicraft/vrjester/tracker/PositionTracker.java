@@ -36,7 +36,12 @@ public class PositionTracker {
         }
     }
 
-    public VRData getVRData() {
+    // Note: VR data getters must be called later after initialization to avoid NullPointerException (i.e.: ExceptionInInitializerError: null)
+    public VRData getVRDataRoomPre() { // Return real world VR data pre-tick
+        return vrPlayer.vrdata_room_pre;
+    }
+
+    public VRData getVRDataWorldPre() { // Return in-game world VR data pre-tick
         return vrPlayer.vrdata_world_pre;
     }
 
