@@ -25,18 +25,12 @@ public class Vox {
                 LENGTH = configFloat;
         }
 
-        // Initialize Center of Vox
-        this.centroid = centroid;
-
-        // Initialize display flag
-        this.display = display;
-
+        this.centroid = centroid; // Initialize Center of Vox
+        this.display = display; // Initialize display flag
         // Initialize Diagonals of Vox
         this.d1 = this.centroid.subtract((LENGTH/2), (LENGTH/2), (LENGTH/2));
         this.d2 = this.centroid.add((LENGTH/2), (LENGTH/2), (LENGTH/2));
-
-        // Initialize Vox Id
-        this.setId(new int[]{0, 0, 0});
+        this.setId(new int[]{0, 0, 0}); // Initialize Vox Id
     }
 
     public boolean hasPoint(Vector3d point) { // Check if point is within Vox
@@ -64,30 +58,34 @@ public class Vox {
         return ret;
     }
 
-    public int[] updateVox(Vector3d point) { // Generates new Vox position and returns new Id if VRDevice is outside Vox
-        if (!this.hasPoint(point)) { // Check if point is outside of Vox
+    public int[] generateVox(Vector3d point) { // Generates new Vox at neighboring position and returns new Id if VRDevice is outside current Vox
+        if (!this.hasPoint(point)) { // Check if point is outside of current Vox
             int[] newVoxId = this.getNeighborVoxId(point);
             double newX = LENGTH * (newVoxId[0] - this.id[0]);
             double newY = LENGTH * (newVoxId[1] - this.id[1]);
             double newZ = LENGTH * (newVoxId[2] - this.id[2]);
             Vector3d newPointDiff = new Vector3d(newX, newY, newZ);
-            this.updateVoxPosition(newPointDiff);
+            this.updateVoxPosition(newPointDiff, true);
             this.setId(newVoxId);
         }
+        if (display)
+            this.displayVox();
         return this.getId();
     }
 
-    public void updateVoxPosition(Vector3d dif) { // Update Vox position values based on player delta movement
-        // TODO - Try anchoring to hmd world position by taking delta between the hmd positions and adding it to the vox
+    public void updateVoxPosition(Vector3d dif, boolean useDif) { // Update Vox position values based on player delta movement
         if (dif.x == 0 && dif.y == 0 && dif.z == 0)
             return;
-        if (dif.x > 100)// Ignore initial player position
-            dif = dif.multiply((0),(0),(0));
-        if (Math.abs(dif.y) <= 0.09) // Temporary strange Y delta value solution
-            dif = dif.multiply((1),(0),(1));
+//        if (dif.x > 100)// Ignore initial player position
+//            dif = dif.multiply((0),(0),(0));
+//        if (Math.abs(dif.y) <= 0.09) // Temporary strange Y delta value solution
+//            dif = dif.multiply((1),(0),(1));
 
         // Center of Vox
-        this.centroid = centroid.add(dif);
+        if(!display || useDif)
+            this.centroid = centroid.add(dif);
+        else
+            this.centroid = dif;
 
         // Diagonals
         this.d1 = this.centroid.subtract((LENGTH/2), (LENGTH/2), (LENGTH/2));

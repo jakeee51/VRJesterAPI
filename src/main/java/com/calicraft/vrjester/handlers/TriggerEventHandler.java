@@ -23,7 +23,7 @@ import java.util.Arrays;
 import static com.calicraft.vrjester.VrJesterApi.VIVECRAFTLOADED;
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
-import static com.calicraft.vrjester.utils.vrdata.VRDataType.VRDATA_ROOM_PRE;
+
 
 public class TriggerEventHandler {
     private static final VRDataAggregator preRoomDataAggregator = new VRDataAggregator(VRDataType.VRDATA_ROOM_PRE, false);
@@ -36,8 +36,8 @@ public class TriggerEventHandler {
     private static boolean listener = false;
     private long elapsed_time = 0;
 
-    private static Vector3d origin;
-    private static Vox activeVox;
+    private static Vector3d origin, origin2, offset;
+    private static Vox activeVox, activeVox2;
     private static int[] previousId;
     private static int particle = 0;
     private static final BasicParticleType[] particleTypes = new BasicParticleType[]{ParticleTypes.FLAME,
@@ -67,11 +67,11 @@ public class TriggerEventHandler {
 //                    for (Vox vox: voxList) {
 //                        // VOX ID: {3, 8 , 26}
 //                        System.out.println("VOX ID: " + Arrays.toString(vox.getId()));
-//                        for (VRDataState vrDataState : preRoomDataAggregator.getData()) {
+//                        for (VRDataState vrDataRoomPre : preRoomDataAggregator.getData()) {
 //                            System.out.println("VOX: " + vox.centroid);
-//                            System.out.println("RC: " + vrDataState.getRc()[0]);
-//                            if (vox.hasPoint(vrDataState.getRc()[0]))
-//                                createParticles(ParticleTypes.FLAME, vrDataState.getRc());
+//                            System.out.println("RC: " + vrDataRoomPre.getRc()[0]);
+//                            if (vox.hasPoint(vrDataRoomPre.getRc()[0]))
+//                                createParticles(ParticleTypes.FLAME, vrDataRoomPre.getRc());
 //                        }
 //                    }
 //                }
@@ -100,6 +100,9 @@ public class TriggerEventHandler {
             if (origin == null && activeVox == null) {
                 origin = vrDataRoomPre.getRc()[0];
                 activeVox = new Vox(origin, false);
+                origin2 = vrDataWorldPre.getRc()[0];
+                activeVox2 = new Vox(origin2, true);
+                offset = origin2.subtract(player.position());
                 previousId = activeVox.getId();
                 particle = 0; trace = "[0, 0, 0]";
                 voxIds.add(previousId);
@@ -107,10 +110,12 @@ public class TriggerEventHandler {
 //                voxDataWriter.write("[0, 0, 0]");
             } else {
 //                vrDataWriter.write(vrDataRoomPre);
-
+                Vector3d delta = player.position().add(offset); // Apply the offset to current player position to simulate delta
+                activeVox2.updateVoxPosition(delta, false);
+                activeVox2.generateVox(vrDataWorldPre.getRc()[0]);
                 // Note: The getDeltaMovement() initially returns player position before returning the actual delta movement like a sussy baka
-//                activeVox.updateVoxPosition(player.getDeltaMovement());
-                int[] currentId = activeVox.updateVox(vrDataRoomPre.getRc()[0]);
+//                activeVox2.updateVoxPosition(player.getDeltaMovement());
+                int[] currentId = activeVox.generateVox(vrDataRoomPre.getRc()[0]);
                 if (!Arrays.equals(previousId, currentId)) { // Update Vox Trace
 //                    voxDataWriter.write(Arrays.toString(currentId));
                     voxIds.add(currentId);

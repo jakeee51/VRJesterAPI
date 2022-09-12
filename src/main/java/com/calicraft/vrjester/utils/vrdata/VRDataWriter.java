@@ -12,10 +12,9 @@ import java.util.Arrays;
 public class VRDataWriter {
     // Class for writing VRData to debug and analyze
 
-    // TODO - write data in iterations
+    // TODO - write data in iterations per trigger
     //      - write data to dev/archive
     //      - make flag to disable writing
-    //      - Setup Config.java
 
     public int pose; // pose = 0 (position) | pose = 1 (direction)
     public String fileName;
