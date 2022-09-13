@@ -37,7 +37,7 @@ public class TriggerEventHandler {
     private long elapsed_time = 0;
 
     private static Vector3d origin, origin2, offset;
-    private static Vox activeVox, activeVox2;
+    private static Vox activeVox, displayVox;
     private static int[] previousId;
     private static int particle = 0;
     private static final BasicParticleType[] particleTypes = new BasicParticleType[]{ParticleTypes.FLAME,
@@ -101,7 +101,7 @@ public class TriggerEventHandler {
                 origin = vrDataRoomPre.getRc()[0];
                 activeVox = new Vox(origin, false);
                 origin2 = vrDataWorldPre.getRc()[0];
-                activeVox2 = new Vox(origin2, true);
+                displayVox = new Vox(origin2, true);
                 offset = origin2.subtract(player.position());
                 previousId = activeVox.getId();
                 particle = 0; trace = "[0, 0, 0]";
@@ -110,11 +110,8 @@ public class TriggerEventHandler {
 //                voxDataWriter.write("[0, 0, 0]");
             } else {
 //                vrDataWriter.write(vrDataRoomPre);
-                Vector3d delta = player.position().add(offset); // Apply the offset to current player position to simulate delta
-                activeVox2.updateVoxPosition(delta, false);
-                activeVox2.generateVox(vrDataWorldPre.getRc()[0]);
-                // Note: The getDeltaMovement() initially returns player position before returning the actual delta movement like a sussy baka
-//                activeVox2.updateVoxPosition(player.getDeltaMovement());
+                displayVox.setDelta(player.position().add(offset)); // Apply the offset to current player position to simulate delta
+                displayVox.generateVox(vrDataWorldPre.getRc()[0]);
                 int[] currentId = activeVox.generateVox(vrDataRoomPre.getRc()[0]);
                 if (!Arrays.equals(previousId, currentId)) { // Update Vox Trace
 //                    voxDataWriter.write(Arrays.toString(currentId));

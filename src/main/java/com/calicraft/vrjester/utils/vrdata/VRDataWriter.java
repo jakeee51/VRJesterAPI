@@ -14,7 +14,7 @@ public class VRDataWriter {
 
     // TODO - write data in iterations per trigger
     //      - write data to dev/archive
-    //      - make flag to disable writing
+    //      - make flag/config to toggle writing
 
     public int pose; // pose = 0 (position) | pose = 1 (direction)
     public String fileName;

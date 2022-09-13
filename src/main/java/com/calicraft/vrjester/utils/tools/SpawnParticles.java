@@ -60,8 +60,6 @@ public class SpawnParticles {
     }
 
     public static void createParticles(Vector3d pose) {
-        Random rand;
-        double motionX, motionY, motionZ;
         ClientPlayerEntity player = getMCI().player;
         assert player != null;
         if (player.getCommandSenderWorld().isClientSide()) {

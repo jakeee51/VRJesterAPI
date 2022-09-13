@@ -13,16 +13,16 @@ public class Vox {
     private boolean display;
     private int[] front, back, left, right, up, down; // Neighboring Voxes based on face
     private Vector3d p1, p2, p3, p4, p5, p6, p7, p8;
-    public Vector3d d1, d2, centroid;
+    public Vector3d d1, d2, centroid, delta;
     public float LENGTH = Constants.VOX_LENGTH;
     public final JSONObject config = new Config().readConfig();
 
     public Vox(Vector3d centroid, boolean display) {
         // Override defaults
         if (config.has("VOX_LENGTH")) {
-            float configFloat = Float.parseFloat(config.getString("VOX_LENGTH"));
-            if (configFloat != LENGTH)
-                LENGTH = configFloat;
+            float configVoxLength = Float.parseFloat(config.getString("VOX_LENGTH"));
+            if (configVoxLength != LENGTH)
+                LENGTH = configVoxLength;
         }
 
         this.centroid = centroid; // Initialize Center of Vox
@@ -31,6 +31,7 @@ public class Vox {
         this.d1 = this.centroid.subtract((LENGTH/2), (LENGTH/2), (LENGTH/2));
         this.d2 = this.centroid.add((LENGTH/2), (LENGTH/2), (LENGTH/2));
         this.setId(new int[]{0, 0, 0}); // Initialize Vox Id
+        this.setDelta(new Vector3d((0),(0),(0))); // Initialize Player Position Delta
     }
 
     public boolean hasPoint(Vector3d point) { // Check if point is within Vox
@@ -69,20 +70,16 @@ public class Vox {
             this.setId(newVoxId);
         }
         if (display)
-            this.displayVox();
+            this.updateVoxPosition(delta, false);
         return this.getId();
     }
 
     public void updateVoxPosition(Vector3d dif, boolean useDif) { // Update Vox position values based on player delta movement
         if (dif.x == 0 && dif.y == 0 && dif.z == 0)
             return;
-//        if (dif.x > 100)// Ignore initial player position
-//            dif = dif.multiply((0),(0),(0));
-//        if (Math.abs(dif.y) <= 0.09) // Temporary strange Y delta value solution
-//            dif = dif.multiply((1),(0),(1));
 
         // Center of Vox
-        if(!display || useDif)
+        if (!display || useDif)
             this.centroid = centroid.add(dif);
         else
             this.centroid = dif;
@@ -107,6 +104,22 @@ public class Vox {
             this.displayVox();
     }
 
+    public int[] getId() {
+        return id;
+    }
+
+    public void setId(int[] id) {
+         this.id = id;
+    }
+
+    public Vector3d getDelta() {
+        return delta;
+    }
+
+    public void setDelta(Vector3d delta) {
+        this.delta = delta;
+    }
+
     private void displayVox() {
         createParticles(this.p1);
         createParticles(this.p2);
@@ -116,13 +129,5 @@ public class Vox {
         createParticles(this.p6);
         createParticles(this.p7);
         createParticles(this.p8);
-    }
-
-    public int[] getId() {
-        return id;
-    }
-
-    public void setId(int[] id) {
-         this.id = id;
     }
 }
