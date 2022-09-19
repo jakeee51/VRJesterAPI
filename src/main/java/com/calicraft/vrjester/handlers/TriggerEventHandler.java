@@ -6,7 +6,6 @@ import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDataType;
-import com.calicraft.vrjester.utils.vrdata.VRDataWriter;
 import com.calicraft.vrjester.vox.Vox;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.particles.BasicParticleType;
@@ -18,7 +17,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static com.calicraft.vrjester.VrJesterApi.VIVECRAFTLOADED;
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
@@ -62,24 +60,12 @@ public class TriggerEventHandler {
             } else { // Trigger the gesture recognition phase after key is released
                 System.out.println("JESTER RELEASED");
                 listener = false;
-//                if (voxNet != null) {
-//                    ArrayList<Vox> voxList = voxNet.get();
-//                    for (Vox vox: voxList) {
-//                        // VOX ID: {3, 8 , 26}
-//                        System.out.println("VOX ID: " + Arrays.toString(vox.getId()));
-//                        for (VRDataState vrDataRoomPre : preRoomDataAggregator.getData()) {
-//                            System.out.println("VOX: " + vox.centroid);
-//                            System.out.println("RC: " + vrDataRoomPre.getRc()[0]);
-//                            if (vox.hasPoint(vrDataRoomPre.getRc()[0]))
-//                                createParticles(ParticleTypes.FLAME, vrDataRoomPre.getRc());
-//                        }
-//                    }
-//                }
+                origin2 = null; displayVox = null;
                 origin = null; activeVox = null; voxIds.clear();
                 elapsed_time = System.nanoTime() - elapsed_time;
 //                JesterRecognition recognizer = new JesterRecognition(preRoomDataAggregator.getData(), elapsed_time);
 //                recognizer.isLinearGesture(VRDevice.RC);
-                preRoomDataAggregator.clear(); elapsed_time = 0;
+                elapsed_time = 0;
                 // Fire event or trigger something based on recognized gesture
             }
         }
@@ -98,10 +84,12 @@ public class TriggerEventHandler {
             VRDataState vrDataRoomPre = preRoomDataAggregator.listen();
             VRDataState vrDataWorldPre = preWorldDataAggregator.listen();
             if (origin == null && activeVox == null) {
+                System.out.println("PLAYER YAW: " + player.getYHeadRot());
+                System.out.println("PLAYER DIRECTION: " + player.getDirection().getName());
                 origin = vrDataRoomPre.getRc()[0];
-                activeVox = new Vox(origin, false);
+                activeVox = new Vox(origin, player.getYHeadRot(), player.getDirection().getName(),  false);
                 origin2 = vrDataWorldPre.getRc()[0];
-                displayVox = new Vox(origin2, true);
+                displayVox = new Vox(origin2, player.getYHeadRot(), player.getDirection().getName(), true);
                 offset = origin2.subtract(player.position());
                 previousId = activeVox.getId();
                 particle = 0; trace = "[0, 0, 0]";
@@ -110,22 +98,23 @@ public class TriggerEventHandler {
 //                voxDataWriter.write("[0, 0, 0]");
             } else {
 //                vrDataWriter.write(vrDataRoomPre);
-                displayVox.setDelta(player.position().add(offset)); // Apply the offset to current player position to simulate delta
-                displayVox.generateVox(vrDataWorldPre.getRc()[0]);
-                int[] currentId = activeVox.generateVox(vrDataRoomPre.getRc()[0]);
-                if (!Arrays.equals(previousId, currentId)) { // Update Vox Trace
-//                    voxDataWriter.write(Arrays.toString(currentId));
-                    voxIds.add(currentId);
-                    trace += Arrays.toString(currentId);
-                    previousId = currentId;
-                    if (particle < particleTypes.length-2)
-                        particle++;
-                    else
-                        particle = 0;
-                    System.out.println("TRACE: " + trace);
-                } else {
-                    createParticles(particleTypes[particle], vrDataWorldPre.getRc());
-                }
+                System.out.println("CENTROID 1: " + displayVox.centroid);
+                displayVox.manifestVox(vrDataWorldPre.getRc()[0], player.position().add(offset));
+                System.out.println("CENTROID 2: " + displayVox.centroid);
+//                int[] currentId = activeVox.generateVox(vrDataRoomPre.getRc()[0]);
+//                if (!Arrays.equals(previousId, currentId)) { // Update Vox Trace
+////                    voxDataWriter.write(Arrays.toString(currentId));
+//                    voxIds.add(currentId);
+//                    trace += Arrays.toString(currentId);
+//                    previousId = currentId;
+//                    if (particle < particleTypes.length-2)
+//                        particle++;
+//                    else
+//                        particle = 0;
+//                    System.out.println("TRACE: " + trace);
+//                } else {
+//                    createParticles(particleTypes[particle], vrDataWorldPre.getRc());
+//                }
 
 
 //                for (int i = 0; i < gestures.length; i++) { // CHECK SINGLE GESTURE (UPPERCUT PUNCH)
