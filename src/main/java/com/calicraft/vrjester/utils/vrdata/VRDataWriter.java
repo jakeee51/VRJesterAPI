@@ -1,64 +1,82 @@
 package com.calicraft.vrjester.utils.vrdata;
 
 import com.calicraft.vrjester.config.Config;
+import com.calicraft.vrjester.config.Constants;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class VRDataWriter {
     // Class for writing VRData to debug and analyze
 
     // TODO - write data in iterations per trigger
-    //      - write data to dev/archive
-    //      - make flag/config to toggle writing
 
     public int pose; // pose = 0 (position) | pose = 1 (direction)
     public String fileName;
     public JSONObject config;
     public ArrayList<File> files = new ArrayList<>();
 
-    public VRDataWriter(String fileName, String[] devices, int pose) { // Setup file objects to create & write VRDevice data
-        this.fileName = fileName; this.pose = pose;
-        for (String device : devices) {
+    public VRDataWriter(JSONObject config) { // Setup file objects to create & write VRDevice data
+        this.config = config; JSONArray devices = new JSONArray();
+        String path = Constants.DEV_ARCHIVE_PATH;
+        try {
+            if (config.has("log")) {
+                JSONObject logConfig = config.getJSONObject("log");
+                this.fileName = logConfig.getString("name");
+                this.pose = logConfig.getInt("pose");
+                devices = logConfig.getJSONArray("devices");
+            }
+        } catch (NullPointerException e) {
+            this.fileName = "VRJester_Data";
+            this.pose = 0;
+            devices.put("rc");
+            System.err.println(e);
+        }
+
+        for (int i = 0; i < devices.length(); i++) {
+            String device = devices.getString(i);
             switch (device) {
                 case "hmd":
-                    System.out.println("HMD " + device);
-                    files.add(new File("hmd_" + fileName + ".csv"));
+                    files.add(new File(path + "hmd_" + fileName + ".csv"));
                     break;
                 case "rc":
-                    System.out.println("RC " + device);
-                    files.add(new File("rc_" + fileName + ".csv"));
+                    files.add(new File(path + "rc_" + fileName + ".csv"));
                     break;
                 case "lc":
-                    System.out.println("LC " + device);
-                    files.add(new File("lc_" + fileName + ".csv"));
+                    files.add(new File(path + "lc_" + fileName + ".csv"));
                     break;
                 case "c2":
-                    files.add(new File("c2_" + fileName + ".csv"));
+                    files.add(new File(path + "c2_" + fileName + ".csv"));
                     break;
                 default:
-                    System.out.println("HERE " + device);
-                    System.err.println("Specified devices invalid: " + Arrays.toString(devices));
+                    System.err.println("Specified devices invalid: " + devices.toString());
             }
         }
     }
 
     public VRDataWriter() { // Setup file objects to create & write Vox data
         config = new Config().readConfig();
-        fileName = config.getString("gesture");
-        files.add(new File("vox_trace_data_" + fileName + ".csv"));
+        try {
+            fileName = config.getJSONObject("log").getString("gesture");
+        } catch (NullPointerException e) {
+            System.err.println(e);
+        } catch (JSONException e) {
+            System.err.println(e);
+        }
+        files.add(new File(Constants.DEV_ARCHIVE_PATH + "vox_trace_data_" + fileName + ".csv"));
     }
 
     public void write(VRDataState record) throws IOException { // Write specified VRDataState data to end of file
         this.create(); String cleanData;
         for (File file: files) {
             cleanData = this.parse(record, file.getName().substring(0,3).replaceAll("_", ""), pose);
-            System.out.println(file.getName() + " -> " + cleanData);
-            try (FileWriter writer = new FileWriter(file.getName(), true)) {
+            System.out.println(file.getPath() + " -> " + cleanData);
+            try (FileWriter writer = new FileWriter(file.getPath(), true)) {
                 writer.write(cleanData + "\n");
                 writer.flush();
             }
@@ -69,8 +87,8 @@ public class VRDataWriter {
         this.create(); String cleanData;
         for (File file: files) {
             cleanData = record.replaceAll("\\[", "").replaceAll("\\]", "");
-            System.out.println(file.getName() + " -> " + cleanData);
-            try (FileWriter writer = new FileWriter(file.getName(), true)) {
+            System.out.println(file.getPath() + " -> " + cleanData);
+            try (FileWriter writer = new FileWriter(file.getPath(), true)) {
                 writer.write(cleanData + "\n");
                 writer.flush();
             }
