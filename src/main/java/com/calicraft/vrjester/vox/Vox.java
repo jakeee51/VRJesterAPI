@@ -2,22 +2,23 @@ package com.calicraft.vrjester.vox;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import net.minecraft.util.math.vector.Vector3d;
 import org.json.JSONObject;
 
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
 public class Vox {
-    private int[] id = new int[3];
-    private String face, category;
+    private VRDevice vrDevice;
+    private int[] id, previousId = new int[3];
+    private String faceDirection, name;
     private boolean display;
     private Vector3d p1, p2, p3, p4, p5, p6, p7, p8;
     public Vector3d d1, d2, centroid;
     public float LENGTH = Constants.VOX_LENGTH, yaw;
-    public Tracer trace;
     public final JSONObject config = new Config().readConfig();
 
-    public Vox(Vector3d centroid, float yaw, String face, boolean display, Tracer trace) {
+    public Vox(VRDevice vrDevice, Vector3d centroid, float yaw, String faceDirection, boolean display) {
         // Override defaults
         if (config.has("VOX_LENGTH")) {
             float configVoxLength = Float.parseFloat(config.getString("VOX_LENGTH"));
@@ -25,15 +26,16 @@ public class Vox {
                 LENGTH = configVoxLength;
         }
 
+        this.setId(new int[]{0, 0, 0}); // Initialize Vox Id
+        this.previousId = id.clone(); // Initialize soon to be previous Id
+        this.vrDevice = vrDevice; // Initialize VRDevice name
         this.centroid = centroid; // Initialize Center of Vox
         this.yaw = yaw; // Initialize facing angle of user
-        this.face = face; // Initialize direction user is facing
+        this.faceDirection = faceDirection; // Initialize direction user is facing
         this.display = display; // Initialize display flag
-        this.trace = trace; // Initialize gesture tracer
         // Initialize Diagonals of Vox
         this.d1 = this.centroid.subtract((LENGTH/2), (LENGTH/2), (LENGTH/2));
         this.d2 = this.centroid.add((LENGTH/2), (LENGTH/2), (LENGTH/2));
-        this.setId(new int[]{0, 0, 0}); // Initialize Vox Id
     }
 
     public boolean hasPoint(Vector3d point) { // Check if point is within Vox
@@ -63,11 +65,11 @@ public class Vox {
     }
 
     public int[] generateVox(Vector3d point) { // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns new Id
-//        System.out.println("DIRECTION NAME: " + face.getName());
-//        System.out.println("DIRECTION AXIS: " + face.getAxis());
-//        System.out.println("DIRECTION AXIS: " + face.getAxisDirection());
-//        System.out.println("CLOCKWISE: " + face.getClockWise()); // Right
-//        System.out.println("CLOCKWISE: " + face.getCounterClockWise()); // Left
+//        System.out.println("DIRECTION NAME: " + faceDirection.getName());
+//        System.out.println("DIRECTION AXIS: " + faceDirection.getAxis());
+//        System.out.println("DIRECTION AXIS: " + faceDirection.getAxisDirection());
+//        System.out.println("CLOCKWISE: " + faceDirection.getClockWise()); // Right
+//        System.out.println("CLOCKWISE: " + faceDirection.getCounterClockWise()); // Left
         if (!this.hasPoint(point)) { // Check if point is outside of current Vox
             int[] newVoxId = this.getNeighborVox(point);
             double newX = LENGTH * (newVoxId[0] - this.id[0]);
@@ -81,7 +83,6 @@ public class Vox {
     }
 
     public void manifestVox(Vector3d point, Vector3d delta) { // When VRDevice is outside current Vox, new Vox is visualized at neighboring position
-        System.out.println("OUT OF VOX: " + !this.hasPoint(point));
         Vector3d newPointDiff = new Vector3d((0), (0), (0));
         if (!this.hasPoint(point)) { // Check if point is outside of current Vox
             int[] newVoxId = this.getNeighborVox(point);
@@ -130,6 +131,18 @@ public class Vox {
 
     public void setId(int[] id) {
          this.id = id;
+    }
+
+    public int[] getPreviousId() {
+        return previousId;
+    }
+
+    public void setPreviousId(int[] previousId) {
+        this.previousId = previousId;
+    }
+
+    public VRDevice getVrDevice() {
+        return vrDevice;
     }
 
     private void displayVox() {

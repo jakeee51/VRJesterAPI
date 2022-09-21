@@ -3,14 +3,19 @@ package com.calicraft.vrjester.config;
 public abstract class Constants {
     public static final String CONFIG_PATH = "config/VRJesterAPI.cfg";
     public static final String DEV_CONFIG_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/src/main/resources/data/vrjester/config.json";
-    public static final String DEV_ARCHIVE_PATH = "vrdata/";
+    public static final String DEV_ARCHIVE_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/dev/archive/";
 
     public static final boolean WRITE_DATA = false;
-    public static final boolean DISPLAY_VOX = true;
+    public static final boolean DISPLAY_VOX = false;
     public static final float VOX_LENGTH = 0.6F;
     public static final int VOX_GRID_LENGTH = 6;
     public static final int VOX_GRID_WIDTH = 6;
     public static final int VOX_GRID_HEIGHT = 6;
 
     public static final float MAX_LISTENING_TIME = 6.0F;
+
+    public static final String HMD = "head_mounted_display";
+    public static final String RC = "right_controller";
+    public static final String LC = "left_controller";
+    public static final String C2 = "extra_tracker";
 }

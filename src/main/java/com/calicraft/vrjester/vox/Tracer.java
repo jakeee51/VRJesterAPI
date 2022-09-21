@@ -1,8 +1,6 @@
 package com.calicraft.vrjester.vox;
 
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +12,6 @@ public class Tracer {
     public final List<VRDataState> poses = new ArrayList<>();
 
     public Tracer() {
-
 
     }
 }

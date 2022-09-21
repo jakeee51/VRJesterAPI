@@ -12,13 +12,13 @@ import static com.calicraft.vrjester.VrJesterApi.getMCI;
 
 public class SpawnParticles {
 
-    public static void createParticles(BasicParticleType type, Vector3d[] pose) {
+    public static void createParticles(BasicParticleType type, Vector3d position) {
         Random rand;
         double motionX, motionY, motionZ;
         ClientPlayerEntity player = getMCI().player;
         assert player != null;
-        if (pose == null) { // Non-VR
-            pose = new Vector3d[]{player.position(), player.getLookAngle()};
+        if (position == null) { // Non-VR
+            Vector3d[] pose = new Vector3d[]{player.position(), player.getLookAngle()};
             pose[1] = pose[1].scale(1).add((0), (player.getEyeHeight() - .5), (0));
             Vector3d newPos = pose[1].add(pose[0]);
             if (player.getCommandSenderWorld().isClientSide()) {
@@ -34,7 +34,7 @@ public class SpawnParticles {
                 }
             }
         } else { // VR
-            Vector3d newPos = pose[0];
+            Vector3d newPos = position;
             if (player.getCommandSenderWorld().isClientSide()) {
                 ClientWorld clientWorld = (ClientWorld) player.getCommandSenderWorld();
                 for (int i = 0; i < 20; i++) {
@@ -59,14 +59,14 @@ public class SpawnParticles {
         }
     }
 
-    public static void createParticles(Vector3d pose) {
+    public static void createParticles(Vector3d position) {
         ClientPlayerEntity player = getMCI().player;
         assert player != null;
         if (player.getCommandSenderWorld().isClientSide()) {
             ClientWorld clientWorld = (ClientWorld) player.getCommandSenderWorld();
             for (int i = 0; i < 5; i++) {
                 clientWorld.addParticle(ParticleTypes.BUBBLE,
-                        pose.x, pose.y, pose.z,
+                        position.x, position.y, position.z,
                         (0.0D), (0.0D), (0.0D));
             }
         }
