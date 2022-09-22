@@ -1,9 +1,7 @@
 {
-	"gesture": "punch",
-	"VOX_LENGTH": 0.6,
-	"VOX_GRID_LENGTH": 6,
-	"VOX_GRID_WIDTH": 6,
-	"VOX_GRID_HEIGHT": 6,	
+	"WRITE_DATA": "false",
+	"DISPLAY_VOX": "true",
+	"VOX_LENGTH": "0.4",
 	"gestures": [
 		"[0, 0, 0][1, 0, 0][1, 1, 0]",
 		"[0, 0, 0][-1, 0, 0][-1, 1, 0]",
@@ -11,6 +9,9 @@
         "[0, 0, 0][0, 0, -1][0, 1, -1]"
     ],
 	"log": {
-		"gesture": "punch"
+		"name": "vrdata",
+		"gesture": "punch",
+		"devices": ["rc", "lc"],
+		"pose": "0"
 	}
 }

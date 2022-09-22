@@ -3,7 +3,7 @@ package com.calicraft.vrjester.config;
 public abstract class Constants {
     public static final String CONFIG_PATH = "config/VRJesterAPI.cfg";
     public static final String DEV_CONFIG_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/src/main/resources/data/vrjester/config.json";
-    public static final String DEV_ARCHIVE_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/dev/archive/";
+    public static final String DEV_ARCHIVE_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/dev/archive";
 
     public static final boolean WRITE_DATA = false;
     public static final boolean DISPLAY_VOX = false;

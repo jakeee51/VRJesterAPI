@@ -35,7 +35,7 @@ public class Gesture {
         voxList.add(hmdVox);
         voxList.add(rcVox);
         voxList.add(lcVox);
-
+        // 0: SOUTH, +-180: NORTH, +-90: EAST, +-90: WEST
         particle = 0;
         System.out.println("PLAYER YAW: " + player.getYHeadRot());
         System.out.println("PLAYER DIRECTION: " + player.getDirection().getName());
@@ -55,7 +55,8 @@ public class Gesture {
                 else
                     particle = 0;
             } else {
-                createParticles(particleTypes[particle], VRDataState.getVRDevicePose(vrDataWorldPre, vox.getVrDevice(), 0));
+                if (vox.getVrDevice() != VRDevice.HMD)
+                    createParticles(particleTypes[particle], VRDataState.getVRDevicePose(vrDataWorldPre, vox.getVrDevice(), 0));
             }
         }
     }

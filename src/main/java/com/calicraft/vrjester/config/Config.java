@@ -10,10 +10,11 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Config {
-    // Refer to this when captured a gesture.
 
     public String configPath = Constants.CONFIG_PATH;
+
     public Config() {}
+
     public Config(String configPath) {
         this.configPath = configPath;
     }
