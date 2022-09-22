@@ -5,6 +5,7 @@ public class Trace {
     public String voxId;
     public String movement;
     public long elapsedTime;
+    public long speed;
 
     public Trace(String voxId, String movement) {
         this.voxId = voxId;
@@ -18,5 +19,13 @@ public class Trace {
 
     public long getElapsedTime() {
         return elapsedTime;
+    }
+
+    public void setSpeed(long speed) {
+        this.speed = speed;
+    }
+
+    public long getSpeed() {
+        return speed;
     }
 }
