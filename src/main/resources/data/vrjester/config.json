@@ -1,6 +1,6 @@
 {
 	"WRITE_DATA": "false",
-	"DISPLAY_VOX": "true",
+	"DISPLAY_VOX": "false",
 	"VOX_LENGTH": "0.4",
 	"gestures": [
 		"[0, 0, 0][1, 0, 0][1, 1, 0]",

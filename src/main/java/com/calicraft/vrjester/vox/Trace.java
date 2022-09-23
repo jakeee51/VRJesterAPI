@@ -2,7 +2,6 @@ package com.calicraft.vrjester.vox;
 
 public class Trace {
     // POJO for traced Vox state per VRDevice
-    // TODO - Add velocity attribute
     public String voxId;
     public String movement;
     public long elapsedTime;
