@@ -56,21 +56,21 @@ public class Vox {
 
     private String getMovement(String axis, int axisDirection) {
         String movement = movementDirection;
+        System.out.println("AXIS MOVED ON: " + axis);
+        System.out.println("FACING: " + faceDirection.toString());
+        System.out.println("AXIS DIRECTION: " + axisDirection);
         switch(axis) {
             case "x":
-                System.out.println("FACING: " + faceDirection.toString());
-                System.out.println(faceDirection.toString().equals("east"));
-                System.out.println("AXIS DIRECTION: " + axisDirection);
                 if (faceDirection.toString().equals("east")) {
                     if (axisDirection == 1)
-                        movement = "front";
+                        movement = "right";
                     else
-                        movement = "back";
+                        movement = "left";
                 } else if (faceDirection.toString().equals("west")) {
                     if (axisDirection == 1)
-                        movement = "back";
+                        movement = "right";
                     else
-                        movement = "front";
+                        movement = "left";
                 } else if (faceDirection.toString().equals("north")) {
                     if (axisDirection == 1)
                         movement = "right";
@@ -82,15 +82,13 @@ public class Vox {
                     else
                         movement = "right";
                 }
+                break;
             case "z":
-                System.out.println("FACING: " + faceDirection.toString());
-                System.out.println(faceDirection.toString().equals("south"));
-                System.out.println("AXIS DIRECTION: " + axisDirection);
                 if (faceDirection.toString().equals("south")) {
                     if (axisDirection == 1)
-                        movement = "front";
-                    else
                         movement = "back";
+                    else
+                        movement = "front";
                 } else if (faceDirection.toString().equals("north")) {
                     if (axisDirection == 1)
                         movement = "back";
@@ -98,15 +96,16 @@ public class Vox {
                         movement = "front";
                 } else if (faceDirection.toString().equals("east")) {
                     if (axisDirection == 1)
-                        movement = "right";
+                        movement = "back";
                     else
-                        movement = "left";
+                        movement = "front";
                 } else if (faceDirection.toString().equals("west")) {
                     if (axisDirection == 1)
-                        movement = "left";
+                        movement = "back";
                     else
-                        movement = "right";
+                        movement = "front";
                 }
+                break;
         }
         return movement;
     }
@@ -151,6 +150,7 @@ public class Vox {
     public void generateVox(Vector3d[] pose) { // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns the Trace data
         if (!this.hasPoint(pose[0])) { // Check if point is outside of current Vox
             int[] newVoxId = this.getVoxNeighbor(pose[0]);
+            System.out.println("MOVED: " + movementDirection);
             double newX = LENGTH * (newVoxId[0] - this.id[0]);
             double newY = LENGTH * (newVoxId[1] - this.id[1]);
             double newZ = LENGTH * (newVoxId[2] - this.id[2]);
