@@ -78,9 +78,9 @@ public class Vox {
                         movement = "left";
                 } else if (faceDirection.toString().equals("south")) {
                     if (axisDirection == 1)
-                        movement = "left";
-                    else
                         movement = "right";
+                    else
+                        movement = "left";
                 }
                 break;
             case "z":
