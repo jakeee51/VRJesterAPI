@@ -60,4 +60,22 @@ public class VRDataState {
         }
         return ret;
     }
+
+    public static Vector3d[] getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice) { // Return pose based on VRDevice
+        Vector3d[] ret;
+        switch(vrDevice) {
+            case HMD:
+                ret = vrDataState.getHmd(); break;
+            case RC:
+                ret = vrDataState.getRc(); break;
+            case LC:
+                ret = vrDataState.getLc(); break;
+            case C2:
+                ret = vrDataState.getC2(); break;
+            default:
+                System.err.println("VRDevice not yet supported!");
+                ret = new Vector3d[]{new Vector3d((0), (0), (0)), new Vector3d((0), (0), (0))};
+        }
+        return ret;
+    }
 }

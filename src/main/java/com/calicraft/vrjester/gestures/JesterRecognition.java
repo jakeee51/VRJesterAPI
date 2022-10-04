@@ -15,12 +15,6 @@ import static com.calicraft.vrjester.VrJesterApi.getMCI;
 public class JesterRecognition {
     // Class for handling gesture recognition phase
 
-    // TODO - Create Context class that reads from config.
-    //  It will specify which devices to aggregate to VRDataState,
-    //  gestures to be bound to events, and w/e else that needs to
-    //  be specified based on mod and user.
-    //  Pass ctx on initialization or when calling recognizeGesture
-
     public VRDataState[] data;
     public int total_points;
     public long elapsed_time;

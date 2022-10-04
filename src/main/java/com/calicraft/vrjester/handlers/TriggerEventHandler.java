@@ -32,7 +32,7 @@ public class TriggerEventHandler {
     private static int sleep = 2 * DELAY; // 2 seconds
     private static int iter = 0;
     private static boolean listener = false;
-    private long elapsed_time = 0;
+    private long elapsedTime = 0;
 
     private static Vector3d offset;
     private static Vox displayRCVox, displayLCVox;
@@ -50,14 +50,14 @@ public class TriggerEventHandler {
         if (VIVECRAFTLOADED) {
             if (VrJesterApi.MOD_KEY.isDown() && !listener) {
                 System.out.println("JESTER TRIGGERED");
-                listener = true; elapsed_time = System.nanoTime();
+                listener = true; elapsedTime = System.nanoTime();
                 config = new Config(Constants.DEV_CONFIG_PATH).readConfig();
                 vrDataWriter = new VRDataWriter("room", iter);
                 voxDataWriter = new VRDataWriter("vox", iter);
             } else {
                 System.out.println("JESTER RELEASED");
-                listener = false; elapsed_time = System.nanoTime() - elapsed_time;
-                gesture = null; elapsed_time = 0;
+                listener = false; elapsedTime = System.nanoTime() - elapsedTime;
+                gesture = null; elapsedTime = 0;
                 if (config.has("WRITE_DATA"))
                     if (config.getBoolean("WRITE_DATA"))
                         iter++;
@@ -105,20 +105,20 @@ public class TriggerEventHandler {
     }
 
     public static void displayRCDebugger(VRDataState vrDataState, VRDevice vrDevice, boolean init) { // For VRData World
-        Vector3d displayOrigin;
+        Vector3d[] displayOrigin;
         try {
             if (init) {
                 if (config.has("DISPLAY_VOX")) {
                     if (config.getBoolean("DISPLAY_VOX")) {
-                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice, 0);
-                        displayRCVox = new Vox(vrDevice, displayOrigin, player.getYHeadRot(), player.getDirection().getName(), true);
-                        offset = displayOrigin.subtract(player.position());
+                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
+                        displayRCVox = new Vox(Constants.RC, vrDevice, displayOrigin, player.getYHeadRot(), player.getDirection(), true);
+                        offset = displayOrigin[0].subtract(player.position());
                     }
                 } else {
                     if (Constants.DISPLAY_VOX) {
-                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice, 0);
-                        displayRCVox = new Vox(vrDevice, displayOrigin, player.getYHeadRot(), player.getDirection().getName(), true);
-                        offset = displayOrigin.subtract(player.position());
+                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
+                        displayRCVox = new Vox(Constants.RC, vrDevice, displayOrigin, player.getYHeadRot(), player.getDirection(), true);
+                        offset = displayOrigin[0].subtract(player.position());
                     }
                 }
             } else {
@@ -136,20 +136,20 @@ public class TriggerEventHandler {
     }
 
     public static void displayLCDebugger(VRDataState vrDataState, VRDevice vrDevice, boolean init) { // For VRData World
-        Vector3d displayOrigin;
+        Vector3d[] displayOrigin;
         try {
             if (init) {
                 if (config.has("DISPLAY_VOX")) {
                     if (config.getBoolean("DISPLAY_VOX")) {
-                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice, 0);
-                        displayLCVox = new Vox(vrDevice, displayOrigin, player.getYHeadRot(), player.getDirection().getName(), true);
-                        offset = displayOrigin.subtract(player.position());
+                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
+                        displayLCVox = new Vox(Constants.LC, vrDevice, displayOrigin, player.getYHeadRot(), player.getDirection(), true);
+                        offset = displayOrigin[0].subtract(player.position());
                     }
                 } else {
                     if (Constants.DISPLAY_VOX) {
-                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice, 0);
-                        displayLCVox = new Vox(vrDevice, displayOrigin, player.getYHeadRot(), player.getDirection().getName(), true);
-                        offset = displayOrigin.subtract(player.position());
+                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
+                        displayLCVox = new Vox(Constants.LC, vrDevice, displayOrigin, player.getYHeadRot(), player.getDirection(), true);
+                        offset = displayOrigin[0].subtract(player.position());
                     }
                 }
             } else {

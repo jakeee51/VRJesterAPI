@@ -3,22 +3,28 @@ package com.calicraft.vrjester.vox;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3d;
 import org.json.JSONObject;
+
+import java.util.Arrays;
 
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
 public class Vox {
     private VRDevice vrDevice;
-    private int[] id, previousId = new int[3];
-    private String faceDirection, name;
+    private int[] id, previousId;
+    private String name, movementDirection = "idle";
+    private Direction faceDirection;
+    private Trace trace;
     private boolean display;
     private Vector3d p1, p2, p3, p4, p5, p6, p7, p8;
     public Vector3d d1, d2, centroid;
     public float LENGTH = Constants.VOX_LENGTH, yaw;
     public final JSONObject config = new Config().readConfig();
+    public boolean previousCenterVoxVisited = false;
 
-    public Vox(VRDevice vrDevice, Vector3d centroid, float yaw, String faceDirection, boolean display) {
+    public Vox(String name, VRDevice vrDevice, Vector3d[] centerPose, float yaw, Direction faceDirection, boolean display) {
         // Override defaults
         if (config.has("VOX_LENGTH")) {
             float configVoxLength = Float.parseFloat(config.getString("VOX_LENGTH"));
@@ -28,10 +34,12 @@ public class Vox {
 
         this.setId(new int[]{0, 0, 0}); // Initialize Vox Id
         this.previousId = id.clone(); // Initialize soon to be previous Id
+        this.name = name; // Initialize name of Vox
         this.vrDevice = vrDevice; // Initialize VRDevice name
-        this.centroid = centroid; // Initialize Center of Vox
+        this.centroid = centerPose[0]; // Initialize Center of Vox
         this.yaw = yaw; // Initialize facing angle of user
         this.faceDirection = faceDirection; // Initialize direction user is facing
+        this.trace = new Trace(Arrays.toString(id), vrDevice, movementDirection, centerPose);
         this.display = display; // Initialize display flag
         // Initialize Diagonals of Vox
         this.d1 = this.centroid.subtract((LENGTH/2), (LENGTH/2), (LENGTH/2));
@@ -46,46 +54,118 @@ public class Vox {
         return ret;
     }
 
-    public int[] getNeighborVox(Vector3d point) { // Get new Vox Id and traced direction based on which side the point withdrew from the Vox
-        // TODO - 3D Joystick: Use Direction object to tell when direction is diagonal & left from right
+    private String getMovement(String axis, int axisDirection) {
+        String movement = movementDirection;
+        switch(axis) {
+            case "x":
+                System.out.println("FACING: " + faceDirection.toString());
+                System.out.println(faceDirection.toString().equals("east"));
+                System.out.println("AXIS DIRECTION: " + axisDirection);
+                if (faceDirection.toString().equals("east")) {
+                    if (axisDirection == 1)
+                        movement = "front";
+                    else
+                        movement = "back";
+                } else if (faceDirection.toString().equals("west")) {
+                    if (axisDirection == 1)
+                        movement = "back";
+                    else
+                        movement = "front";
+                } else if (faceDirection.toString().equals("north")) {
+                    if (axisDirection == 1)
+                        movement = "right";
+                    else
+                        movement = "left";
+                } else if (faceDirection.toString().equals("south")) {
+                    if (axisDirection == 1)
+                        movement = "left";
+                    else
+                        movement = "right";
+                }
+            case "z":
+                System.out.println("FACING: " + faceDirection.toString());
+                System.out.println(faceDirection.toString().equals("south"));
+                System.out.println("AXIS DIRECTION: " + axisDirection);
+                if (faceDirection.toString().equals("south")) {
+                    if (axisDirection == 1)
+                        movement = "front";
+                    else
+                        movement = "back";
+                } else if (faceDirection.toString().equals("north")) {
+                    if (axisDirection == 1)
+                        movement = "back";
+                    else
+                        movement = "front";
+                } else if (faceDirection.toString().equals("east")) {
+                    if (axisDirection == 1)
+                        movement = "right";
+                    else
+                        movement = "left";
+                } else if (faceDirection.toString().equals("west")) {
+                    if (axisDirection == 1)
+                        movement = "left";
+                    else
+                        movement = "right";
+                }
+        }
+        return movement;
+    }
+
+    private int[] getVoxNeighbor(Vector3d point) { // Get new Vox Id and set traced movement direction based on which side the point withdrew from the Vox
+//        System.out.println("DIRECTION NAME: " + faceDirection.getName());
+//        System.out.println("AXIS: " + faceDirection.getAxis().getName());
+//        System.out.println("AXIS DIRECTION: " + faceDirection.getAxisDirection().toString());
+//        System.out.println("RIGHT: " + faceDirection.getClockWise()); // Right
+//        System.out.println("LEFT: " + faceDirection.getCounterClockWise()); // Left
+
+//      DIRECTION NAME: north
+//      AXIS: -z
+//      DIRECTION NAME: east
+//      AXIS: +x
+//      DIRECTION NAME: south
+//      AXIS: +z
+//      DIRECTION NAME: west
+//      AXIS: -x
         int[] ret = this.getId().clone();
-        if (point.x < d1.x)
-            ret[0]--;
-        if (point.y < d1.y) // Down
-            ret[1]--;
-        if (point.z < d1.z)
-            ret[2]--;
-        if (point.x > d2.x)
-            ret[0]++;
-        if (point.y > d2.y) // Up
-            ret[1]++;
-        if (point.z > d2.z)
-            ret[2]++;
+        if (point.y < d1.y) { // Down
+            ret[1]--; movementDirection = "down";
+        }
+        if (point.y > d2.y) { // Up
+            ret[1]++; movementDirection = "up";
+        }
+        if (point.x < d1.x) {
+            ret[0]--; movementDirection = getMovement("x", -1);
+        }
+        if (point.x > d2.x) {
+            ret[0]++; movementDirection = getMovement("x", 1);
+        }
+        if (point.z < d1.z) {
+            ret[2]--; movementDirection = getMovement("z", -1);
+        }
+        if (point.z > d2.z) {
+            ret[2]++; movementDirection = getMovement("z", 1);
+        }
         return ret;
     }
 
-    public int[] generateVox(Vector3d point) { // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns new Id
-//        System.out.println("DIRECTION NAME: " + faceDirection.getName());
-//        System.out.println("DIRECTION AXIS: " + faceDirection.getAxis());
-//        System.out.println("DIRECTION AXIS: " + faceDirection.getAxisDirection());
-//        System.out.println("CLOCKWISE: " + faceDirection.getClockWise()); // Right
-//        System.out.println("CLOCKWISE: " + faceDirection.getCounterClockWise()); // Left
-        if (!this.hasPoint(point)) { // Check if point is outside of current Vox
-            int[] newVoxId = this.getNeighborVox(point);
+    public void generateVox(Vector3d[] pose) { // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns the Trace data
+        if (!this.hasPoint(pose[0])) { // Check if point is outside of current Vox
+            int[] newVoxId = this.getVoxNeighbor(pose[0]);
             double newX = LENGTH * (newVoxId[0] - this.id[0]);
             double newY = LENGTH * (newVoxId[1] - this.id[1]);
             double newZ = LENGTH * (newVoxId[2] - this.id[2]);
             Vector3d newPointDiff = new Vector3d(newX, newY, newZ);
-            this.updateVoxPosition(newPointDiff, true);
-            this.setId(newVoxId);
+            updateVoxPosition(newPointDiff, true);
+            setId(newVoxId);
+        } else {
+            trace.addPose(pose); // Constantly update the current Trace
         }
-        return this.getId();
     }
 
     public void manifestVox(Vector3d point, Vector3d delta) { // When VRDevice is outside current Vox, new Vox is visualized at neighboring position
         Vector3d newPointDiff = new Vector3d((0), (0), (0));
         if (!this.hasPoint(point)) { // Check if point is outside of current Vox
-            int[] newVoxId = this.getNeighborVox(point);
+            int[] newVoxId = this.getVoxNeighbor(point);
             double newX = LENGTH * (newVoxId[0] - this.id[0]);
             double newY = LENGTH * (newVoxId[1] - this.id[1]);
             double newZ = LENGTH * (newVoxId[2] - this.id[2]);
@@ -141,8 +221,21 @@ public class Vox {
         this.previousId = previousId;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public VRDevice getVrDevice() {
         return vrDevice;
+    }
+
+    public Trace getTrace() {
+        return trace;
+    }
+
+    public Trace beginTrace(Vector3d[] pose) { // Begin with a new Trace object
+        trace = new Trace(Arrays.toString(id), vrDevice, movementDirection, pose);
+        return trace;
     }
 
     private void displayVox() {
