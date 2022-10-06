@@ -1,5 +1,6 @@
 package com.calicraft.vrjester.vox;
 
+import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
@@ -56,55 +57,21 @@ public class Vox {
 
     private String getMovement(String axis, int axisDirection) {
         String movement = movementDirection;
-        System.out.println("AXIS MOVED ON: " + axis);
-        System.out.println("FACING: " + faceDirection.toString());
-        System.out.println("AXIS DIRECTION: " + axisDirection);
+//        System.out.println("AXIS MOVED ON: " + axis);
+//        System.out.println("FACING: " + faceDirection.toString());
+//        System.out.println("AXIS DIRECTION: " + axisDirection);
         switch(axis) {
             case "x":
-                if (faceDirection.toString().equals("east")) {
-                    if (axisDirection == 1)
-                        movement = "right";
-                    else
-                        movement = "left";
-                } else if (faceDirection.toString().equals("west")) {
-                    if (axisDirection == 1)
-                        movement = "right";
-                    else
-                        movement = "left";
-                } else if (faceDirection.toString().equals("north")) {
-                    if (axisDirection == 1)
-                        movement = "right";
-                    else
-                        movement = "left";
-                } else if (faceDirection.toString().equals("south")) {
-                    if (axisDirection == 1)
-                        movement = "right";
-                    else
-                        movement = "left";
-                }
+                if (axisDirection == 1)
+                    movement = "right";
+                else
+                    movement = "left";
                 break;
             case "z":
-                if (faceDirection.toString().equals("south")) {
-                    if (axisDirection == 1)
-                        movement = "back";
-                    else
-                        movement = "front";
-                } else if (faceDirection.toString().equals("north")) {
-                    if (axisDirection == 1)
-                        movement = "back";
-                    else
-                        movement = "front";
-                } else if (faceDirection.toString().equals("east")) {
-                    if (axisDirection == 1)
-                        movement = "back";
-                    else
-                        movement = "front";
-                } else if (faceDirection.toString().equals("west")) {
-                    if (axisDirection == 1)
-                        movement = "back";
-                    else
-                        movement = "front";
-                }
+                if (axisDirection == 1)
+                    movement = "back";
+                else
+                    movement = "front";
                 break;
         }
         return movement;
@@ -117,6 +84,11 @@ public class Vox {
 //        System.out.println("RIGHT: " + faceDirection.getClockWise()); // Right
 //        System.out.println("LEFT: " + faceDirection.getCounterClockWise()); // Left
 
+//        System.out.println("BODY YAW: " + VrJesterApi.TRACKER.getVRDataRoomPre().getBodyYaw());
+//        System.out.println("FACING YAW: " + VrJesterApi.TRACKER.getVRDataRoomPre().getFacingYaw());
+//        System.out.println("HMD YAW: " + VrJesterApi.TRACKER.getVRDataRoomPre().hmd.getYaw());
+//        System.out.println(VrJesterApi.TRACKER.getVRPlayer().rotDiff_Degrees());
+
 //      DIRECTION NAME: north
 //      AXIS: -z
 //      DIRECTION NAME: east
@@ -125,6 +97,7 @@ public class Vox {
 //      AXIS: +z
 //      DIRECTION NAME: west
 //      AXIS: -x
+
         int[] ret = this.getId().clone();
         if (point.y < d1.y) { // Down
             ret[1]--; movementDirection = "down";
@@ -151,6 +124,7 @@ public class Vox {
         if (!this.hasPoint(pose[0])) { // Check if point is outside of current Vox
             int[] newVoxId = this.getVoxNeighbor(pose[0]);
             System.out.println("MOVED: " + movementDirection);
+            System.out.println("NEW VOX ID: " + Arrays.toString(newVoxId));
             double newX = LENGTH * (newVoxId[0] - this.id[0]);
             double newY = LENGTH * (newVoxId[1] - this.id[1]);
             double newZ = LENGTH * (newVoxId[2] - this.id[2]);

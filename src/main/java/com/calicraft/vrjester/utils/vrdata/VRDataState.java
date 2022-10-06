@@ -1,5 +1,6 @@
 package com.calicraft.vrjester.utils.vrdata;
 
+import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.tracker.Tracker;
 import net.minecraft.util.math.vector.Vector3d;
 import org.vivecraft.api.VRData;

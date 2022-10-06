@@ -13,5 +13,6 @@
 		"gesture": "punch",
 		"devices": ["rc", "lc"],
 		"pose": "0"
-	}
+	},
+	"degrees": "0.0"
 }

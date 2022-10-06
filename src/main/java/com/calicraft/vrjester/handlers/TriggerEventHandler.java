@@ -37,8 +37,6 @@ public class TriggerEventHandler {
     private static Vector3d offset;
     private static Vox displayRCVox, displayLCVox;
     private static Gesture gesture;
-    private static final String[] gestures = new String[]{"[0, 0, 0][1, 0, 0][1, 1, 0]", "[0, 0, 0][-1, 0, 0][-1, 1, 0]",
-                                                          "[0, 0, 0][0, 0, 1][0, 1, 1]", "[0, 0, 0][0, 0, -1][0, 1, -1]"};
     private static ClientPlayerEntity player;
 
 

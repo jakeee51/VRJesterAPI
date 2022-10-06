@@ -45,7 +45,7 @@ public class PositionTracker {
         return vrPlayer.vrdata_world_pre;
     }
 
-    public VRPlayer getVrPlayer() {
+    public VRPlayer getVRPlayer() {
         return vrPlayer;
     }
 }

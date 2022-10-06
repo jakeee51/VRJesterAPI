@@ -15,7 +15,7 @@ public class PlaceEventHandler {
     public void onPlaceEvent(BlockEvent.EntityPlaceEvent event) {
         String pos;
         VRData vrData = VrJesterApi.TRACKER.getVRDataRoomPre();
-        VRPlayer vrPlayer = VrJesterApi.TRACKER.getVrPlayer();
+        VRPlayer vrPlayer = VrJesterApi.TRACKER.getVRPlayer();
         if (vrPlayer == null) {
             pos = "null";
         } else {

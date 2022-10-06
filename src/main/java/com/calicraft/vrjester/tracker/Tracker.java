@@ -3,11 +3,25 @@ package com.calicraft.vrjester.tracker;
 import net.minecraft.util.math.vector.Vector3d;
 import org.vivecraft.api.VRData;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public abstract class Tracker {
     // VRData Position Tracker Interface
 
     // TODO - To consume VRData from updated or additional sources
     //      - Overload static methods with new parameters
+
+    public static Vector3d getOrigin(String vrData) {
+        // origin: (0.0, 0.0, 0.0)
+        Pattern pattern = Pattern.compile("origin: \\(.+, .+, .+\\)");
+        Matcher matcher = pattern.matcher(vrData);
+        String pos = matcher.group().replaceAll("(origin: \\(|\\)| )", "");
+        String[] coords = pos.split(",");
+        return new Vector3d(Double.parseDouble(coords[0]),
+                Double.parseDouble(coords[1]),
+                Double.parseDouble(coords[2]));
+    }
 
     public static Vector3d getPosition(VRData.VRDevicePose device) {
         // Get the 3D positional coordinate of passed device

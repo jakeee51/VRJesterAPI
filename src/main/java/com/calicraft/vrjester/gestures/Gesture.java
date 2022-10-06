@@ -1,6 +1,9 @@
 package com.calicraft.vrjester.gestures;
 
+import com.calicraft.vrjester.VrJesterApi;
+import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.utils.tools.Calcs;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.vox.Trace;
@@ -9,6 +12,7 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.vector.Vector3d;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +31,8 @@ public class Gesture {
     private static int rcParticle, lcParticle;
     private static final BasicParticleType[] particleTypes = new BasicParticleType[]{ParticleTypes.FLAME,
             ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.BUBBLE_POP};
+    public final JSONObject config = new Config().readConfig();
+    public float degrees;
 
     public Gesture(VRDataState vrDataRoomPre, ClientPlayerEntity player) {
         hmdOrigin = vrDataRoomPre.getHmd();
@@ -42,14 +48,22 @@ public class Gesture {
         // 0: SOUTH, +-180: NORTH, +-90: EAST, +-09: WEST
 //        System.out.println("PLAYER YAW: " + player.getYHeadRot());
 //        System.out.println("PLAYER DIRECTION: " + player.getDirection().getName());
+        if (config.has("degrees"))
+            degrees = Float.parseFloat(config.getString("degrees"));
     }
 
     public void track(VRDataState vrDataRoomPre, VRDataState vrDataWorldPre) { // Record the Vox trace of each VRDevice and return the resulting data
+        float start = (float) Math.toDegrees(VrJesterApi.TRACKER.getVRDataWorldPre().rotation_radians);
+        System.out.println("starting degrees: " + start);
+        Calcs.rotateOriginAround(-degrees+start, Calcs.getHeadPivot(vrDataWorldPre));
         for (Vox vox: voxList) { // Loop through each VRDevice's Vox
             Vector3d[] currentPoint = VRDataState.getVRDevicePose(vrDataRoomPre, vox.getVrDevice());
             vox.generateVox(currentPoint);
             int[] currentId = vox.getId();
-            if (!Arrays.equals(vox.getPreviousId(), currentId)) { // Append Vox Trace
+            if (!Arrays.equals(vox.getPreviousId(), currentId)) { // Append new Vox Trace object
+//                System.out.println("NOT ROTATED: " + currentPoint[0]);
+//                System.out.println("IF ROTATED: " + currentPoint[0].yRot(VrJesterApi.TRACKER.getVRDataWorldPre().rotation_radians));
+//                System.out.println("vrdata_world_pre: " + VrJesterApi.TRACKER.getVRDataRoomPre());
                 vox.setPreviousId(currentId.clone());
                 Trace trace = vox.getTrace();
                 trace.completeTrace();
