@@ -34,7 +34,7 @@ public class VRDataAggregator {
                 vrData = null;
         }
         assert vrData != null;
-        VRDataState dataState = new VRDataState(vrData.hmd, vrData.c0, vrData.c1, vrData.c2);
+        VRDataState dataState = new VRDataState(vrData);
         if (saveState)
             data.add(dataState);
         return dataState;

@@ -16,11 +16,14 @@ public abstract class Tracker {
         // origin: (0.0, 0.0, 0.0)
         Pattern pattern = Pattern.compile("origin: \\(.+, .+, .+\\)");
         Matcher matcher = pattern.matcher(vrData);
-        String pos = matcher.group().replaceAll("(origin: \\(|\\)| )", "");
-        String[] coords = pos.split(",");
-        return new Vector3d(Double.parseDouble(coords[0]),
-                Double.parseDouble(coords[1]),
-                Double.parseDouble(coords[2]));
+        if (matcher.find()) {
+            String pos = matcher.group().replaceAll("(origin: \\(|\\)| )", "");
+            String[] coords = pos.split(",");
+            return new Vector3d(Double.parseDouble(coords[0]),
+                    Double.parseDouble(coords[1]),
+                    Double.parseDouble(coords[2]));
+        }
+        return new Vector3d((0), (0), (0));
     }
 
     public static Vector3d getPosition(VRData.VRDevicePose device) {

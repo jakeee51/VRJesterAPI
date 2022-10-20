@@ -17,13 +17,11 @@ public class Calcs {
         Vector3d pt = Tracker.getOrigin(VrJesterApi.TRACKER.getVRPlayer().toString());
 
         float rads = (float) Math.toRadians(degrees); //reverse rotate.
-        System.out.println("OLD ORIGIN: " + pt);
         if(rads!=0)
             VrJesterApi.TRACKER.getVRPlayer().setRoomOrigin(
                     Math.cos(rads) * (pt.x-o.x) - Math.sin(rads) * (pt.z-o.z) + o.x,
                     pt.y,
                     Math.sin(rads) * (pt.x-o.x) + Math.cos(rads) * (pt.z-o.z) + o.z
                     ,false);
-        System.out.println("NEW ORIGIN: " + Tracker.getOrigin(VrJesterApi.TRACKER.getVRPlayer().toString()));
     }
 }

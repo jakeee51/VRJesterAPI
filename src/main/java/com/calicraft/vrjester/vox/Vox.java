@@ -1,10 +1,8 @@
 package com.calicraft.vrjester.vox;
 
-import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3d;
 import org.json.JSONObject;
 
@@ -16,16 +14,16 @@ public class Vox {
     private VRDevice vrDevice;
     private int[] id, previousId;
     private String name, movementDirection = "idle";
-    private Direction faceDirection;
     private Trace trace;
     private boolean display;
+    public Vector3d d1, d2, centroid, faceDirection, offset;
     private Vector3d p1, p2, p3, p4, p5, p6, p7, p8;
-    public Vector3d d1, d2, centroid;
-    public float LENGTH = Constants.VOX_LENGTH, yaw;
+    private Vector3d[] vertices = new Vector3d[]{p1, p2, p3, p4, p5, p6, p7, p8};
+    public float LENGTH = Constants.VOX_LENGTH;
     public final JSONObject config = new Config().readConfig();
     public boolean previousCenterVoxVisited = false;
 
-    public Vox(String name, VRDevice vrDevice, Vector3d[] centerPose, float yaw, Direction faceDirection, boolean display) {
+    public Vox(String name, VRDevice vrDevice, Vector3d[] centerPose, Vector3d faceDirection, Vector3d offset, boolean display) {
         // Override defaults
         if (config.has("VOX_LENGTH")) {
             float configVoxLength = Float.parseFloat(config.getString("VOX_LENGTH"));
@@ -38,9 +36,9 @@ public class Vox {
         this.name = name; // Initialize name of Vox
         this.vrDevice = vrDevice; // Initialize VRDevice name
         this.centroid = centerPose[0]; // Initialize Center of Vox
-        this.yaw = yaw; // Initialize facing angle of user
-        this.faceDirection = faceDirection; // Initialize direction user is facing
-        this.trace = new Trace(Arrays.toString(id), vrDevice, movementDirection, centerPose);
+        this.offset = offset; // Delta between VR origin and VRDevice origin
+        this.faceDirection = faceDirection; // Initialize facing angle of user
+        this.trace = new Trace(Arrays.toString(id), vrDevice, centerPose, faceDirection);
         this.display = display; // Initialize display flag
         // Initialize Diagonals of Vox
         this.d1 = this.centroid.subtract((LENGTH/2), (LENGTH/2), (LENGTH/2));
@@ -49,17 +47,14 @@ public class Vox {
 
     public boolean hasPoint(Vector3d point) { // Check if point is within Vox
         boolean ret = false;
-        if (point.x > d1.x && point.y > d1.y && point.z > d1.z)
-            if (point.x < d2.x && point.y < d2.y && point.z < d2.z)
+        if (point.x >= d1.x && point.y >= d1.y && point.z >= d1.z)
+            if (point.x <= d2.x && point.y <= d2.y && point.z <= d2.z)
                 ret = true;
         return ret;
     }
 
     private String getMovement(String axis, int axisDirection) {
         String movement = movementDirection;
-//        System.out.println("AXIS MOVED ON: " + axis);
-//        System.out.println("FACING: " + faceDirection.toString());
-//        System.out.println("AXIS DIRECTION: " + axisDirection);
         switch(axis) {
             case "x":
                 if (axisDirection == 1)
@@ -78,25 +73,9 @@ public class Vox {
     }
 
     private int[] getVoxNeighbor(Vector3d point) { // Get new Vox Id and set traced movement direction based on which side the point withdrew from the Vox
-//        System.out.println("DIRECTION NAME: " + faceDirection.getName());
-//        System.out.println("AXIS: " + faceDirection.getAxis().getName());
-//        System.out.println("AXIS DIRECTION: " + faceDirection.getAxisDirection().toString());
-//        System.out.println("RIGHT: " + faceDirection.getClockWise()); // Right
-//        System.out.println("LEFT: " + faceDirection.getCounterClockWise()); // Left
-
 //        System.out.println("BODY YAW: " + VrJesterApi.TRACKER.getVRDataRoomPre().getBodyYaw());
 //        System.out.println("FACING YAW: " + VrJesterApi.TRACKER.getVRDataRoomPre().getFacingYaw());
 //        System.out.println("HMD YAW: " + VrJesterApi.TRACKER.getVRDataRoomPre().hmd.getYaw());
-//        System.out.println(VrJesterApi.TRACKER.getVRPlayer().rotDiff_Degrees());
-
-//      DIRECTION NAME: north
-//      AXIS: -z
-//      DIRECTION NAME: east
-//      AXIS: +x
-//      DIRECTION NAME: south
-//      AXIS: +z
-//      DIRECTION NAME: west
-//      AXIS: -x
 
         int[] ret = this.getId().clone();
         if (point.y < d1.y) { // Down
@@ -123,11 +102,9 @@ public class Vox {
     public void generateVox(Vector3d[] pose) { // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns the Trace data
         if (!this.hasPoint(pose[0])) { // Check if point is outside of current Vox
             int[] newVoxId = this.getVoxNeighbor(pose[0]);
-            System.out.println("MOVED: " + movementDirection);
-            System.out.println("NEW VOX ID: " + Arrays.toString(newVoxId));
-            double newX = LENGTH * (newVoxId[0] - this.id[0]);
-            double newY = LENGTH * (newVoxId[1] - this.id[1]);
-            double newZ = LENGTH * (newVoxId[2] - this.id[2]);
+            double newX = LENGTH * (newVoxId[0] - id[0]);
+            double newY = LENGTH * (newVoxId[1] - id[1]);
+            double newZ = LENGTH * (newVoxId[2] - id[2]);
             Vector3d newPointDiff = new Vector3d(newX, newY, newZ);
             updateVoxPosition(newPointDiff, true);
             setId(newVoxId);
@@ -175,8 +152,24 @@ public class Vox {
         p7 = centroid.add((LENGTH/2), -(LENGTH/2), (LENGTH/2));
         p8 = d2;
 
+        //        this.rotateVoxAround(yaw);
+
         if (display)
             this.displayVox();
+    }
+
+    public void rotateVoxAround(float degrees){
+        for (int i = 0; i < vertices.length; i++) {
+            Vector3d pt = vertices[i];
+
+            float rads = (float) Math.toRadians(degrees);
+            if (rads != 0)
+                vertices[i] = new Vector3d(
+                        (Math.cos(rads) * (pt.x - centroid.x) - Math.sin(rads) * (pt.z - centroid.z) + centroid.x),
+                        pt.y,
+                        (Math.sin(rads) * (pt.x - centroid.x) + Math.cos(rads) * (pt.z - centroid.z) + centroid.z)
+                );
+        }
     }
 
     public int[] getId() {
@@ -203,12 +196,17 @@ public class Vox {
         return vrDevice;
     }
 
+    public Vector3d getOffset() {
+        return offset;
+    }
+
     public Trace getTrace() {
         return trace;
     }
 
-    public Trace beginTrace(Vector3d[] pose) { // Begin with a new Trace object
-        trace = new Trace(Arrays.toString(id), vrDevice, movementDirection, pose);
+    public Trace beginTrace(Vector3d[] pose, Vector3d faceDirection) { // Begin with a new Trace object
+        this.faceDirection = faceDirection;
+        trace = new Trace(Arrays.toString(id), vrDevice, pose, faceDirection);
         return trace;
     }
 

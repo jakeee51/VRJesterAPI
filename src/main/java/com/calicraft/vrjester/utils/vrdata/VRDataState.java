@@ -8,29 +8,31 @@ import org.vivecraft.api.VRData;
 public class VRDataState {
     // Class for encapsulating VRData devices
 
-    private final Vector3d[] hmd;
-    private final Vector3d[] rc;
-    private final Vector3d[] lc;
-    private final Vector3d[] c2;
+    private final Vector3d origin;
+    private final Vector3d[] hmd, rc, lc, c2;
 
     // TODO - Add another constructor with new params for upward compatibility
-    public VRDataState(VRData.VRDevicePose head_mounted_display, VRData.VRDevicePose right_controller,
-                       VRData.VRDevicePose left_controller, VRData.VRDevicePose extra_tracker) {
-        hmd = Tracker.getPose(head_mounted_display);
-        rc = Tracker.getPose(right_controller);
-        lc = Tracker.getPose(left_controller);
-        c2 = Tracker.getPose(extra_tracker);
+    public VRDataState(VRData vrData) {
+        origin = Tracker.getOrigin(vrData.toString());
+        hmd = Tracker.getPose(vrData.hmd);
+        rc = Tracker.getPose(vrData.c0);
+        lc = Tracker.getPose(vrData.c1);
+        c2 = Tracker.getPose(vrData.c2);
     }
 
     @Override
     public String toString() {
         return "data:" +
+                "\r\n \t origin: " + origin +
                 "\r\n \t hmd: " + hmd +
                 "\r\n \t rc: " + rc +
                 "\r\n \t lc: " + lc +
                 "\r\n \t c2: " + c2;
     }
 
+    public Vector3d getOrigin() {
+        return origin;
+    }
     public Vector3d[] getHmd() {
         return hmd;
     }
