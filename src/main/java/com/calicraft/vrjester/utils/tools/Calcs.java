@@ -7,6 +7,14 @@ import net.minecraft.util.math.vector.Vector3d;
 import org.vivecraft.utils.math.Vector3;
 
 public class Calcs {
+    public static double getMagnitude2D(Vector3d v) {
+        return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.z, 2));
+    }
+    public static double getAngle2D(Vector3d v1, Vector3d v2) {
+        double theta = v1.multiply((1), (0), (1)).dot(v2.multiply((1), (0), (1)));
+        theta = theta / (getMagnitude2D(v1) * getMagnitude2D(v2));
+        return Math.acos(theta);
+    }
     public static Vector3d getHeadPivot(VRDataState vrDataState) {
         Vector3d eye = vrDataState.getHmd()[0];
         Vector3 v3 = VrJesterApi.TRACKER.getVRDataWorldPre().hmd.getMatrix().transform(new Vector3(0,-.1f, .1f));

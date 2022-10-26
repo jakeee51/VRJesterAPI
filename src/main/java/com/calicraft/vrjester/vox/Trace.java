@@ -1,10 +1,13 @@
 package com.calicraft.vrjester.vox;
 
+import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.calicraft.vrjester.utils.tools.Calcs.getAngle2D;
 
 public class Trace {
     // POJO for traced Vox state per VRDevice
@@ -45,7 +48,17 @@ public class Trace {
     public void setMovement(Vector3d gestureDirection) {
         Vector3d dif = gestureDirection.subtract(front);
         System.out.println("FRONT DIR DIF: " + dif);
-        // TODO - Determine if gestureDirection falls within the movement buckets based on degree span
+        // TODO - Test if works correctly
+        if (getAngle2D(front, gestureDirection) <= Constants.DEGREE_SPAN) {
+            movement = "forward";
+        } else if (getAngle2D(back, gestureDirection) <= Constants.DEGREE_SPAN) {
+            movement = "back";
+        } else if (getAngle2D(right, gestureDirection) <= Constants.DEGREE_SPAN) {
+            movement = "right";
+        } else if (getAngle2D(left, gestureDirection) <= Constants.DEGREE_SPAN) {
+            movement = "left";
+        }
+        System.out.printf("MOVEMENT: " + movement);
     }
 
     public void setElapsedTime(long currentTime) {
