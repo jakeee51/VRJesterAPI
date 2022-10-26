@@ -14,6 +14,8 @@ public abstract class Constants {
 
     public static final float MAX_LISTENING_TIME = 6.0F;
 
+    public static final float DEGREE_SPAN = 45.0F;
+
     public static final String HMD = "head_mounted_display";
     public static final String RC = "right_controller";
     public static final String LC = "left_controller";
