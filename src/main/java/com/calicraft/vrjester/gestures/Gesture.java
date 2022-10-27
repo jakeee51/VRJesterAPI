@@ -41,7 +41,7 @@ public class Gesture {
         lcVox = new Vox(Constants.LC, VRDevice.LC, lcOrigin, hmdOrigin[1], lcOrigin[0].subtract(previousOrigin), false);
         voxList.add(hmdVox); voxList.add(rcVox); voxList.add(lcVox);
         rcParticle = 0; lcParticle = 0;
-        // 0: SOUTH, +-180: NORTH, +-90: EAST, +-09: WEST
+        // 0: SOUTH, +-180: NORTH, +-90: EAST, +-90: WEST
 //        System.out.println("PLAYER YAW: " + player.getYHeadRot());
 //        System.out.println("PLAYER DIRECTION: " + player.getDirection().getName());
 //        float vrDataWorldYaw = VrJesterApi.TRACKER.getVRDataWorldPre().rotation_radians;
