@@ -13,10 +13,11 @@ public class Trace {
     // POJO for traced Vox state per VRDevice
     public String voxId; // The Vox Id
     public VRDevice vrDevice; // The VRDevice
-    public String movement; // Movement taken to get to Vox
+    public String movement = "idle"; // Movement taken to get to Vox
     private long elapsedTime = 0; // Time spent within Vox (added on the fly while idle)
     private long speed; // Average speed within Vox (calculated on the fly while idle)
-    private Vector3d faceDirection, direction, front, back, right, left; // Average direction within Vox (calculated on the fly while idle)
+    private Vector3d faceDirection, direction, front, back, right, left,
+                     frontRight, frontLeft, backRight, backLeft; // Average direction within Vox (calculated on the fly while idle)
     private final List<Vector3d[]> poses = new ArrayList<>(); // Poses captured within Vox
 
     public Trace(String voxId, VRDevice vrDevice, Vector3d[] pose, Vector3d faceDirection) {
@@ -48,7 +49,7 @@ public class Trace {
     public void setMovement(Vector3d gestureDirection) {
         Vector3d dif = gestureDirection.subtract(front);
         System.out.println("FRONT DIR DIF: " + dif);
-        // TODO - Test if works correctly
+        // TODO - Test if works correctly; divide by 2 after adding diagonals
         if (getAngle2D(front, gestureDirection) <= Constants.DEGREE_SPAN) {
             movement = "forward";
         } else if (getAngle2D(back, gestureDirection) <= Constants.DEGREE_SPAN) {
@@ -57,6 +58,14 @@ public class Trace {
             movement = "right";
         } else if (getAngle2D(left, gestureDirection) <= Constants.DEGREE_SPAN) {
             movement = "left";
+        } else if (getAngle2D(frontRight, gestureDirection) <= Constants.DEGREE_SPAN) {
+            movement = "forward_right";
+        } else if (getAngle2D(frontLeft, gestureDirection) <= Constants.DEGREE_SPAN) {
+            movement = "forward_left";
+        } else if (getAngle2D(backRight, gestureDirection) <= Constants.DEGREE_SPAN) {
+            movement = "back_right";
+        } else if (getAngle2D(backLeft, gestureDirection) <= Constants.DEGREE_SPAN) {
+            movement = "back_left";
         }
         System.out.printf("MOVEMENT: " + movement);
     }
@@ -107,5 +116,9 @@ public class Trace {
         back = new Vector3d(-faceDirection.x, faceDirection.y, -faceDirection.z);
         right = new Vector3d(faceDirection.z, faceDirection.y, -faceDirection.x);
         left = new Vector3d(-faceDirection.z, faceDirection.y, faceDirection.x);
+        frontRight = front.yRot(Constants.DEGREE_SPAN);
+        frontLeft = front.yRot(-Constants.DEGREE_SPAN);
+        backRight = back.yRot(Constants.DEGREE_SPAN);
+        backLeft = back.yRot(-Constants.DEGREE_SPAN);
     }
 }
