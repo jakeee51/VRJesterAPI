@@ -12,9 +12,9 @@ public class Calcs {
     }
 
     public static double getAngle2D(Vector3d v1, Vector3d v2) {
-        double theta = v1.multiply((1), (0), (1)).dot(v2.multiply((1), (0), (1)));
-        theta = theta / (getMagnitude2D(v1) * getMagnitude2D(v2));
-        return Math.acos(theta);
+        double dotProduct = v1.multiply((1), (0), (1)).dot(v2.multiply((1), (0), (1)));
+        double radians = dotProduct / (getMagnitude2D(v1) * getMagnitude2D(v2));
+        return Math.toDegrees(Math.acos(radians));
     }
 
     public static Vector3d getHeadPivot(VRDataState vrDataState) {
@@ -26,7 +26,7 @@ public class Calcs {
     public static void rotateOriginAround(float degrees, Vector3d o){
         Vector3d pt = Tracker.getOrigin(VrJesterApi.TRACKER.getVRPlayer().toString());
 
-        float rads = (float) Math.toRadians(degrees); //reverse rotate.
+        float rads = (float) Math.toRadians(degrees); // reverse rotate
         if(rads!=0)
             VrJesterApi.TRACKER.getVRPlayer().setRoomOrigin(
                     Math.cos(rads) * (pt.x-o.x) - Math.sin(rads) * (pt.z-o.z) + o.x,

@@ -31,7 +31,7 @@ public class Trace {
 
     @Override
     public String toString() {
-        return String.format("VOX %s MOVED: %s", voxId, movement);
+        return String.format("VOX: %s | MOVED: %s | Time Elapsed: %dl", voxId, movement, elapsedTime);
     }
 
     public String getVoxId() {
@@ -47,9 +47,8 @@ public class Trace {
     }
 
     public void setMovement(Vector3d gestureDirection) {
-        Vector3d dif = gestureDirection.subtract(front);
-        System.out.println("FRONT DIR DIF: " + dif);
         // TODO - Test if works correctly; divide by 2 after adding diagonals
+//        System.out.println("ANGLE BETWEEN FRONT AND GESTURE: " + getAngle2D(front, gestureDirection));
         if (getAngle2D(front, gestureDirection) <= Constants.DEGREE_SPAN) {
             movement = "forward";
         } else if (getAngle2D(back, gestureDirection) <= Constants.DEGREE_SPAN) {
@@ -67,7 +66,7 @@ public class Trace {
         } else if (getAngle2D(backLeft, gestureDirection) <= Constants.DEGREE_SPAN) {
             movement = "back_left";
         }
-        System.out.printf("MOVEMENT: " + movement);
+        System.out.println("MOVEMENT: " + movement);
     }
 
     public void setElapsedTime(long currentTime) {
@@ -106,7 +105,7 @@ public class Trace {
         Vector3d start = poses.get(0)[0];
         Vector3d end = poses.get(poses.size()-1)[0];
         Vector3d gestureDirection = end.subtract(start).normalize();
-        System.out.println("GESTURE DIR: " + gestureDirection);
+//        System.out.println("GESTURE DIR: " + gestureDirection);
         setMovement(gestureDirection);
         setElapsedTime(System.nanoTime());
     }
@@ -114,8 +113,8 @@ public class Trace {
     private void setMovementBuckets(Vector3d faceDirection) {
         front = faceDirection;
         back = new Vector3d(-faceDirection.x, faceDirection.y, -faceDirection.z);
-        right = new Vector3d(faceDirection.z, faceDirection.y, -faceDirection.x);
-        left = new Vector3d(-faceDirection.z, faceDirection.y, faceDirection.x);
+        right = new Vector3d(-faceDirection.z, faceDirection.y, faceDirection.x);
+        left = new Vector3d(faceDirection.z, faceDirection.y, -faceDirection.x);
         frontRight = front.yRot(Constants.DEGREE_SPAN);
         frontLeft = front.yRot(-Constants.DEGREE_SPAN);
         backRight = back.yRot(Constants.DEGREE_SPAN);
