@@ -2,7 +2,11 @@ package com.calicraft.vrjester.vox;
 
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +50,17 @@ public class Trace {
         return movement;
     }
 
+    public void setMovement(String movement) {
+        this.movement = movement;
+    }
+
     public void setMovement(Vector3d gestureDirection) {
         // TODO - Test if works correctly; divide by 2 after adding diagonals
-//        System.out.println("ANGLE BETWEEN FRONT AND GESTURE: " + getAngle2D(front, gestureDirection));
-        if (getAngle2D(front, gestureDirection) <= Constants.DEGREE_SPAN) {
+        if (!movement.equals("idle")) {
+            // TODO - Possibly handle diagonal ups and downs using concatenation
+            //      - Make separate if block for y-axis then handle x-axis & z-axis
+            System.out.println("MADE IT");
+        } else if (getAngle2D(front, gestureDirection) <= Constants.DEGREE_SPAN) {
             movement = "forward";
         } else if (getAngle2D(back, gestureDirection) <= Constants.DEGREE_SPAN) {
             movement = "back";
@@ -65,8 +76,17 @@ public class Trace {
             movement = "back_right";
         } else if (getAngle2D(backLeft, gestureDirection) <= Constants.DEGREE_SPAN) {
             movement = "back_left";
+        } else {
+            // TODO - Handle this
+            System.out.println("NO MOVEMENT RECOGNIZED!");
+            System.out.println("ANGLE BETWEEN FACING DIRECTION AND GESTURE: " + getAngle2D(front, gestureDirection));
+
         }
         System.out.println("MOVEMENT: " + movement);
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        ITextComponent text = new StringTextComponent("MOVED: " + movement);
+        assert player != null;
+        player.sendMessage(text, player.getUUID());
     }
 
     public void setElapsedTime(long currentTime) {

@@ -53,25 +53,6 @@ public class Vox {
         return ret;
     }
 
-    private String getMovement(String axis, int axisDirection) {
-        String movement = movementDirection;
-        switch(axis) {
-            case "x":
-                if (axisDirection == 1)
-                    movement = "right";
-                else
-                    movement = "left";
-                break;
-            case "z":
-                if (axisDirection == 1)
-                    movement = "back";
-                else
-                    movement = "front";
-                break;
-        }
-        return movement;
-    }
-
     private int[] getVoxNeighbor(Vector3d point) { // Get new Vox Id and set traced movement direction based on which side the point withdrew from the Vox
 //        System.out.println("BODY YAW: " + VrJesterApi.TRACKER.getVRDataRoomPre().getBodyYaw());
 //        System.out.println("FACING YAW: " + VrJesterApi.TRACKER.getVRDataRoomPre().getFacingYaw());
@@ -84,18 +65,14 @@ public class Vox {
         if (point.y > d2.y) { // Up
             ret[1]++; movementDirection = "up";
         }
-        if (point.x < d1.x) {
-            ret[0]--; movementDirection = getMovement("x", -1);
-        }
-        if (point.x > d2.x) {
-            ret[0]++; movementDirection = getMovement("x", 1);
-        }
-        if (point.z < d1.z) {
-            ret[2]--; movementDirection = getMovement("z", -1);
-        }
-        if (point.z > d2.z) {
-            ret[2]++; movementDirection = getMovement("z", 1);
-        }
+        if (point.x < d1.x)
+            ret[0]--;
+        if (point.x > d2.x)
+            ret[0]++;
+        if (point.z < d1.z)
+            ret[2]--;
+        if (point.z > d2.z)
+            ret[2]++;
         return ret;
     }
 
@@ -108,6 +85,7 @@ public class Vox {
             Vector3d newPointDiff = new Vector3d(newX, newY, newZ);
             updateVoxPosition(newPointDiff, true);
             setId(newVoxId);
+            trace.setMovement(movementDirection);
         } else {
             trace.addPose(pose); // Constantly update the current Trace
         }
