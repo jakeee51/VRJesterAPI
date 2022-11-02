@@ -170,9 +170,10 @@ jar {
 // Move generated jar file to Minecraft mods folder
 task copyJarToMods(type: Copy) {
         from jar
-        into "/Users/saif/Library/Application Support/minecraft/mods"
+        into "C:\\Users\\jakem\\AppData\\Roaming\\.minecraft\\mods"
 }
 build.finalizedBy copyJarToMods
+
 // Example configuration to allow publishing using the maven-publish task
 // This is the preferred method to reobfuscate your jar file
 jar.finalizedBy('reobfJar') 
