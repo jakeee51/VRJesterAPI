@@ -79,13 +79,13 @@ public class Trace {
             System.out.println("NO MOVEMENT RECOGNIZED!");
             System.out.println("ANGLE BETWEEN FACING DIRECTION AND GESTURE: " + getAngle2D(front, gestureDirection));
         }
-        System.out.println("GESTURE DIR: " + gestureDirection);
-        System.out.println("FRONT DIR: " + front);
-        System.out.println("MOVEMENT: " + movement);
-        ClientPlayerEntity player = Minecraft.getInstance().player;
-        ITextComponent text = new StringTextComponent( vrDevice + " MOVED: " + movement);
-        assert player != null;
-        player.sendMessage(text, player.getUUID());
+//        System.out.println("GESTURE DIR: " + gestureDirection);
+//        System.out.println("FRONT DIR: " + front);
+//        System.out.println("MOVEMENT: " + movement);
+//        ClientPlayerEntity player = Minecraft.getInstance().player;
+//        ITextComponent text = new StringTextComponent( vrDevice + " MOVED: " + movement);
+//        assert player != null;
+//        player.sendMessage(text, player.getUUID());
     }
 
     public void setElapsedTime(long currentTime) {
@@ -126,7 +126,6 @@ public class Trace {
         System.out.println("VRDEVICE: " + vrDevice);
         System.out.println("START: " + start);
         System.out.println("END: " + end);
-        // TODO - Carry over points from next vox to increase sample size to provide more accurate gestureDirection
         // TODO - Handle when gesturedirection is (0,0,0) because getAngle2D returns NaN
         //      - Occurs because poses only have like 2 poses when it goes though a vox diagonally for a short time
         Vector3d gestureDirection = end.subtract(start).normalize();

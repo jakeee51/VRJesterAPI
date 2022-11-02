@@ -54,10 +54,6 @@ public class Vox {
     }
 
     private int[] getVoxNeighbor(Vector3d point) { // Get new Vox Id and set traced movement direction based on which side the point withdrew from the Vox
-//        System.out.println("BODY YAW: " + VrJesterApi.TRACKER.getVRDataRoomPre().getBodyYaw());
-//        System.out.println("FACING YAW: " + VrJesterApi.TRACKER.getVRDataRoomPre().getFacingYaw());
-//        System.out.println("HMD YAW: " + VrJesterApi.TRACKER.getVRDataRoomPre().hmd.getYaw());
-
         int[] ret = this.getId().clone();
         if (point.y < d1.y) { // Down
             ret[1]--; movementDirection = "down";

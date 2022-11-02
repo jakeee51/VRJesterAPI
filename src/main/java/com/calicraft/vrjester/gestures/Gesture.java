@@ -31,7 +31,6 @@ public class Gesture {
     private static final BasicParticleType[] particleTypes = new BasicParticleType[]{ParticleTypes.FLAME,
             ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.BUBBLE_POP};
     public final JSONObject config = new Config().readConfig();
-    public float degrees;
 
     public Gesture(VRDataState vrDataState, ClientPlayerEntity player) {
         previousOrigin = vrDataState.getOrigin();
@@ -41,13 +40,6 @@ public class Gesture {
         lcVox = new Vox(Constants.LC, VRDevice.LC, lcOrigin, hmdOrigin[1], lcOrigin[0].subtract(previousOrigin), false);
         voxList.add(hmdVox); voxList.add(rcVox); voxList.add(lcVox);
         rcParticle = 0; lcParticle = 0;
-        // 0: SOUTH, +-180: NORTH, +-90: EAST, +-90: WEST
-//        System.out.println("PLAYER YAW: " + player.getYHeadRot());
-//        System.out.println("PLAYER DIRECTION: " + player.getDirection().getName());
-//        float vrDataWorldYaw = VrJesterApi.TRACKER.getVRDataWorldPre().rotation_radians;
-//        System.out.println("starting degrees: " + (float) Math.toDegrees(VrJesterApi.TRACKER.getVRDataWorldPre().rotation_radians));
-        if (config.has("degrees"))
-            degrees = Float.parseFloat(config.getString("degrees"));
     }
 
     public void track(VRDataState vrDataRoomPre, VRDataState vrDataWorldPre) { // Record the Vox trace of each VRDevice and return the resulting data
