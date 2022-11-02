@@ -86,6 +86,7 @@ public class Vox {
             updateVoxPosition(newPointDiff, true);
             setId(newVoxId);
             trace.setMovement(movementDirection);
+            movementDirection = "idle";
         } else {
             trace.addPose(pose); // Constantly update the current Trace
         }
@@ -182,8 +183,7 @@ public class Vox {
         return trace;
     }
 
-    public Trace beginTrace(Vector3d[] pose, Vector3d faceDirection) { // Begin with a new Trace object
-        this.faceDirection = faceDirection;
+    public Trace beginTrace(Vector3d[] pose) { // Begin with a new Trace object
         trace = new Trace(Arrays.toString(id), vrDevice, pose, faceDirection);
         return trace;
     }

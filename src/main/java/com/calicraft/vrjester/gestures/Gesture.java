@@ -64,9 +64,9 @@ public class Gesture {
             if (!Arrays.equals(vox.getPreviousId(), currentId)) { // Append new Vox Trace object
                 vox.setPreviousId(currentId.clone());
                 Trace trace = vox.getTrace();
-                trace.completeTrace();
+                trace.completeTrace(vox.centroid);
 //                System.out.println("BEFORE: " + vox.getName() + ": " + trace.toString());
-                vox.beginTrace(currentPoint, vrDataRoomPre.getHmd()[1]);
+                vox.beginTrace(currentPoint);
 //                System.out.println("AFTER: " + vox.getName() + ": " + vox.getTrace().toString());
                 // TODO - Append Trace to Tracer object
                 if (vox.getVrDevice() == VRDevice.RC) {

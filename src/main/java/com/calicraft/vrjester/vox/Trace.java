@@ -58,8 +58,7 @@ public class Trace {
         // TODO - Test if works correctly; divide by 2 after adding diagonals
         if (!movement.equals("idle")) {
             // TODO - Possibly handle diagonal ups and downs using concatenation
-            //      - Make separate if block for y-axis then handle x-axis & z-axis
-            System.out.println("MADE IT");
+            System.out.println("MOVED UP OR DOWN");
         } else if (getAngle2D(front, gestureDirection) <= Constants.DEGREE_SPAN) {
             movement = "forward";
         } else if (getAngle2D(back, gestureDirection) <= Constants.DEGREE_SPAN) {
@@ -77,14 +76,14 @@ public class Trace {
         } else if (getAngle2D(backLeft, gestureDirection) <= Constants.DEGREE_SPAN) {
             movement = "back_left";
         } else {
-            // TODO - Handle this
             System.out.println("NO MOVEMENT RECOGNIZED!");
             System.out.println("ANGLE BETWEEN FACING DIRECTION AND GESTURE: " + getAngle2D(front, gestureDirection));
-
         }
+        System.out.println("GESTURE DIR: " + gestureDirection);
+        System.out.println("FRONT DIR: " + front);
         System.out.println("MOVEMENT: " + movement);
         ClientPlayerEntity player = Minecraft.getInstance().player;
-        ITextComponent text = new StringTextComponent("MOVED: " + movement);
+        ITextComponent text = new StringTextComponent( vrDevice + " MOVED: " + movement);
         assert player != null;
         player.sendMessage(text, player.getUUID());
     }
@@ -121,11 +120,16 @@ public class Trace {
         return poses;
     }
 
-    public void completeTrace() {
+    public void completeTrace(Vector3d nextCentroid) {
         Vector3d start = poses.get(0)[0];
-        Vector3d end = poses.get(poses.size()-1)[0];
+        Vector3d end = nextCentroid; // poses.get(poses.size()-1)[0];
+        System.out.println("VRDEVICE: " + vrDevice);
+        System.out.println("START: " + start);
+        System.out.println("END: " + end);
+        // TODO - Carry over points from next vox to increase sample size to provide more accurate gestureDirection
+        // TODO - Handle when gesturedirection is (0,0,0) because getAngle2D returns NaN
+        //      - Occurs because poses only have like 2 poses when it goes though a vox diagonally for a short time
         Vector3d gestureDirection = end.subtract(start).normalize();
-//        System.out.println("GESTURE DIR: " + gestureDirection);
         setMovement(gestureDirection);
         setElapsedTime(System.nanoTime());
     }
