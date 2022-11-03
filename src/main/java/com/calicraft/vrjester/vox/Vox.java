@@ -15,20 +15,19 @@ public class Vox {
     private int[] id, previousId;
     private String name, movementDirection = "idle";
     private Trace trace;
-    private boolean display;
-    public Vector3d d1, d2, centroid, faceDirection, offset;
+    private boolean isDiamond;
+    public Vector3d d1, d2, centroid, faceDirection, offset = new Vector3d((0), (0), (0));
     private Vector3d p1, p2, p3, p4, p5, p6, p7, p8;
     private Vector3d[] vertices = new Vector3d[]{p1, p2, p3, p4, p5, p6, p7, p8};
-    public float LENGTH = Constants.VOX_LENGTH;
+    public float side_length = Constants.VOX_LENGTH;
     public final JSONObject config = new Config().readConfig();
-    public boolean previousCenterVoxVisited = false;
 
-    public Vox(String name, VRDevice vrDevice, Vector3d[] centerPose, Vector3d faceDirection, Vector3d offset, boolean display) {
+    public Vox(String name, VRDevice vrDevice, Vector3d[] centerPose, Vector3d faceDirection, boolean isDiamond) {
         // Override defaults
         if (config.has("VOX_LENGTH")) {
             float configVoxLength = Float.parseFloat(config.getString("VOX_LENGTH"));
-            if (configVoxLength != LENGTH)
-                LENGTH = configVoxLength;
+            if (configVoxLength != side_length)
+                side_length = configVoxLength;
         }
 
         this.setId(new int[]{0, 0, 0}); // Initialize Vox Id
@@ -36,19 +35,33 @@ public class Vox {
         this.name = name; // Initialize name of Vox
         this.vrDevice = vrDevice; // Initialize VRDevice name
         this.centroid = centerPose[0]; // Initialize Center of Vox
-        this.offset = offset; // Delta between VR origin and VRDevice origin
         this.faceDirection = faceDirection; // Initialize facing angle of user
         this.trace = new Trace(Arrays.toString(id), vrDevice, centerPose, faceDirection);
-        this.display = display; // Initialize display flag
+        this.isDiamond = isDiamond; // Initialize display flag
         // Initialize Diagonals of Vox
-        this.d1 = this.centroid.subtract((LENGTH/2), (LENGTH/2), (LENGTH/2));
-        this.d2 = this.centroid.add((LENGTH/2), (LENGTH/2), (LENGTH/2));
+        this.d1 = this.centroid.subtract((side_length /2), (side_length /2), (side_length /2));
+        this.d2 = this.centroid.add((side_length /2), (side_length /2), (side_length /2));
+        // Rotate Vox to form diamond
+        if (isDiamond)
+            this.rotateVoxAround((45.0F));
     }
 
     public boolean hasPoint(Vector3d point) { // Check if point is within Vox
         boolean ret = false;
         if (point.x >= d1.x && point.y >= d1.y && point.z >= d1.z)
             if (point.x <= d2.x && point.y <= d2.y && point.z <= d2.z)
+                ret = true;
+        return ret;
+    }
+
+    public boolean hasDiamondInRough(Vector3d point) {
+        boolean ret = false;
+        double dx = Math.abs(point.x - centroid.x);
+        double dz = Math.abs(point.z - centroid.z);
+        double diagonal_width = side_length * Math.sqrt(2);
+        double d = dx / diagonal_width + dz / diagonal_width;
+        if (d <= 0.5)
+            if (point.y >= d1.y && point.y <= d2.y)
                 ret = true;
         return ret;
     }
@@ -75,9 +88,9 @@ public class Vox {
     public void generateVox(Vector3d[] pose) { // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns the Trace data
         if (!this.hasPoint(pose[0])) { // Check if point is outside of current Vox
             int[] newVoxId = this.getVoxNeighbor(pose[0]);
-            double newX = LENGTH * (newVoxId[0] - id[0]);
-            double newY = LENGTH * (newVoxId[1] - id[1]);
-            double newZ = LENGTH * (newVoxId[2] - id[2]);
+            double newX = side_length * (newVoxId[0] - id[0]);
+            double newY = side_length * (newVoxId[1] - id[1]);
+            double newZ = side_length * (newVoxId[2] - id[2]);
             Vector3d newPointDiff = new Vector3d(newX, newY, newZ);
             updateVoxPosition(newPointDiff, true);
             setId(newVoxId);
@@ -92,9 +105,9 @@ public class Vox {
         Vector3d newPointDiff = new Vector3d((0), (0), (0));
         if (!this.hasPoint(point)) { // Check if point is outside of current Vox
             int[] newVoxId = this.getVoxNeighbor(point);
-            double newX = LENGTH * (newVoxId[0] - this.id[0]);
-            double newY = LENGTH * (newVoxId[1] - this.id[1]);
-            double newZ = LENGTH * (newVoxId[2] - this.id[2]);
+            double newX = side_length * (newVoxId[0] - this.id[0]);
+            double newY = side_length * (newVoxId[1] - this.id[1]);
+            double newZ = side_length * (newVoxId[2] - this.id[2]);
             newPointDiff = new Vector3d(newX, newY, newZ);
             this.setId(newVoxId);
         }
@@ -102,35 +115,30 @@ public class Vox {
     }
 
     public void updateVoxPosition(Vector3d dif, boolean useDif) { // Update Vox position values based on delta movement
-        if (dif.x == 0 && dif.y == 0 && dif.z == 0 && !display)
+        if (dif.x == 0 && dif.y == 0 && dif.z == 0)
             return;
 
         // Center of Vox
-        if (!display || useDif)
+        if (useDif)
             centroid = centroid.add(dif);
         else
             centroid = dif;
 
         // Diagonals
-        this.d1 = centroid.subtract((LENGTH/2), (LENGTH/2), (LENGTH/2));
-        this.d2 = centroid.add((LENGTH/2), (LENGTH/2), (LENGTH/2));
+        this.d1 = centroid.subtract((side_length /2), (side_length /2), (side_length /2));
+        this.d2 = centroid.add((side_length /2), (side_length /2), (side_length /2));
 
         // Bottom square plane
         p1 = d1;
-        p2 = centroid.add((LENGTH/2), -(LENGTH/2), -(LENGTH/2));
-        p3 = centroid.add((LENGTH/2), (LENGTH/2), -(LENGTH/2));
-        p4 = centroid.add(-(LENGTH/2), (LENGTH/2), -(LENGTH/2));
+        p2 = centroid.add((side_length /2), -(side_length /2), -(side_length /2));
+        p3 = centroid.add((side_length /2), (side_length /2), -(side_length /2));
+        p4 = centroid.add(-(side_length /2), (side_length /2), -(side_length /2));
 
         // Top square plane
-        p5 = centroid.add(-(LENGTH/2), (LENGTH/2), (LENGTH/2));
-        p6 = centroid.add(-(LENGTH/2), -(LENGTH/2), (LENGTH/2));
-        p7 = centroid.add((LENGTH/2), -(LENGTH/2), (LENGTH/2));
+        p5 = centroid.add(-(side_length /2), (side_length /2), (side_length /2));
+        p6 = centroid.add(-(side_length /2), -(side_length /2), (side_length /2));
+        p7 = centroid.add((side_length /2), -(side_length /2), (side_length /2));
         p8 = d2;
-
-        //        this.rotateVoxAround(yaw);
-
-        if (display)
-            this.displayVox();
     }
 
     public void rotateVoxAround(float degrees){

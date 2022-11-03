@@ -55,7 +55,7 @@ public class Trace {
     }
 
     public void setMovement(Vector3d gestureDirection) {
-        // TODO - Test if works correctly; divide by 2 after adding diagonals
+        // TODO - Divide Constants.DEGREE_SPAN by 2 after adding diagonals
         if (!movement.equals("idle")) {
             // TODO - Possibly handle diagonal ups and downs using concatenation
             System.out.println("MOVED UP OR DOWN");
@@ -123,9 +123,9 @@ public class Trace {
     public void completeTrace(Vector3d nextCentroid) {
         Vector3d start = poses.get(0)[0];
         Vector3d end = nextCentroid; // poses.get(poses.size()-1)[0];
-        System.out.println("VRDEVICE: " + vrDevice);
-        System.out.println("START: " + start);
-        System.out.println("END: " + end);
+//        System.out.println("VRDEVICE: " + vrDevice);
+//        System.out.println("START: " + start);
+//        System.out.println("END: " + end);
         // TODO - Handle when gesturedirection is (0,0,0) because getAngle2D returns NaN
         //      - Occurs because poses only have like 2 poses when it goes though a vox diagonally for a short time
         Vector3d gestureDirection = end.subtract(start).normalize();

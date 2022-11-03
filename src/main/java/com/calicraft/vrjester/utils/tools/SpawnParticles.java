@@ -37,7 +37,7 @@ public class SpawnParticles {
             Vector3d newPos = position;
             if (player.getCommandSenderWorld().isClientSide()) {
                 ClientWorld clientWorld = (ClientWorld) player.getCommandSenderWorld();
-                for (int i = 0; i < 20; i++) {
+                for (int i = 0; i < 60; i++) {
                     rand = new Random();
                     if (type == ParticleTypes.BUBBLE) {
                         motionX = rand.nextGaussian() * 0.04D;
