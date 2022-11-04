@@ -34,7 +34,8 @@ public class Gesture {
 
     private static int rcParticle, lcParticle;
     private static final BasicParticleType[] particleTypes = new BasicParticleType[]{ParticleTypes.FLAME,
-            ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.BUBBLE_POP};
+            ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.CLOUD, ParticleTypes.BUBBLE_POP,
+            ParticleTypes.FALLING_WATER};
     public final JSONObject config = new Config().readConfig();
 
     public Gesture(VRDataState vrDataState) {
@@ -42,7 +43,7 @@ public class Gesture {
         previousOrigin = vrDataState.getOrigin();
         hmdOrigin = vrDataState.getHmd(); rcOrigin = vrDataState.getRc(); lcOrigin = vrDataState.getLc();
         hmdVox = new Vox(Constants.HMD, VRDevice.HMD, hmdOrigin, hmdOrigin[1], false);
-        rcVox = new Vox(Constants.RC, VRDevice.RC, rcOrigin, hmdOrigin[1], false);
+        rcVox = new Vox(Constants.RC, VRDevice.RC, rcOrigin, hmdOrigin[1], true);
         lcVox = new Vox(Constants.LC, VRDevice.LC, lcOrigin, hmdOrigin[1], false);
         voxList.add(hmdVox); voxList.add(rcVox); voxList.add(lcVox);
         rcParticle = 0; lcParticle = 0;
@@ -79,28 +80,44 @@ public class Gesture {
                 }
             }
         }
+//        createParticles(particleTypes[rcParticle], VRDataState.getVRDevicePose(vrDataWorldPre, rcVox.getVrDevice(), 0));
         System.out.println("RC MOVE: " + tracer.rcMove);
         System.out.println("RC GESTURE: " + rcGesture);
-        if (tracer.rcMove.equals("forward")) {
-            createParticles(particleTypes[0], VRDataState.getVRDevicePose(vrDataWorldPre, rcVox.getVrDevice(), 0));
-            sendDebugMsg("PUSH");
-        }
-        if (tracer.lcMove.equals("forward")) {
-            createParticles(particleTypes[0], VRDataState.getVRDevicePose(vrDataWorldPre, lcVox.getVrDevice(), 0));
-            sendDebugMsg("PUSH");
-        }
+
         if (tracer.rcMove.equals("left") && tracer.lcMove.equals("right")) {
+            createParticles(particleTypes[4], VRDataState.getVRDevicePose(vrDataWorldPre, rcVox.getVrDevice(), 0));
+            createParticles(particleTypes[4], VRDataState.getVRDevicePose(vrDataWorldPre, lcVox.getVrDevice(), 0));
+            sendDebugMsg("SHRINK"); tracer.rcMove = ""; tracer.lcMove = "";
+        } else if (tracer.rcMove.equals("right") && tracer.lcMove.equals("left")) {
             createParticles(particleTypes[2], VRDataState.getVRDevicePose(vrDataWorldPre, rcVox.getVrDevice(), 0));
             createParticles(particleTypes[2], VRDataState.getVRDevicePose(vrDataWorldPre, lcVox.getVrDevice(), 0));
-            sendDebugMsg("SHRINK");
-        }
-        if (rcGesture.equals("forwardup")) {
+            sendDebugMsg("GROW"); tracer.rcMove = ""; tracer.lcMove = "";
+        } else if (rcGesture.equals("forwardup") && lcGesture.equals("forwardup")) {
             createParticles(particleTypes[1], VRDataState.getVRDevicePose(vrDataWorldPre, rcVox.getVrDevice(), 0));
-            sendDebugMsg("RAISE"); rcGesture = "";
-        }
-        if (lcGesture.equals("forwardup")) {
             createParticles(particleTypes[1], VRDataState.getVRDevicePose(vrDataWorldPre, lcVox.getVrDevice(), 0));
-            sendDebugMsg("RAISE"); lcGesture = "";
+            sendDebugMsg("RAISE"); rcGesture = ""; lcGesture = ""; tracer.rcMove = ""; tracer.lcMove = "";
+        } else if (rcGesture.equals("downback") && lcGesture.equals("downback")) {
+            createParticles(particleTypes[5], VRDataState.getVRDevicePose(vrDataWorldPre, rcVox.getVrDevice(), 0));
+            createParticles(particleTypes[5], VRDataState.getVRDevicePose(vrDataWorldPre, lcVox.getVrDevice(), 0));
+            sendDebugMsg("PULL"); rcGesture = ""; lcGesture = "";
+        } else if (rcGesture.equals("upforward") && lcGesture.equals("upforward")) {
+            createParticles(particleTypes[3], VRDataState.getVRDevicePose(vrDataWorldPre, rcVox.getVrDevice(), 0));
+            createParticles(particleTypes[3], VRDataState.getVRDevicePose(vrDataWorldPre, lcVox.getVrDevice(), 0));
+            sendDebugMsg("BLAST"); rcGesture = ""; lcGesture = ""; tracer.rcMove = ""; tracer.lcMove = "";
+        } else {
+            if (tracer.rcMove.equals("forward")) {
+                createParticles(particleTypes[0], VRDataState.getVRDevicePose(vrDataWorldPre, rcVox.getVrDevice(), 0));
+                sendDebugMsg("STRIKE"); tracer.rcMove = "";
+            }
+            if (tracer.lcMove.equals("forward")) {
+                createParticles(particleTypes[0], VRDataState.getVRDevicePose(vrDataWorldPre, lcVox.getVrDevice(), 0));
+                sendDebugMsg("STRIKE"); tracer.lcMove = "";
+            }
+            if (tracer.rcMove.equals("down") && tracer.lcMove.equals("down")) {
+                createParticles(particleTypes[1], VRDataState.getVRDevicePose(vrDataWorldPre, rcVox.getVrDevice(), 0));
+                createParticles(particleTypes[1], VRDataState.getVRDevicePose(vrDataWorldPre, lcVox.getVrDevice(), 0));
+                sendDebugMsg("LOWER"); tracer.rcMove = ""; tracer.lcMove = "";
+            }
         }
     }
 

@@ -81,12 +81,12 @@ public class TriggerEventHandler {
             if (gesture == null) {
                 gesture = new Gesture(vrDataRoomPre);
 //                voxDebugger(new int[]{0, 0, 0}, true);
-//                displayRCDebugger(vrDataWorldPre, VRDevice.RC, true);
+                displayRCDebugger(vrDataWorldPre, VRDevice.RC, true);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, true);
             } else {
                 gesture.track(vrDataRoomPre, vrDataWorldPre);
 //                voxDebugger(currentId, false);
-//                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
+                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, false);
                 dataDebugger(vrDataRoomPre);
             }

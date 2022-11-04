@@ -2,25 +2,27 @@ package com.calicraft.vrjester.vox;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.utils.tools.Calcs;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import net.minecraft.util.math.vector.Vector3d;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
 public class Vox {
-    private VRDevice vrDevice;
+    private final VRDevice vrDevice;
+    private final Map<String, Vector3d> vertices = new HashMap<>();
+    public final JSONObject config = new Config().readConfig();
+    private final boolean isDiamond;
     private int[] id, previousId;
     private String name, movementDirection = "idle";
     private Trace trace;
-    private boolean isDiamond;
-    public Vector3d d1, d2, centroid, faceDirection, offset = new Vector3d((0), (0), (0));
-    private Vector3d p1, p2, p3, p4, p5, p6, p7, p8;
-    private Vector3d[] vertices = new Vector3d[]{p1, p2, p3, p4, p5, p6, p7, p8};
+    public Vector3d centroid, faceDirection, offset = new Vector3d((0), (0), (0));
     public float side_length = Constants.VOX_LENGTH;
-    public final JSONObject config = new Config().readConfig();
 
     public Vox(String name, VRDevice vrDevice, Vector3d[] centerPose, Vector3d faceDirection, boolean isDiamond) {
         // Override defaults
@@ -34,28 +36,39 @@ public class Vox {
         this.previousId = id.clone(); // Initialize soon to be previous Id
         this.name = name; // Initialize name of Vox
         this.vrDevice = vrDevice; // Initialize VRDevice name
-        this.centroid = centerPose[0]; // Initialize Center of Vox
         this.faceDirection = faceDirection; // Initialize facing angle of user
         this.trace = new Trace(Arrays.toString(id), vrDevice, centerPose, faceDirection);
-        this.isDiamond = isDiamond; // Initialize display flag
-        // Initialize Diagonals of Vox
-        this.d1 = this.centroid.subtract((side_length /2), (side_length /2), (side_length /2));
-        this.d2 = this.centroid.add((side_length /2), (side_length /2), (side_length /2));
-        // Rotate Vox to form diamond
-        if (isDiamond)
-            this.rotateVoxAround((45.0F));
+        this.isDiamond = isDiamond;
+        // Initialize Vertices of Vox
+        this.updateVoxPosition(centerPose[0], false);
     }
 
     public boolean hasPoint(Vector3d point) { // Check if point is within Vox
         boolean ret = false;
-        if (point.x >= d1.x && point.y >= d1.y && point.z >= d1.z)
-            if (point.x <= d2.x && point.y <= d2.y && point.z <= d2.z)
-                ret = true;
+        Vector3d p1 = vertices.get("p1"); Vector3d p2 = vertices.get("p2");
+        Vector3d p3 = vertices.get("p3"); Vector3d p5 = vertices.get("p5");
+        Vector3d dirX = p2.subtract(p1); Vector3d dirY = p3.subtract(p1); Vector3d dirZ = p5.subtract(p1);
+        double lengthX = Calcs.getMagnitude3D(dirX);
+        double lengthY = Calcs.getMagnitude3D(dirY);
+        double lengthZ = Calcs.getMagnitude3D(dirZ);
+        Vector3d localX = dirX.normalize(); Vector3d localY = dirY.normalize(); Vector3d localZ = dirZ.normalize();
+        Vector3d V = point.subtract(centroid);
+        double projectionX = Math.abs(V.dot(localX) * 2);
+        double projectionY = Math.abs(V.dot(localY) * 2);
+        double projectionZ = Math.abs(V.dot(localZ) * 2);
+        if (projectionX <= lengthX && projectionY <= lengthY && projectionZ <= lengthZ)
+            ret = true;
+//        Vector3d d1 = vertices.get("d1");
+//        Vector3d d2 = vertices.get("d2");
+//        if (point.x >= d1.x && point.y >= d1.y && point.z >= d1.z)
+//            if (point.x <= d2.x && point.y <= d2.y && point.z <= d2.z)
+//                ret = true;
         return ret;
     }
 
-    public boolean hasDiamondInRough(Vector3d point) {
+    public boolean hasDiamondInRough(Vector3d point) { // Check if point is within Vox rotated 45 degrees
         boolean ret = false;
+        Vector3d d1 = vertices.get("d1"); Vector3d d2 = vertices.get("d2");
         double dx = Math.abs(point.x - centroid.x);
         double dz = Math.abs(point.z - centroid.z);
         double diagonal_width = side_length * Math.sqrt(2);
@@ -68,6 +81,7 @@ public class Vox {
 
     private int[] getVoxNeighbor(Vector3d point) { // Get new Vox Id and set traced movement direction based on which side the point withdrew from the Vox
         int[] ret = this.getId().clone();
+        Vector3d d1 = vertices.get("d1"); Vector3d d2 = vertices.get("d2");
         if (point.y < d1.y) { // Down
             ret[1]--; movementDirection = "down";
         }
@@ -92,7 +106,8 @@ public class Vox {
             double newY = side_length * (newVoxId[1] - id[1]);
             double newZ = side_length * (newVoxId[2] - id[2]);
             Vector3d newPointDiff = new Vector3d(newX, newY, newZ);
-            updateVoxPosition(newPointDiff, true);
+            // TODO - Try updating vox position immediately after we exited from previous vox
+            updateVoxPosition(pose[0], false);
             setId(newVoxId);
             trace.setMovement(movementDirection);
             movementDirection = "idle";
@@ -109,9 +124,10 @@ public class Vox {
             double newY = side_length * (newVoxId[1] - this.id[1]);
             double newZ = side_length * (newVoxId[2] - this.id[2]);
             newPointDiff = new Vector3d(newX, newY, newZ);
+            this.updateVoxPosition(point, false);
             this.setId(newVoxId);
         }
-        this.updateVoxPosition(newPointDiff, true);
+        this.displayVox();
     }
 
     public void updateVoxPosition(Vector3d dif, boolean useDif) { // Update Vox position values based on delta movement
@@ -125,33 +141,36 @@ public class Vox {
             centroid = dif;
 
         // Diagonals
-        this.d1 = centroid.subtract((side_length /2), (side_length /2), (side_length /2));
-        this.d2 = centroid.add((side_length /2), (side_length /2), (side_length /2));
+        vertices.put("d1", centroid.subtract((side_length /2), (side_length /2), (side_length /2)));
+        vertices.put("d2", centroid.add((side_length /2), (side_length /2), (side_length /2)));
 
         // Bottom square plane
-        p1 = d1;
-        p2 = centroid.add((side_length /2), -(side_length /2), -(side_length /2));
-        p3 = centroid.add((side_length /2), (side_length /2), -(side_length /2));
-        p4 = centroid.add(-(side_length /2), (side_length /2), -(side_length /2));
+        vertices.put("p1", vertices.get("d1"));
+        vertices.put("p2", centroid.add((side_length /2), -(side_length /2), -(side_length /2)));
+        vertices.put("p3", centroid.add(-(side_length /2), -(side_length /2), (side_length /2)));
+        vertices.put("p4", centroid.add((side_length /2), -(side_length /2), (side_length /2)));
 
         // Top square plane
-        p5 = centroid.add(-(side_length /2), (side_length /2), (side_length /2));
-        p6 = centroid.add(-(side_length /2), -(side_length /2), (side_length /2));
-        p7 = centroid.add((side_length /2), -(side_length /2), (side_length /2));
-        p8 = d2;
+        vertices.put("p5", centroid.add(-(side_length /2), (side_length /2), -(side_length /2)));
+        vertices.put("p6", centroid.add((side_length /2), (side_length /2), -(side_length /2)));
+        vertices.put("p7", centroid.add(-(side_length /2), (side_length /2), (side_length /2)));
+        vertices.put("p8", vertices.get("d2"));
+
+        // Rotate Vox to form diamond
+        if (isDiamond)
+            this.rotateVoxAround((45.0F));
     }
 
     public void rotateVoxAround(float degrees){
-        for (int i = 0; i < vertices.length; i++) {
-            Vector3d pt = vertices[i];
-
+        for (String i: vertices.keySet()) {
+            Vector3d pt = vertices.get(i);
             float rads = (float) Math.toRadians(degrees);
             if (rads != 0)
-                vertices[i] = new Vector3d(
+                vertices.put(i, new Vector3d(
                         (Math.cos(rads) * (pt.x - centroid.x) - Math.sin(rads) * (pt.z - centroid.z) + centroid.x),
                         pt.y,
                         (Math.sin(rads) * (pt.x - centroid.x) + Math.cos(rads) * (pt.z - centroid.z) + centroid.z)
-                );
+                ));
         }
     }
 
@@ -193,13 +212,13 @@ public class Vox {
     }
 
     private void displayVox() {
-        createParticles(this.p1);
-        createParticles(this.p2);
-        createParticles(this.p3);
-        createParticles(this.p4);
-        createParticles(this.p5);
-        createParticles(this.p6);
-        createParticles(this.p7);
-        createParticles(this.p8);
+        createParticles(vertices.get("p1"));
+        createParticles(vertices.get("p2"));
+        createParticles(vertices.get("p3"));
+        createParticles(vertices.get("p4"));
+        createParticles(vertices.get("p5"));
+        createParticles(vertices.get("p6"));
+        createParticles(vertices.get("p7"));
+        createParticles(vertices.get("p8"));
     }
 }

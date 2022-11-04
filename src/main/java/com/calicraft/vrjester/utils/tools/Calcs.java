@@ -7,6 +7,10 @@ import net.minecraft.util.math.vector.Vector3d;
 import org.vivecraft.utils.math.Vector3;
 
 public class Calcs {
+    public static double getMagnitude3D(Vector3d v) {
+        return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2) + Math.pow(v.z, 2));
+    }
+
     public static double getMagnitude2D(Vector3d v) {
         return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.z, 2));
     }
