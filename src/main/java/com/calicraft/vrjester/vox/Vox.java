@@ -2,6 +2,7 @@ package com.calicraft.vrjester.vox;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.gesture.radix.Trace;
 import com.calicraft.vrjester.utils.tools.Calcs;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import net.minecraft.util.math.vector.Vector3d;
@@ -41,6 +42,13 @@ public class Vox {
         this.isDiamond = isDiamond;
         // Initialize Vertices of Vox
         this.updateVoxPosition(centerPose[0], false);
+    }
+
+    public boolean inProximity(Vector3d point) {
+        // TODO - Check if VRDevice position has been within another VRDevices Vox
+        boolean ret = false;
+
+        return ret;
     }
 
     public boolean hasPoint(Vector3d point) { // Check if point is within Vox

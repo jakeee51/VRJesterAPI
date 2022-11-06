@@ -23,9 +23,9 @@ public class PositionTracker {
             Field vrPlayer = mc.getDeclaredField("vrPlayer");
             this.vrPlayer = (VRPlayer) vrPlayer.get(Minecraft.getInstance());
             if (this.vrPlayer != null) {
-                vrDataSource = "vivecraft_116";
+                vrDataSource = "vivecraft";
             } else {
-                LOGGER.debug("vrPlayer null");
+                LOGGER.debug("vrPlayer: null");
             }
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             LOGGER.error("Failed to load Vivecraft class!");

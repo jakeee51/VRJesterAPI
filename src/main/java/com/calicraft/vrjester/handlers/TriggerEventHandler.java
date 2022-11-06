@@ -3,7 +3,7 @@ package com.calicraft.vrjester.handlers;
 import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
-import com.calicraft.vrjester.gestures.Gesture;
+import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.utils.vrdata.*;
 import com.calicraft.vrjester.vox.Vox;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -54,6 +54,7 @@ public class TriggerEventHandler {
                 voxDataWriter = new VRDataWriter("vox", iter);
             } else {
                 System.out.println("JESTER RELEASED");
+                gesture.recognizeTest();
                 listener = false; elapsedTime = System.nanoTime() - elapsedTime;
                 gesture = null; elapsedTime = 0;
                 if (config.has("WRITE_DATA"))

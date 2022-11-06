@@ -126,6 +126,7 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.34'
     implementation files('libs/minecrift-1.16.5-jrbudda-7-6.jar')
+//    implementation files('libs/vivecraft-1.19.2-jrbudda-VR-2-b8-forge.jar')
     implementation files('libs/OptiFine-1.16.5_HD_U_G8.jar')
     implementation group: 'org.json', name: 'json', version: '20220320'
     implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.149'
