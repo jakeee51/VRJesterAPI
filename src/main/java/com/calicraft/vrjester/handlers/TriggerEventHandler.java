@@ -6,9 +6,9 @@ import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.utils.vrdata.*;
 import com.calicraft.vrjester.vox.Vox;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,14 +34,13 @@ public class TriggerEventHandler {
     private static boolean listener = false;
     private long elapsedTime = 0;
 
-    private static Vector3d offset;
+    private static Vec3 offset;
     private static Vox displayRCVox, displayLCVox;
     private static Gesture gesture;
-    private static ClientPlayerEntity player;
-
-
+    private static LocalPlayer player;
+    
     @SubscribeEvent
-    public void onJesterTrigger(InputEvent.KeyInputEvent event) {
+    public void onJesterTrigger(InputEvent.Key event) {
         if (player == null)
             player = getMCI().player;
         // Trigger the gesture listening phase
@@ -54,7 +53,6 @@ public class TriggerEventHandler {
                 voxDataWriter = new VRDataWriter("vox", iter);
             } else {
                 System.out.println("JESTER RELEASED");
-                gesture.recognizeTest();
                 listener = false; elapsedTime = System.nanoTime() - elapsedTime;
                 gesture = null; elapsedTime = 0;
                 if (config.has("WRITE_DATA"))
@@ -86,6 +84,7 @@ public class TriggerEventHandler {
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, true);
             } else {
                 gesture.track(vrDataRoomPre, vrDataWorldPre);
+                gesture.recognizeTest();
 //                voxDebugger(currentId, false);
                 displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, false);
@@ -104,7 +103,7 @@ public class TriggerEventHandler {
     }
 
     public static void displayRCDebugger(VRDataState vrDataState, VRDevice vrDevice, boolean init) { // For VRData World
-        Vector3d[] displayOrigin, hmdOrigin = vrDataState.getHmd();
+        Vec3[] displayOrigin, hmdOrigin = vrDataState.getHmd();
         try {
             if (init) {
                 if (config.has("DISPLAY_VOX")) {
@@ -133,7 +132,7 @@ public class TriggerEventHandler {
     }
 
     public static void displayLCDebugger(VRDataState vrDataState, VRDevice vrDevice, boolean init) { // For VRData World
-        Vector3d[] displayOrigin, hmdOrigin = vrDataState.getHmd();
+        Vec3[] displayOrigin, hmdOrigin = vrDataState.getHmd();
         try {
             if (init) {
                 if (config.has("DISPLAY_VOX")) {

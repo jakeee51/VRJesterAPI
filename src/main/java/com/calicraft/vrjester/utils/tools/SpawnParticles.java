@@ -1,10 +1,10 @@
 package com.calicraft.vrjester.utils.tools;
 
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.level.Level;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Random;
 
@@ -12,17 +12,17 @@ import static com.calicraft.vrjester.VrJesterApi.getMCI;
 
 public class SpawnParticles {
 
-    public static void createParticles(BasicParticleType type, Vector3d position) {
+    public static void createParticles(SimpleParticleType type, Vec3 position) {
         Random rand;
         double motionX, motionY, motionZ;
-        ClientPlayerEntity player = getMCI().player;
+        LocalPlayer player = getMCI().player;
         assert player != null;
         if (position == null) { // Non-VR
-            Vector3d[] pose = new Vector3d[]{player.position(), player.getLookAngle()};
+            Vec3[] pose = new Vec3[]{player.position(), player.getLookAngle()};
             pose[1] = pose[1].scale(1).add((0), (player.getEyeHeight() - .5), (0));
-            Vector3d newPos = pose[1].add(pose[0]);
+            Vec3 newPos = pose[1].add(pose[0]);
             if (player.getCommandSenderWorld().isClientSide()) {
-                ClientWorld clientWorld = (ClientWorld) player.getCommandSenderWorld();
+                Level clientWorld = (Level) player.getCommandSenderWorld();
                 for (int i = 0; i < 20; i++) {
                     rand = new Random();
                     motionX = rand.nextGaussian() * 0.005D;
@@ -34,9 +34,9 @@ public class SpawnParticles {
                 }
             }
         } else { // VR
-            Vector3d newPos = position;
+            Vec3 newPos = position;
             if (player.getCommandSenderWorld().isClientSide()) {
-                ClientWorld clientWorld = (ClientWorld) player.getCommandSenderWorld();
+                Level clientWorld = (Level) player.getCommandSenderWorld();
                 for (int i = 0; i < 120; i++) {
                     rand = new Random();
                     if (type == ParticleTypes.BUBBLE) {
@@ -59,11 +59,11 @@ public class SpawnParticles {
         }
     }
 
-    public static void createParticles(Vector3d position) {
-        ClientPlayerEntity player = getMCI().player;
+    public static void createParticles(Vec3 position) {
+        LocalPlayer player = getMCI().player;
         assert player != null;
         if (player.getCommandSenderWorld().isClientSide()) {
-            ClientWorld clientWorld = (ClientWorld) player.getCommandSenderWorld();
+            Level clientWorld = (Level) player.getCommandSenderWorld();
             for (int i = 0; i < 5; i++) {
                 clientWorld.addParticle(ParticleTypes.BUBBLE,
                         position.x, position.y, position.z,

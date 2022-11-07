@@ -7,25 +7,24 @@ import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.gesture.radix.Trace;
 import com.calicraft.vrjester.gesture.radix.Tracer;
 import com.calicraft.vrjester.vox.Vox;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.Vec3;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.calicraft.vrjester.VrJesterApi.getMCI;
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
 public class Gesture {
     // Class that handles compiling the attributes of a gesture utilizing the Tracer class
-    public Vector3d previousOrigin;
-    public Vector3d[] hmdOrigin, rcOrigin, lcOrigin;
+    public Vec3 previousOrigin;
+    public Vec3[] hmdOrigin, rcOrigin, lcOrigin;
     public Vox hmdVox, rcVox, lcVox;
     public List<Vox> voxList = new ArrayList<>();
     public Tracer tracer;
@@ -33,7 +32,7 @@ public class Gesture {
     public String rcGesture = "", lcGesture = "";
 
     private static int rcParticle, lcParticle;
-    private static final BasicParticleType[] particleTypes = new BasicParticleType[]{ParticleTypes.FLAME,
+    private static final SimpleParticleType[] particleTypes = new SimpleParticleType[]{ParticleTypes.FLAME,
             ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.CLOUD, ParticleTypes.BUBBLE_POP,
             ParticleTypes.FALLING_WATER};
     public final JSONObject config = new Config().readConfig();
@@ -51,7 +50,7 @@ public class Gesture {
 
     public void track(VRDataState vrDataRoomPre, VRDataState vrDataWorldPre) { // Record the Vox trace of each VRDevice and return the resulting data
         for (Vox vox: voxList) { // Loop through each VRDevice's Vox
-            Vector3d[] currentPoint = VRDataState.getVRDevicePose(vrDataRoomPre, vox.getVrDevice());
+            Vec3[] currentPoint = VRDataState.getVRDevicePose(vrDataRoomPre, vox.getVrDevice());
             vox.generateVox(currentPoint);
             int[] currentId = vox.getId();
             if (!Arrays.equals(vox.getPreviousId(), currentId)) { // Append new Vox Trace object
@@ -82,6 +81,7 @@ public class Gesture {
         }
         System.out.println("RC MOVE: " + tracer.rcMove);
         System.out.println("RC GESTURE: " + rcGesture);
+        System.out.println("RC PARTICLE: " + rcParticle);
         if (rcParticle >= 0) {
             createParticles(particleTypes[rcParticle], VRDataState.getVRDevicePose(vrDataWorldPre, rcVox.getVrDevice(), 0));
             rcParticle = -1;
@@ -127,9 +127,9 @@ public class Gesture {
     }
 
     public static void sendDebugMsg(String msg) {
-        ClientPlayerEntity player = Minecraft.getInstance().player;
-        ITextComponent text = new StringTextComponent(msg);
+        LocalPlayer player = getMCI().player;
+        Component text = Component.literal(msg);
         assert player != null;
-        player.sendMessage(text, player.getUUID());
+        player.sendSystemMessage(text);
     }
 }

@@ -2,7 +2,7 @@ package com.calicraft.vrjester.gesture.radix;
 
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +17,11 @@ public class Trace {
     public String inProximityOf;
     private long elapsedTime = 0; // Time spent within Vox (added on the fly while idle)
     private long speed; // Average speed within Vox (calculated on the fly while idle)
-    private Vector3d faceDirection, direction, front, back, right, left,
+    private Vec3 faceDirection, direction, front, back, right, left,
                      frontRight, frontLeft, backRight, backLeft;
-    private final List<Vector3d[]> poses = new ArrayList<>(); // Poses captured within Vox
+    private final List<Vec3[]> poses = new ArrayList<>(); // Poses captured within Vox
 
-    public Trace(String voxId, VRDevice vrDevice, Vector3d[] pose, Vector3d faceDirection) {
+    public Trace(String voxId, VRDevice vrDevice, Vec3[] pose, Vec3 faceDirection) {
         this.voxId = voxId;
         this.vrDevice = vrDevice;
         this.faceDirection = faceDirection;
@@ -51,7 +51,7 @@ public class Trace {
         this.movement = movement;
     }
 
-    public void setMovement(Vector3d gestureDirection) {
+    public void setMovement(Vec3 gestureDirection) {
         // TODO - Divide Constants.DEGREE_SPAN by 2 after adding diagonals handler
         if (!movement.equals("idle")) {
             // TODO - Possibly handle diagonal ups and downs using concatenation
@@ -94,34 +94,34 @@ public class Trace {
         return speed;
     }
 
-    public Vector3d getDirection() {
+    public Vec3 getDirection() {
         return direction;
     }
 
-    public void setDirection(Vector3d direction) {
+    public void setDirection(Vec3 direction) {
         this.direction = direction;
     }
 
-    public void addPose(Vector3d[] pose) {
+    public void addPose(Vec3[] pose) {
         poses.add(pose);
     }
 
-    public List<Vector3d[]> getPoses() {
+    public List<Vec3[]> getPoses() {
         return poses;
     }
 
-    public void completeTrace(Vector3d end) {
-        Vector3d start = poses.get(0)[0];
-        Vector3d gestureDirection = end.subtract(start).normalize();
+    public void completeTrace(Vec3 end) {
+        Vec3 start = poses.get(0)[0];
+        Vec3 gestureDirection = end.subtract(start).normalize();
         setMovement(gestureDirection);
         setElapsedTime(System.nanoTime());
     }
 
-    private void setMovementBuckets(Vector3d faceDirection) {
+    private void setMovementBuckets(Vec3 faceDirection) {
         front = faceDirection;
-        back = new Vector3d(-faceDirection.x, faceDirection.y, -faceDirection.z);
-        right = new Vector3d(-faceDirection.z, faceDirection.y, faceDirection.x);
-        left = new Vector3d(faceDirection.z, faceDirection.y, -faceDirection.x);
+        back = new Vec3(-faceDirection.x, faceDirection.y, -faceDirection.z);
+        right = new Vec3(-faceDirection.z, faceDirection.y, faceDirection.x);
+        left = new Vec3(faceDirection.z, faceDirection.y, -faceDirection.x);
         frontRight = front.yRot(Constants.DEGREE_SPAN);
         frontLeft = front.yRot(-Constants.DEGREE_SPAN);
         backRight = back.yRot(Constants.DEGREE_SPAN);

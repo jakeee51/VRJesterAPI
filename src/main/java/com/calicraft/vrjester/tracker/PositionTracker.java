@@ -1,51 +1,44 @@
 package com.calicraft.vrjester.tracker;
 
-import net.minecraft.client.Minecraft;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.vivecraft.api.VRData;
-import org.vivecraft.gameplay.VRPlayer;
+import net.blf02.vrapi.api.IVRAPI;
+import net.blf02.vrapi.api.VRAPIPlugin;
+import net.blf02.vrapi.api.VRAPIPluginProvider;
+import net.blf02.vrapi.api.data.IVRData;
+import net.blf02.vrapi.api.data.IVRPlayer;
 
-import java.lang.reflect.*;
+import static com.calicraft.vrjester.VrJesterApi.getMCI;
 
-public class PositionTracker {
+@VRAPIPlugin
+public class PositionTracker implements VRAPIPluginProvider {
     // Class for consuming & tracking VRPlayer data from Vivecraft
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    public VRPlayer vrPlayer; // Field declared as part of Minecraft instance
-    public String vrDataSource; // Which VR Data API being consumed
+    public IVRPlayer vrPlayer;
+    public static IVRAPI vrAPI = null;
+
+    @Override
+    public void getVRAPI(IVRAPI ivrapi) {
+        vrAPI = ivrapi;
+        VRPluginStatus.hasPlugin = true;
+    }
+
+    public class VRPluginStatus {
+        public static boolean hasPlugin = false;
+    }
 
     public PositionTracker() {
-        try {
-//            MC.VRPlayer.VRData.VRDevicePose -> vr device
-//            mc.vrPlayer.vrdata_world_pre.c0 -> right controller
-            Class<?> mc = Class.forName("net.minecraft.client.Minecraft");
-            Field vrPlayer = mc.getDeclaredField("vrPlayer");
-            this.vrPlayer = (VRPlayer) vrPlayer.get(Minecraft.getInstance());
-            if (this.vrPlayer != null) {
-                vrDataSource = "vivecraft";
-            } else {
-                LOGGER.debug("vrPlayer: null");
-            }
-        } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            LOGGER.error("Failed to load Vivecraft class!");
-        } catch ( NoSuchFieldException e) {
-            LOGGER.error("Failed to get Vivecraft field");
-        } catch (IllegalAccessException e) {
-            LOGGER.error("Failed to access Vivecraft object");
-        }
+        vrPlayer = vrAPI.getVRPlayer(getMCI().player);
     }
 
     // Note: VR data getters must be called later after initialization to avoid NullPointerException (i.e.: ExceptionInInitializerError: null)
-    public VRData getVRDataRoomPre() { // Return real world VR data pre-tick
+    public IVRData getVRDataRoomPre() { // Return real world VR data pre-tick
         return vrPlayer.vrdata_room_pre;
     }
 
-    public VRData getVRDataWorldPre() { // Return in-game world VR data pre-tick
+    public IVRData getVRDataWorldPre() { // Return in-game world VR data pre-tick
         return vrPlayer.vrdata_world_pre;
     }
 
-    public VRPlayer getVRPlayer() {
+    public IVRPlayer getVRPlayer() {
         return vrPlayer;
     }
 }
