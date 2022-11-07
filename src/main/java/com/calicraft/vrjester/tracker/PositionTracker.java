@@ -15,6 +15,10 @@ public class PositionTracker implements VRAPIPluginProvider {
     public IVRPlayer vrPlayer;
     public static IVRAPI vrAPI = null;
 
+    public PositionTracker() {
+        vrPlayer = vrAPI.getVRPlayer(getMCI().player);
+    }
+
     @Override
     public void getVRAPI(IVRAPI ivrapi) {
         vrAPI = ivrapi;
@@ -23,10 +27,6 @@ public class PositionTracker implements VRAPIPluginProvider {
 
     public class VRPluginStatus {
         public static boolean hasPlugin = false;
-    }
-
-    public PositionTracker() {
-        vrPlayer = vrAPI.getVRPlayer(getMCI().player);
     }
 
     // Note: VR data getters must be called later after initialization to avoid NullPointerException (i.e.: ExceptionInInitializerError: null)

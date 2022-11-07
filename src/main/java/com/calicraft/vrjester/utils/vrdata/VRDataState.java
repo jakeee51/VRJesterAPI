@@ -1,8 +1,8 @@
 package com.calicraft.vrjester.utils.vrdata;
 
 import com.calicraft.vrjester.tracker.Tracker;
+import net.blf02.vrapi.api.data.IVRData;
 import net.minecraft.world.phys.Vec3;
-import org.vivecraft.api.VRData;
 
 public class VRDataState {
     // Class for encapsulating VRData devices
@@ -16,6 +16,14 @@ public class VRDataState {
         rc = Tracker.getPose(vrData.c0);
         lc = Tracker.getPose(vrData.c1);
         c2 = Tracker.getPose(vrData.c2);
+    }
+
+    public VRDataState(IVRData vrData) {
+        origin = null;
+        hmd = null;
+        rc = null;
+        lc = null;
+        c2 = null;
     }
 
     @Override

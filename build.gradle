@@ -153,6 +153,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.19.2-43.1.1'
     compileOnly fg.deobf("curse.maven:mcvrapi-591092:4070479")
     runtimeOnly fg.deobf("curse.maven:mcvrapi-591092:4070479")
+//    implementation files('libs/minecrift-1.19.2-jrbudda-VR-2-b8-forge.jar')
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation group: 'org.json', name: 'json', version: '20220320'
     implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.149'
