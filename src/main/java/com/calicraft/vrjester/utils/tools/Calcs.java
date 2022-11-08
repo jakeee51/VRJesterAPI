@@ -1,7 +1,5 @@
 package com.calicraft.vrjester.utils.tools;
 
-import com.calicraft.vrjester.VrJesterApi;
-import com.calicraft.vrjester.tracker.Tracker;
 import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 
@@ -53,15 +51,4 @@ public class Calcs {
         return ret;
     }
 
-    public static void rotateOriginAround(float degrees, Vec3 o){
-        Vec3 pt = Tracker.getOrigin(VrJesterApi.TRACKER.getVRPlayer().toString());
-
-        float rads = (float) Math.toRadians(degrees); // reverse rotate
-        if(rads!=0)
-            VrJesterApi.TRACKER.getVRPlayer().setRoomOrigin(
-                    Math.cos(rads) * (pt.x-o.x) - Math.sin(rads) * (pt.z-o.z) + o.x,
-                    pt.y,
-                    Math.sin(rads) * (pt.x-o.x) + Math.cos(rads) * (pt.z-o.z) + o.z
-                    ,false);
-    }
 }

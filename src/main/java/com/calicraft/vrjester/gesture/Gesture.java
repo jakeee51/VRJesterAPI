@@ -23,7 +23,6 @@ import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
 public class Gesture {
     // Class that handles compiling the attributes of a gesture utilizing the Tracer class
-    public Vec3 previousOrigin;
     public Vec3[] hmdOrigin, rcOrigin, lcOrigin;
     public Vox hmdVox, rcVox, lcVox;
     public List<Vox> voxList = new ArrayList<>();
@@ -39,7 +38,6 @@ public class Gesture {
 
     public Gesture(VRDataState vrDataState) {
         tracer = new Tracer();
-        previousOrigin = vrDataState.getOrigin();
         hmdOrigin = vrDataState.getHmd(); rcOrigin = vrDataState.getRc(); lcOrigin = vrDataState.getLc();
         hmdVox = new Vox(Constants.HMD, VRDevice.HMD, hmdOrigin, hmdOrigin[1], false);
         rcVox = new Vox(Constants.RC, VRDevice.RC, rcOrigin, hmdOrigin[1], true);

@@ -4,6 +4,7 @@ import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
+import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.vrdata.*;
 import com.calicraft.vrjester.vox.Vox;
 import net.minecraft.client.player.LocalPlayer;
@@ -47,6 +48,7 @@ public class TriggerEventHandler {
         if (VIVECRAFTLOADED) {
             if (VrJesterApi.MOD_KEY.isDown() && !listener) {
                 System.out.println("JESTER TRIGGERED");
+                System.out.println("HERE: " + PositionTracker.vrAPI.getPreTickRoomVRPlayer().getController0());
                 listener = true; elapsedTime = System.nanoTime();
                 config = new Config(Constants.DEV_CONFIG_PATH).readConfig();
                 vrDataWriter = new VRDataWriter("room", iter);

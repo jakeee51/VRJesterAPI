@@ -1,8 +1,6 @@
 package com.calicraft.vrjester;
 
 import com.calicraft.vrjester.handlers.TriggerEventHandler;
-import com.calicraft.vrjester.tracker.PositionTracker;
-import com.calicraft.vrjester.utils.tools.EventsLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -27,7 +25,6 @@ import java.util.stream.Collectors;
 public class VrJesterApi {
     // Main entry point
     private static final Logger LOGGER = LogManager.getLogger();
-    public static PositionTracker TRACKER;
     public static boolean VIVECRAFTLOADED = false;
     public static final String MOD_ID = "vrjester";
     public static final KeyMapping MOD_KEY = new KeyMapping("key.vrjester.71", 71, MOD_ID);
@@ -45,22 +42,11 @@ public class VrJesterApi {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerBindings);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-        // Register deferred register for custom particles
-//        PARTICLES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        try { // Check if Vivecraft is running
-            Class.forName("org.vivecraft.api.VRData");
-            VIVECRAFTLOADED = true;
-            System.out.println("Vivecraft has been loaded!");
-            EventsLoader.register();
-            LOGGER.info("Events have been loaded!");
-        } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            LOGGER.error("Vivecraft has failed to load!");
-        }
         MinecraftForge.EVENT_BUS.register(new TriggerEventHandler());
     }
 
     public static Minecraft getMCI() {
-        return VrJesterApi.getMCI();
+        return Minecraft.getInstance();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -76,7 +62,7 @@ public class VrJesterApi {
     private void processIMC(final InterModProcessEvent event) {
         // some example code to receive and process InterModComms from other mods
         LOGGER.info("Got IMC {}", event.getIMCStream().
-                map(m->m.getMessageSupplier().get()).
+                map(m->m.messageSupplier().get()).
                 collect(Collectors.toList()));
     }
 

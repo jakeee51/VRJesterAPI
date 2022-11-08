@@ -143,6 +143,7 @@ repositories {
     maven {
         url = "https://cursemaven.com"
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -153,10 +154,10 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.19.2-43.1.1'
     compileOnly fg.deobf("curse.maven:mcvrapi-591092:4073384")
     runtimeOnly fg.deobf("curse.maven:mcvrapi-591092:4073384")
-//    implementation files('libs/minecrift-1.19.2-jrbudda-VR-2-b8-forge.jar')
-    implementation 'org.jetbrains:annotations:20.1.0'
-    implementation group: 'org.json', name: 'json', version: '20220320'
-    implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.149'
+    implementation 'org.jetbrains:annotations:23.0.0'
+    implementation 'org.json:json:20220924'
+//    implementation files('libs/OptiFine_1.19.2_HD_U_H9.jar')
+//    implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.149'
 //    compileOnly group: 'com.mojang', name: 'authlib', version: '1.5.25'
 
 

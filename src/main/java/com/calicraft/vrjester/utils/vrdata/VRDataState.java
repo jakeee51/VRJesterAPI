@@ -1,7 +1,7 @@
 package com.calicraft.vrjester.utils.vrdata;
 
 import com.calicraft.vrjester.tracker.Tracker;
-import net.blf02.vrapi.api.data.IVRData;
+import net.blf02.vrapi.api.data.IVRPlayer;
 import net.minecraft.world.phys.Vec3;
 
 public class VRDataState {
@@ -10,19 +10,11 @@ public class VRDataState {
     private final Vec3 origin;
     private final Vec3[] hmd, rc, lc, c2;
 
-    public VRDataState(VRData vrData) {
-        origin = Tracker.getOrigin(vrData.toString());
-        hmd = Tracker.getPose(vrData.hmd);
-        rc = Tracker.getPose(vrData.c0);
-        lc = Tracker.getPose(vrData.c1);
-        c2 = Tracker.getPose(vrData.c2);
-    }
-
-    public VRDataState(IVRData vrData) {
-        origin = null;
-        hmd = null;
-        rc = null;
-        lc = null;
+    public VRDataState(IVRPlayer ivrPlayer) {
+        origin = new Vec3((0), (0), (0));
+        hmd = Tracker.getPose(ivrPlayer.getHMD());
+        rc = Tracker.getPose(ivrPlayer.getController0());
+        lc = Tracker.getPose(ivrPlayer.getController1());
         c2 = null;
     }
 
