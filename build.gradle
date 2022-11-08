@@ -151,8 +151,8 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.19.2-43.1.1'
-    compileOnly fg.deobf("curse.maven:mcvrapi-591092:4070479")
-    runtimeOnly fg.deobf("curse.maven:mcvrapi-591092:4070479")
+    compileOnly fg.deobf("curse.maven:mcvrapi-591092:4073384")
+    runtimeOnly fg.deobf("curse.maven:mcvrapi-591092:4073384")
 //    implementation files('libs/minecrift-1.19.2-jrbudda-VR-2-b8-forge.jar')
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation group: 'org.json', name: 'json', version: '20220320'
