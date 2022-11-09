@@ -1,11 +1,12 @@
 {
 	"WRITE_DATA": "false",
 	"DISPLAY_VOX": "false",
-	"VOX_LENGTH": "0.4",
+	"VOX_LENGTH": "0.5",
 	"GESTURES": [
 		{
-			"movements": "forwardup",
-			"elapsedTime": "5",
+			"name": "KAAAMEEE...HAAAMEEE...HAAAAAA!",
+			"movements": "backforward",
+			"elapsedTime": "4000",
 			"velocity": "5.0"
 		}
     ],

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.calicraft.vrjester.utils.tools.Calcs.getAngle2D;
+import static com.calicraft.vrjester.utils.tools.Calcs.getMagnitude3D;
 
 public class Trace {
     // POJO for traced Vox state per VRDevice in an iteration of time
@@ -15,8 +16,8 @@ public class Trace {
     public VRDevice vrDevice; // The VRDevice
     public String movement = "idle"; // Movement taken to get to Vox
     public String inProximityOf;
-    private long elapsedTime = 0; // Time spent within Vox (added on the fly while idle)
-    private long speed; // Average speed within Vox (calculated on the fly while idle)
+    private long elapsedTime = 0; // Time spent within Vox in ms (added on the fly while idle)
+    private double speed; // Average speed within Vox (calculated on the fly while idle)
     private Vec3 faceDirection, direction, front, back, right, left,
                      frontRight, frontLeft, backRight, backLeft;
     private final List<Vec3[]> poses = new ArrayList<>(); // Poses captured within Vox
@@ -55,7 +56,6 @@ public class Trace {
         // TODO - Divide Constants.DEGREE_SPAN by 2 after adding diagonals handler
         if (!movement.equals("idle")) {
             // TODO - Possibly handle diagonal ups and downs using concatenation
-            System.out.println("MOVED UP OR DOWN");
         } else if (getAngle2D(front, gestureDirection) <= Constants.DEGREE_SPAN) {
             movement = "forward";
         } else if (getAngle2D(back, gestureDirection) <= Constants.DEGREE_SPAN) {
@@ -79,18 +79,21 @@ public class Trace {
     }
 
     public void setElapsedTime(long currentTime) {
-        this.elapsedTime = currentTime - elapsedTime;
+        if (elapsedTime == 0)
+            elapsedTime = currentTime;
+        else
+            elapsedTime = (currentTime - elapsedTime) / 1000000;
     }
 
-    public long getElapsedTime() {
+    public float getElapsedTime() {
         return elapsedTime;
     }
 
-    public void setSpeed(long speed) {
-        this.speed = speed;
+    public void setSpeed(Vec3 end) {
+        this.speed = (getMagnitude3D(end.subtract(poses.get(0)[0])) / elapsedTime) * 1000000;
     }
 
-    public long getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
@@ -115,6 +118,7 @@ public class Trace {
         Vec3 gestureDirection = end.subtract(start).normalize();
         setMovement(gestureDirection);
         setElapsedTime(System.nanoTime());
+        setSpeed(end);
     }
 
     private void setMovementBuckets(Vec3 faceDirection) {

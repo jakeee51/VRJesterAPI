@@ -26,9 +26,9 @@ public class Gesture {
     public Vox hmdVox, rcVox, lcVox;
     public List<Vox> voxList = new ArrayList<>();
     public Tracer tracer;
+
     public Trace[] traceTray = new Trace[3];
     public String rcGesture = "", lcGesture = "";
-
     private static int rcParticle, lcParticle;
     private static final SimpleParticleType[] particleTypes = new SimpleParticleType[]{ParticleTypes.FLAME,
             ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.CLOUD, ParticleTypes.BUBBLE_POP,
@@ -60,7 +60,12 @@ public class Gesture {
 //                System.out.println("AFTER: " + vox.getName() + ": " + vox.getTrace().toString());
                 if (vox.getVrDevice() == VRDevice.RC) {
                     tracer.rcMove = trace.movement;
+                    tracer.rcElapsedTime += trace.getElapsedTime();
+                    tracer.rcSpeed = trace.getSpeed();
                     rcGesture += trace.movement;
+                    System.out.println("RC GESTURE: " + rcGesture);
+                    System.out.println("RC ELAPSED TIME: " + tracer.rcElapsedTime);
+                    System.out.println("RC ELAPSED SPEED: " + tracer.rcSpeed);
 //                    if (rcParticle < particleTypes.length-2)
 //                        rcParticle++;
 //                    else
@@ -68,6 +73,8 @@ public class Gesture {
                 }
                 if (vox.getVrDevice() == VRDevice.LC) {
                     tracer.lcMove = trace.movement;
+                    tracer.lcElapsedTime += trace.getElapsedTime();
+                    tracer.lcSpeed = trace.getSpeed();
                     lcGesture += trace.movement;
 //                    if (lcParticle < particleTypes.length-2)
 //                        lcParticle++;
@@ -76,9 +83,6 @@ public class Gesture {
                 }
             }
         }
-        System.out.println("RC MOVE: " + tracer.rcMove);
-        System.out.println("RC GESTURE: " + rcGesture);
-        System.out.println("RC PARTICLE: " + rcParticle);
         if (rcParticle >= 0) {
             createParticles(particleTypes[rcParticle], VRDataState.getVRDevicePose(vrDataWorldPre, rcVox.getVrDevice(), 0));
             rcParticle = -1;
@@ -91,35 +95,44 @@ public class Gesture {
 
     public boolean recognizeTest() {
         boolean ret = false;
-        if (tracer.rcMove.equals("left") && tracer.lcMove.equals("right")) {
-            rcParticle = 4; lcParticle = 4;
-            sendDebugMsg("SHRINK"); tracer.rcMove = ""; tracer.lcMove = "";
-        } else if (tracer.rcMove.equals("right") && tracer.lcMove.equals("left")) {
-            rcParticle = 2; lcParticle = 2;
-            sendDebugMsg("GROW"); tracer.rcMove = ""; tracer.lcMove = "";
-        } else if (rcGesture.equals("forwardup") && lcGesture.equals("forwardup")) {
-            rcParticle = 1; lcParticle = 1;
-            sendDebugMsg("RAISE"); rcGesture = ""; lcGesture = ""; tracer.rcMove = ""; tracer.lcMove = "";
-        } else if (rcGesture.equals("downback") && lcGesture.equals("downback")) {
-            rcParticle = 5; lcParticle = 5;
-            sendDebugMsg("PULL"); rcGesture = ""; lcGesture = "";
-        } else if (rcGesture.equals("upforward") && lcGesture.equals("upforward")) {
-            rcParticle = 3; lcParticle = 3;
-            sendDebugMsg("BLAST"); rcGesture = ""; lcGesture = ""; tracer.rcMove = ""; tracer.lcMove = "";
-        } else {
-            if (tracer.rcMove.equals("forward")) {
-                rcParticle = 0;
-                sendDebugMsg("STRIKE"); tracer.rcMove = "";
-            }
-            if (tracer.lcMove.equals("forward")) {
-                lcParticle = 0;
-                sendDebugMsg("STRIKE"); tracer.lcMove = "";
-            }
-            if (tracer.rcMove.equals("down") && tracer.lcMove.equals("down")) {
-                rcParticle = 1; lcParticle = 1;
-                sendDebugMsg("LOWER"); tracer.rcMove = ""; tracer.lcMove = "";
+        for (int i = 0; i < config.GESTURES.length; i++) {
+            Config.SimpleGesture simpleGesture = config.GESTURES[0];
+            if (rcGesture.equals(simpleGesture.movements) || lcGesture.equals(simpleGesture.movements)) {
+                if (tracer.rcElapsedTime >= simpleGesture.elapsedTime || tracer.lcElapsedTime >= simpleGesture.elapsedTime) {
+                    rcParticle = 1; lcParticle = 1; ret = true;
+                    sendDebugMsg(simpleGesture.name); rcGesture = ""; lcGesture = ""; tracer.rcMove = ""; tracer.lcMove = "";
+                }
             }
         }
+//        if (tracer.rcMove.equals("left") && tracer.lcMove.equals("right")) {
+//            rcParticle = 4; lcParticle = 4;
+//            sendDebugMsg("SHRINK"); tracer.rcMove = ""; tracer.lcMove = "";
+//        } else if (tracer.rcMove.equals("right") && tracer.lcMove.equals("left")) {
+//            rcParticle = 2; lcParticle = 2;
+//            sendDebugMsg("GROW"); tracer.rcMove = ""; tracer.lcMove = "";
+//        } else if (rcGesture.equals("forwardup") && lcGesture.equals("forwardup")) {
+//            rcParticle = 1; lcParticle = 1;
+//            sendDebugMsg("RAISE"); rcGesture = ""; lcGesture = ""; tracer.rcMove = ""; tracer.lcMove = "";
+//        } else if (rcGesture.equals("downback") && lcGesture.equals("downback")) {
+//            rcParticle = 5; lcParticle = 5;
+//            sendDebugMsg("PULL"); rcGesture = ""; lcGesture = "";
+//        } else if (rcGesture.equals("upforward") && lcGesture.equals("upforward")) {
+//            rcParticle = 3; lcParticle = 3;
+//            sendDebugMsg("BLAST"); rcGesture = ""; lcGesture = ""; tracer.rcMove = ""; tracer.lcMove = "";
+//        } else {
+//            if (tracer.rcMove.equals("forward")) {
+//                rcParticle = 0;
+//                sendDebugMsg("STRIKE"); tracer.rcMove = "";
+//            }
+//            if (tracer.lcMove.equals("forward")) {
+//                lcParticle = 0;
+//                sendDebugMsg("STRIKE"); tracer.lcMove = "";
+//            }
+//            if (tracer.rcMove.equals("down") && tracer.lcMove.equals("down")) {
+//                rcParticle = 1; lcParticle = 1;
+//                sendDebugMsg("LOWER"); tracer.rcMove = ""; tracer.lcMove = "";
+//            }
+//        }
         return ret;
     }
 

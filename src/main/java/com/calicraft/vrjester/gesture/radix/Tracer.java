@@ -11,6 +11,8 @@ public class Tracer {
     //   -> Vox Id's, 3D Joystick Directions, VRDevice Poses & Time Elapsed (per Vox)
     public List<Trace[]> traces = new ArrayList<>();
     public String rcMove = "", lcMove = "";
+    public long rcElapsedTime = 0, lcElapsedTime = 0;
+    public double rcSpeed, lcSpeed;
     public Tracer() {
 
     }

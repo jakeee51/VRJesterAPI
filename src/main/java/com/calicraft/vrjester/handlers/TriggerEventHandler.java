@@ -33,7 +33,6 @@ public class TriggerEventHandler {
     private static boolean listener = false;
     private long elapsedTime = 0;
 
-    private static Vec3 offset;
     private static Vox displayRCVox, displayLCVox;
     private static Gesture gesture;
     private static LocalPlayer player;
@@ -45,7 +44,7 @@ public class TriggerEventHandler {
             try {
                 VIVECRAFTLOADED = PositionTracker.vrAPI.playerInVR(player);
             } catch (NullPointerException e) {
-                System.out.println("Threw NullPointerException trying to call IVRAPI.playerInVR" + e);
+                System.out.println("Threw NullPointerException trying to call IVRAPI.playerInVR");
             }
         }
         // Trigger the gesture listening phase
@@ -83,13 +82,13 @@ public class TriggerEventHandler {
             VRDataState vrDataWorldPre = preWorldDataAggregator.listen();
             if (gesture == null) {
                 gesture = new Gesture(vrDataRoomPre);
-//                voxDebugger(new int[]{0, 0, 0}, true);
+//                traceDebugger(new int[]{0, 0, 0}, true);
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, true);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, true);
             } else {
                 gesture.track(vrDataRoomPre, vrDataWorldPre);
                 gesture.recognizeTest();
-//                voxDebugger(currentId, false);
+//                traceDebugger(currentId, false);
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, false);
                 dataDebugger(vrDataRoomPre);
@@ -113,7 +112,7 @@ public class TriggerEventHandler {
                 displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
                 displayRCVox = new Vox(Constants.RC, vrDevice, displayOrigin, hmdOrigin[1], true);
             } else {
-                displayRCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0), player.position().add(displayRCVox.getOffset()));
+                displayRCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0));
             }
         }
     }
@@ -125,7 +124,7 @@ public class TriggerEventHandler {
                 displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
                 displayLCVox = new Vox(Constants.LC, vrDevice, displayOrigin, hmdOrigin[1], true);
             } else {
-                displayLCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0), player.position().add(displayLCVox.getOffset()));
+                displayLCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0));
             }
         }
     }
@@ -135,8 +134,8 @@ public class TriggerEventHandler {
             vrDataWriter.write(vrDataState);
     }
 
-    public static void voxDebugger(int[] currentId, boolean init) throws IOException { // For Vox Data
-        // TODO - Upgrade voxDebugger to write trace information
+    public static void traceDebugger(int[] currentId, boolean init) throws IOException { // For Vox Data
+        // TODO - Upgrade traceDebugger to write trace information
         if (config.WRITE_DATA)
             voxDataWriter.write(Arrays.toString(currentId));
     }

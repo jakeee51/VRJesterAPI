@@ -26,8 +26,9 @@ public class Config {
         public String[] devices;
     }
 
-    class SimpleGesture {
+    public class SimpleGesture {
         // Class that represents a gesture's overall simple attributes from a collection of Trace objects
+        public String name;
         public String movements;
         public long elapsedTime;
         public double velocity;

@@ -110,7 +110,6 @@ public class Vox {
             double newY = side_length * (newVoxId[1] - id[1]);
             double newZ = side_length * (newVoxId[2] - id[2]);
             Vec3 newPointDiff = new Vec3(newX, newY, newZ);
-            // TODO - Try updating vox position immediately after we exited from previous vox
             updateVoxPosition(pose[0], false);
             setId(newVoxId);
             trace.setMovement(movementDirection);
@@ -120,14 +119,12 @@ public class Vox {
         }
     }
 
-    public void manifestVox(Vec3 point, Vec3 delta) { // When VRDevice is outside current Vox, new Vox is visualized at neighboring position
-        Vec3 newPointDiff = new Vec3((0), (0), (0));
+    public void manifestVox(Vec3 point) { // When VRDevice is outside current Vox, new Vox is visualized at neighboring position
         if (!this.hasPoint(point)) { // Check if point is outside of current Vox
             int[] newVoxId = this.getVoxNeighbor(point);
             double newX = side_length * (newVoxId[0] - this.id[0]);
             double newY = side_length * (newVoxId[1] - this.id[1]);
             double newZ = side_length * (newVoxId[2] - this.id[2]);
-            newPointDiff = new Vec3(newX, newY, newZ);
             this.updateVoxPosition(point, false);
             this.setId(newVoxId);
         }
@@ -147,9 +144,7 @@ public class Vox {
 
         // Bottom square plane
         vertices.put("p1", vertices.get("d1"));
-        System.out.println("HERE BEFORE p2: " + vertices.get("p2"));
         vertices.put("p2", centroid.add((side_length /2), -(side_length /2), -(side_length /2)));
-        System.out.println("HERE AFTER p2: " + vertices.get("p2"));
         vertices.put("p3", centroid.add(-(side_length /2), -(side_length /2), (side_length /2)));
         vertices.put("p4", centroid.add((side_length /2), -(side_length /2), (side_length /2)));
 
