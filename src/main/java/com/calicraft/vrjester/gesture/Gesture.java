@@ -12,7 +12,6 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,14 +33,14 @@ public class Gesture {
     private static final SimpleParticleType[] particleTypes = new SimpleParticleType[]{ParticleTypes.FLAME,
             ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.CLOUD, ParticleTypes.BUBBLE_POP,
             ParticleTypes.FALLING_WATER};
-    public final JSONObject config = new Config().readConfig();
+    public final Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);
 
     public Gesture(VRDataState vrDataState) {
         tracer = new Tracer();
         hmdOrigin = vrDataState.getHmd(); rcOrigin = vrDataState.getRc(); lcOrigin = vrDataState.getLc();
         hmdVox = new Vox(Constants.HMD, VRDevice.HMD, hmdOrigin, hmdOrigin[1], false);
         rcVox = new Vox(Constants.RC, VRDevice.RC, rcOrigin, hmdOrigin[1], true);
-        lcVox = new Vox(Constants.LC, VRDevice.LC, lcOrigin, hmdOrigin[1], false);
+        lcVox = new Vox(Constants.LC, VRDevice.LC, lcOrigin, hmdOrigin[1], true);
         voxList.add(hmdVox); voxList.add(rcVox); voxList.add(lcVox);
         rcParticle = -1; lcParticle = -1;
     }

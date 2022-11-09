@@ -13,18 +13,16 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-import static com.calicraft.vrjester.VrJesterApi.VIVECRAFTLOADED;
-import static com.calicraft.vrjester.VrJesterApi.getMCI;
+import static com.calicraft.vrjester.VrJesterApi.*;
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
 
 public class TriggerEventHandler {
-    private static JSONObject config;
+    private static Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);
     private static final VRDataAggregator preRoomDataAggregator = new VRDataAggregator(VRDataType.VRDATA_ROOM_PRE, false);
     private static final VRDataAggregator preWorldDataAggregator = new VRDataAggregator(VRDataType.VRDATA_WORLD_PRE, false);
     private static VRDataWriter vrDataWriter;
@@ -42,26 +40,30 @@ public class TriggerEventHandler {
     
     @SubscribeEvent
     public void onJesterTrigger(InputEvent.Key event) {
-        if (player == null)
+        if (player == null) {
             player = getMCI().player;
+            try {
+                VIVECRAFTLOADED = PositionTracker.vrAPI.playerInVR(player);
+            } catch (NullPointerException e) {
+                System.out.println("Threw NullPointerException trying to call IVRAPI.playerInVR" + e);
+            }
+        }
         // Trigger the gesture listening phase
         if (VIVECRAFTLOADED) {
             if (VrJesterApi.MOD_KEY.isDown() && !listener) {
                 System.out.println("JESTER TRIGGERED");
-                System.out.println("HERE: " + PositionTracker.vrAPI.getPreTickRoomVRPlayer().getController0());
                 listener = true; elapsedTime = System.nanoTime();
-                config = new Config(Constants.DEV_CONFIG_PATH).readConfig();
+                config = Config.readConfig(Constants.DEV_CONFIG_PATH);
                 vrDataWriter = new VRDataWriter("room", iter);
                 voxDataWriter = new VRDataWriter("vox", iter);
             } else {
                 System.out.println("JESTER RELEASED");
                 listener = false; elapsedTime = System.nanoTime() - elapsedTime;
                 gesture = null; elapsedTime = 0;
-                if (config.has("WRITE_DATA"))
-                    if (config.getBoolean("WRITE_DATA"))
-                        iter++;
-                    else
-                        iter = 0;
+                if (config.WRITE_DATA)
+                    iter++;
+                else
+                    iter = 0;
                 // Fire event or trigger something based on recognized gesture
             }
         }
@@ -82,13 +84,13 @@ public class TriggerEventHandler {
             if (gesture == null) {
                 gesture = new Gesture(vrDataRoomPre);
 //                voxDebugger(new int[]{0, 0, 0}, true);
-                displayRCDebugger(vrDataWorldPre, VRDevice.RC, true);
+//                displayRCDebugger(vrDataWorldPre, VRDevice.RC, true);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, true);
             } else {
                 gesture.track(vrDataRoomPre, vrDataWorldPre);
                 gesture.recognizeTest();
 //                voxDebugger(currentId, false);
-                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
+//                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, false);
                 dataDebugger(vrDataRoomPre);
             }
@@ -106,105 +108,37 @@ public class TriggerEventHandler {
 
     public static void displayRCDebugger(VRDataState vrDataState, VRDevice vrDevice, boolean init) { // For VRData World
         Vec3[] displayOrigin, hmdOrigin = vrDataState.getHmd();
-        try {
+        if (config.DISPLAY_VOX) {
             if (init) {
-                if (config.has("DISPLAY_VOX")) {
-                    if (config.getBoolean("DISPLAY_VOX")) {
-                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
-                        displayRCVox = new Vox(Constants.RC, vrDevice, displayOrigin, hmdOrigin[1], true);
-                    }
-                } else {
-                    if (Constants.DISPLAY_VOX) {
-                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
-                        displayRCVox = new Vox(Constants.RC, vrDevice, displayOrigin, hmdOrigin[1], true);
-                    }
-                }
+                displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
+                displayRCVox = new Vox(Constants.RC, vrDevice, displayOrigin, hmdOrigin[1], true);
             } else {
-                if (config.has("DISPLAY_VOX")) {
-                    if (config.getBoolean("DISPLAY_VOX"))
-                        displayRCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0), player.position().add(displayRCVox.getOffset()));
-                } else {
-                    if (Constants.DISPLAY_VOX)
-                        displayRCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0), player.position().add(displayRCVox.getOffset()));
-                }
+                displayRCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0), player.position().add(displayRCVox.getOffset()));
             }
-        } catch (NullPointerException e) {
-            System.err.println(e);
         }
     }
 
     public static void displayLCDebugger(VRDataState vrDataState, VRDevice vrDevice, boolean init) { // For VRData World
         Vec3[] displayOrigin, hmdOrigin = vrDataState.getHmd();
-        try {
+        if (config.DISPLAY_VOX) {
             if (init) {
-                if (config.has("DISPLAY_VOX")) {
-                    if (config.getBoolean("DISPLAY_VOX")) {
-                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
-                        displayLCVox = new Vox(Constants.LC, vrDevice, displayOrigin, hmdOrigin[1], true);
-                        offset = displayOrigin[0].subtract(player.position());
-                    }
-                } else {
-                    if (Constants.DISPLAY_VOX) {
-                        displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
-                        displayLCVox = new Vox(Constants.LC, vrDevice, displayOrigin, hmdOrigin[1], true);
-                        offset = displayOrigin[0].subtract(player.position());
-                    }
-                }
+                displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
+                displayLCVox = new Vox(Constants.LC, vrDevice, displayOrigin, hmdOrigin[1], true);
             } else {
-                if (config.has("DISPLAY_VOX")) {
-                    if (config.getBoolean("DISPLAY_VOX"))
-                        displayLCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0), player.position().add(displayLCVox.getOffset()));
-                } else {
-                    if (Constants.DISPLAY_VOX)
-                        displayLCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0), player.position().add(displayLCVox.getOffset()));
-                }
+                displayLCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0), player.position().add(displayLCVox.getOffset()));
             }
-        } catch (NullPointerException e) {
-            System.err.println(e);
         }
     }
 
     public static void dataDebugger(VRDataState vrDataState) throws IOException { // For VRData Room
-        try {
-            if (config.has("WRITE_DATA")) {
-                if (config.getBoolean("WRITE_DATA")) {
-                    vrDataWriter.write(vrDataState);
-                }
-            } else {
-                if (Constants.WRITE_DATA) {
-                    vrDataWriter.write(vrDataState);
-                }
-            }
-        } catch (NullPointerException e) {
-            System.err.println(e);
-        }
+        if (config.WRITE_DATA)
+            vrDataWriter.write(vrDataState);
     }
 
-    // TODO - Upgrade voxDebugger to write trace information
     public static void voxDebugger(int[] currentId, boolean init) throws IOException { // For Vox Data
-        try {
-            if (init) {
-                if (config.has("WRITE_DATA")) {
-                    if (config.getBoolean("WRITE_DATA")) {
-                        voxDataWriter.write(Arrays.toString(currentId));
-                    }
-                } else {
-                    if (Constants.WRITE_DATA) {
-                        voxDataWriter.write(Arrays.toString(currentId));
-                    }
-                }
-            } else {
-                if (config.has("WRITE_DATA")) {
-                    if (config.getBoolean("WRITE_DATA"))
-                        voxDataWriter.write(Arrays.toString(currentId));
-                } else {
-                    if (Constants.WRITE_DATA)
-                        voxDataWriter.write(Arrays.toString(currentId));
-                }
-            }
-        } catch (NullPointerException e) {
-            System.err.println(e);
-        }
+        // TODO - Upgrade voxDebugger to write trace information
+        if (config.WRITE_DATA)
+            voxDataWriter.write(Arrays.toString(currentId));
     }
 
 }

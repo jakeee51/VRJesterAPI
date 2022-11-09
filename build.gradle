@@ -16,7 +16,7 @@ plugins {
 }
 
 apply plugin: 'net.minecraftforge.gradle'
-version = '0.2.6'
+version = '0.3.0'
 group = 'com.calicraft.vrjester' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'VRJesterAPI'
 
@@ -155,8 +155,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:mcvrapi-591092:4073384")
     runtimeOnly fg.deobf("curse.maven:mcvrapi-591092:4073384")
     implementation 'org.jetbrains:annotations:23.0.0'
-    implementation 'org.json:json:20220924'
-//    implementation files('libs/OptiFine_1.19.2_HD_U_H9.jar')
+    implementation files('libs/OptiFine_1.19.2_HD_U_H9.jar')
 //    implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.149'
 //    compileOnly group: 'com.mojang', name: 'authlib', version: '1.5.25'
 

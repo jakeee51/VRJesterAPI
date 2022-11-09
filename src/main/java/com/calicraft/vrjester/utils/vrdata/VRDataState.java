@@ -4,6 +4,8 @@ import com.calicraft.vrjester.tracker.Tracker;
 import net.blf02.vrapi.api.data.IVRPlayer;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Arrays;
+
 public class VRDataState {
     // Class for encapsulating VRData devices
 
@@ -22,9 +24,9 @@ public class VRDataState {
     public String toString() {
         return "data:" +
                 "\r\n \t origin: " + origin +
-                "\r\n \t hmd: " + hmd +
-                "\r\n \t rc: " + rc +
-                "\r\n \t lc: " + lc +
+                "\r\n \t hmd: " + Arrays.toString(hmd) +
+                "\r\n \t rc: " + Arrays.toString(rc) +
+                "\r\n \t lc: " + Arrays.toString(lc) +
                 "\r\n \t c2: " + c2;
     }
 

@@ -1,6 +1,6 @@
 package com.calicraft.vrjester;
 
-import com.calicraft.vrjester.handlers.TriggerEventHandler;
+import com.calicraft.vrjester.utils.tools.EventsLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Mod("vrjester")
 public class VrJesterApi {
     // Main entry point
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     public static boolean VIVECRAFTLOADED = false;
     public static final String MOD_ID = "vrjester";
     public static final KeyMapping MOD_KEY = new KeyMapping("key.vrjester.71", 71, MOD_ID);
@@ -38,11 +38,11 @@ public class VrJesterApi {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         // Register the processIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        // Register the doClientStuff method for modloading
+        // Register the registerBindings method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerBindings);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new TriggerEventHandler());
+        EventsLoader.register();
     }
 
     public static Minecraft getMCI() {
@@ -68,7 +68,7 @@ public class VrJesterApi {
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
-        LOGGER.info("Get game settings: ");
+        LOGGER.info("Do client stuff like get game settings");
     }
 
     public void registerBindings(RegisterKeyMappingsEvent event) {

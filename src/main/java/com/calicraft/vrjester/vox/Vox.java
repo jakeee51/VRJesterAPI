@@ -6,7 +6,6 @@ import com.calicraft.vrjester.gesture.radix.Trace;
 import com.calicraft.vrjester.utils.tools.Calcs;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import net.minecraft.world.phys.Vec3;
-import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,7 +16,7 @@ import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 public class Vox {
     private final VRDevice vrDevice;
     private final Map<String, Vec3> vertices = new HashMap<>();
-    public final JSONObject config = new Config().readConfig();
+    public final Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);
     private final boolean isDiamond;
     private int[] id, previousId;
     private String name, movementDirection = "idle";
@@ -25,23 +24,20 @@ public class Vox {
     public Vec3 centroid, faceDirection, offset = new Vec3((0), (0), (0));
     public float side_length = Constants.VOX_LENGTH;
 
-    public Vox(String name, VRDevice vrDevice, Vec3[] centerPose, Vec3 faceDirection, boolean isDiamond) {
+    public Vox(String name, VRDevice vrDevice, Vec3[] centroidPose, Vec3 faceDirection, boolean isDiamond) {
         // Override defaults
-        if (config.has("VOX_LENGTH")) {
-            float configVoxLength = Float.parseFloat(config.getString("VOX_LENGTH"));
-            if (configVoxLength != side_length)
-                side_length = configVoxLength;
-        }
+        if (config.VOX_LENGTH != side_length)
+            side_length = config.VOX_LENGTH;
 
         this.setId(new int[]{0, 0, 0}); // Initialize Vox Id
         this.previousId = id.clone(); // Initialize soon to be previous Id
         this.name = name; // Initialize name of Vox
         this.vrDevice = vrDevice; // Initialize VRDevice name
         this.faceDirection = faceDirection; // Initialize facing angle of user
-        this.trace = new Trace(Arrays.toString(id), vrDevice, centerPose, faceDirection);
+        this.trace = new Trace(Arrays.toString(id), vrDevice, centroidPose, faceDirection);
         this.isDiamond = isDiamond;
         // Initialize Vertices of Vox
-        this.updateVoxPosition(centerPose[0], false);
+        this.updateVoxPosition(centroidPose[0], false);
     }
 
     public boolean inProximity(Vec3 point) {
@@ -74,7 +70,7 @@ public class Vox {
         return ret;
     }
 
-    public boolean hasDiamondInRough(Vec3 point) { // Check if point is within Vox rotated 45 degrees
+    public boolean hasDiamondInRough(Vec3 point) { // Check if point is within only Vox rotated 45 degrees
         boolean ret = false;
         Vec3 d1 = vertices.get("d1"); Vec3 d2 = vertices.get("d2");
         double dx = Math.abs(point.x - centroid.x);
@@ -139,9 +135,6 @@ public class Vox {
     }
 
     public void updateVoxPosition(Vec3 dif, boolean useDif) { // Update Vox position values based on delta movement
-        if (dif.x == 0 && dif.y == 0 && dif.z == 0)
-            return;
-
         // Center of Vox
         if (useDif)
             centroid = centroid.add(dif);
@@ -154,7 +147,9 @@ public class Vox {
 
         // Bottom square plane
         vertices.put("p1", vertices.get("d1"));
+        System.out.println("HERE BEFORE p2: " + vertices.get("p2"));
         vertices.put("p2", centroid.add((side_length /2), -(side_length /2), -(side_length /2)));
+        System.out.println("HERE AFTER p2: " + vertices.get("p2"));
         vertices.put("p3", centroid.add(-(side_length /2), -(side_length /2), (side_length /2)));
         vertices.put("p4", centroid.add((side_length /2), -(side_length /2), (side_length /2)));
 
@@ -163,7 +158,6 @@ public class Vox {
         vertices.put("p6", centroid.add((side_length /2), (side_length /2), -(side_length /2)));
         vertices.put("p7", centroid.add(-(side_length /2), (side_length /2), (side_length /2)));
         vertices.put("p8", vertices.get("d2"));
-
         // Rotate Vox to form diamond
         if (isDiamond)
             this.rotateVoxAround((45.0F));
