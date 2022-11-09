@@ -1,18 +1,19 @@
 {
 	"WRITE_DATA": "false",
 	"DISPLAY_VOX": "false",
-	"VOX_LENGTH": "0.4",
-	"gestures": [
-		"[0, 0, 0][1, 0, 0][1, 1, 0]",
-		"[0, 0, 0][-1, 0, 0][-1, 1, 0]",
-        "[0, 0, 0][0, 0, 1][0, 1, 1]",
-        "[0, 0, 0][0, 0, -1][0, 1, -1]"
+	"VOX_LENGTH": "0.5",
+	"GESTURES": [
+		{
+			"name": "KAAAMEEE...HAAAMEEE...HAAAAAA!",
+			"movements": "backforward",
+			"elapsedTime": "4000",
+			"velocity": "5.0"
+		}
     ],
-	"log": {
+	"LOG": {
 		"name": "vrdata",
 		"gesture": "punch",
 		"devices": ["rc", "lc"],
 		"pose": "0"
-	},
-	"degrees": "0.0"
+	}
 }

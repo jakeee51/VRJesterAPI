@@ -1,14 +1,14 @@
 //package com.calicraft.vrjester.particle;
 //
 //import net.minecraft.client.particle.*;
-//import net.minecraft.client.world.ClientWorld;
+//import net.minecraft.world.level.Level;
 //
 //import javax.annotation.Nullable;
 //
 //public class SparklerParticle extends SpriteTexturedParticle {
 //    private final IAnimatedSprite sprite;
 //
-//    public SparklerParticle(ClientWorld world, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ, IAnimatedSprite sprite, float scale, float ageModifier, float red, float green, float blue, float alpha) {
+//    public SparklerParticle(Level world, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ, IAnimatedSprite sprite, float scale, float ageModifier, float red, float green, float blue, float alpha) {
 //        super(world, posX, posY, posZ, velocityX, velocityY, velocityZ);
 //
 //        this.sprite = sprite;
@@ -64,7 +64,7 @@
 //
 //        @Nullable
 //        @Override
-//        public Particle createParticle(CustomParticleType.Data data, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+//        public Particle createParticle(CustomParticleType.Data data, Level world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
 //            return new SparklerParticle(world, x, y, z, velocityX, velocityY, velocityZ, sprite, data.scale, data.ageModifier, data.red, data.green, data.blue, data.alpha);
 //        }
 //    }

@@ -5,8 +5,8 @@
 //import net.minecraft.client.particle.IParticleRenderType;
 //import net.minecraft.client.particle.Particle;
 //import net.minecraft.client.renderer.ActiveRenderInfo;
-//import net.minecraft.client.world.ClientWorld;
-//import net.minecraft.particles.BasicParticleType;
+//import net.minecraft.world.level.Level;
+//import net.minecraft.core.particles.SimpleParticleType;
 //
 //import javax.annotation.Nullable;
 //import java.awt.*;
@@ -15,7 +15,7 @@
 //
 //    public static IParticleFactory<CustomParticleType.Data> Factory;
 //
-//    public JesterParticle(ClientWorld worldIn, Color color, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+//    public JesterParticle(Level worldIn, Color color, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 //        super(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
 //    }
 //
@@ -29,7 +29,7 @@
 //        return null;
 //    }
 //
-//    public static class Factory implements IParticleFactory<BasicParticleType> {
+//    public static class Factory implements IParticleFactory<SimpleParticleType> {
 //        private final Color color;
 //        public Factory(Color color) {
 //            this.color = color;
@@ -37,7 +37,7 @@
 //
 //        @Nullable
 //        @Override
-//        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+//        public Particle createParticle(SimpleParticleType typeIn, Level worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 //            return new JesterParticle(worldIn, this.color, x, y, z, xSpeed, ySpeed, zSpeed);
 //        }
 //    }

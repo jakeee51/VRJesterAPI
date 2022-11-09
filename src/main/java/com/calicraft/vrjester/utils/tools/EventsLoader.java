@@ -1,7 +1,7 @@
 package com.calicraft.vrjester.utils.tools;
 
-import com.calicraft.vrjester.handlers.PlaceEventHandler;
 import com.calicraft.vrjester.handlers.PlayerInitHandler;
+import com.calicraft.vrjester.handlers.TriggerEventHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 public class EventsLoader {
@@ -9,7 +9,7 @@ public class EventsLoader {
 
     public static void register() {
         // Register for relevant vrjester events
-        MinecraftForge.EVENT_BUS.register(new PlayerInitHandler());
-        MinecraftForge.EVENT_BUS.register(new PlaceEventHandler());
+        MinecraftForge.EVENT_BUS.register(new TriggerEventHandler());
+//        MinecraftForge.EVENT_BUS.register(new PlayerInitHandler());
     }
 }

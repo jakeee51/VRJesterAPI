@@ -2,9 +2,6 @@ package com.calicraft.vrjester.utils.vrdata;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -16,29 +13,22 @@ public class VRDataWriter {
 
     public int pose; // pose = 0 (position) | pose = 1 (direction)
     public String fileName;
-    public JSONObject config;
+    public Config config;
     public ArrayList<File> files = new ArrayList<>();
 
     public VRDataWriter(String mode, int iteration) { // Setup file objects to create & write VRDevice data
-        config = new Config(Constants.DEV_CONFIG_PATH).readConfig();
-        JSONArray devices = new JSONArray();
+        config = Config.readConfig(Constants.DEV_CONFIG_PATH);
+        String[] devices;
         File path = new File(Constants.DEV_ARCHIVE_PATH + String.format("/iteration_%s", iteration));
         boolean folderCreated = path.mkdir();
-        try {
-            if (config.has("log")) {
-                JSONObject logConfig = config.getJSONObject("log");
-                devices = logConfig.getJSONArray("devices");
-                pose = logConfig.getInt("pose");
-                if (mode.equals("vox"))
-                    fileName = "vox_trace_" + logConfig.getString("gesture");
-                else
-                    fileName = mode + "_" + logConfig.getString("name");
-            }
-        } catch (NullPointerException | JSONException e) {
-            System.err.println(e);
-        }
-        for (int i = 0; i < devices.length(); i++) {
-            String device = devices.getString(i);
+        devices = config.LOG.devices;
+        pose = config.LOG.pose;
+        if (mode.equals("vox"))
+            fileName = "vox_trace_" + config.LOG.gesture;
+        else
+            fileName = mode + "_" + config.LOG.name;
+        for (int i = 0; i < devices.length; i++) {
+            String device = devices[i];
             if (folderCreated)
                 files.add(new File(path.getPath() + String.format("/%s_%s_%s.csv", device, fileName, iteration)));
         }

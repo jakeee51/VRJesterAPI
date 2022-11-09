@@ -1,8 +1,8 @@
 package com.calicraft.vrjester.utils.vrdata;
 
-import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.config.Context;
-import org.vivecraft.api.VRData;
+import com.calicraft.vrjester.tracker.PositionTracker;
+import net.blf02.vrapi.api.data.IVRPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,17 +24,17 @@ public class VRDataAggregator {
     }
 
     public VRDataState listen() { // Consume Vivecraft VRDevicePose data from TRACKER
-        VRData vrData;
+        IVRPlayer ivrPlayer;
         switch(vrDataType) {
             case VRDATA_ROOM_PRE:
-                vrData = VrJesterApi.TRACKER.getVRDataRoomPre(); break;
+                ivrPlayer = PositionTracker.getVRDataRoomPre(); break;
             case VRDATA_WORLD_PRE:
-                vrData = VrJesterApi.TRACKER.getVRDataWorldPre(); break;
+                ivrPlayer = PositionTracker.getVRDataWorldPre(); break;
             default:
-                vrData = null;
+                ivrPlayer = null;
         }
-        assert vrData != null;
-        VRDataState dataState = new VRDataState(vrData);
+        assert ivrPlayer != null;
+        VRDataState dataState = new VRDataState(ivrPlayer);
         if (saveState)
             data.add(dataState);
         return dataState;

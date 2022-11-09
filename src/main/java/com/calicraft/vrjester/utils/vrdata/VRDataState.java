@@ -1,53 +1,53 @@
 package com.calicraft.vrjester.utils.vrdata;
 
-import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.tracker.Tracker;
-import net.minecraft.util.math.vector.Vector3d;
-import org.vivecraft.api.VRData;
+import net.blf02.vrapi.api.data.IVRPlayer;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.Arrays;
 
 public class VRDataState {
     // Class for encapsulating VRData devices
 
-    private final Vector3d origin;
-    private final Vector3d[] hmd, rc, lc, c2;
+    private final Vec3 origin;
+    private final Vec3[] hmd, rc, lc, c2;
 
-    // TODO - Add another constructor with new params for upward compatibility
-    public VRDataState(VRData vrData) {
-        origin = Tracker.getOrigin(vrData.toString());
-        hmd = Tracker.getPose(vrData.hmd);
-        rc = Tracker.getPose(vrData.c0);
-        lc = Tracker.getPose(vrData.c1);
-        c2 = Tracker.getPose(vrData.c2);
+    public VRDataState(IVRPlayer ivrPlayer) {
+        origin = new Vec3((0), (0), (0));
+        hmd = Tracker.getPose(ivrPlayer.getHMD());
+        rc = Tracker.getPose(ivrPlayer.getController0());
+        lc = Tracker.getPose(ivrPlayer.getController1());
+        c2 = null;
     }
 
     @Override
     public String toString() {
         return "data:" +
                 "\r\n \t origin: " + origin +
-                "\r\n \t hmd: " + hmd +
-                "\r\n \t rc: " + rc +
-                "\r\n \t lc: " + lc +
+                "\r\n \t hmd: " + Arrays.toString(hmd) +
+                "\r\n \t rc: " + Arrays.toString(rc) +
+                "\r\n \t lc: " + Arrays.toString(lc) +
                 "\r\n \t c2: " + c2;
     }
 
-    public Vector3d getOrigin() {
+    public Vec3 getOrigin() {
         return origin;
     }
-    public Vector3d[] getHmd() {
+    public Vec3[] getHmd() {
         return hmd;
     }
-    public Vector3d[] getRc() {
+    public Vec3[] getRc() {
         return rc;
     }
-    public Vector3d[] getLc() {
+    public Vec3[] getLc() {
         return lc;
     }
-    public Vector3d[] getC2() {
+    public Vec3[] getC2() {
         return c2;
     }
 
-    public static Vector3d getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice, int pose) { // Return pose based on VRDevice
-        Vector3d ret;
+    public static Vec3 getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice, int pose) { // Return pose based on VRDevice
+        Vec3 ret;
         switch(vrDevice) {
             case HMD:
                 ret = vrDataState.getHmd()[pose]; break;
@@ -59,13 +59,13 @@ public class VRDataState {
                 ret = vrDataState.getC2()[pose]; break;
             default:
                 System.err.println("VRDevice not yet supported!");
-                ret = new Vector3d((0), (0), (0));
+                ret = new Vec3((0), (0), (0));
         }
         return ret;
     }
 
-    public static Vector3d[] getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice) { // Return pose based on VRDevice
-        Vector3d[] ret;
+    public static Vec3[] getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice) { // Return pose based on VRDevice
+        Vec3[] ret;
         switch(vrDevice) {
             case HMD:
                 ret = vrDataState.getHmd(); break;
@@ -77,7 +77,7 @@ public class VRDataState {
                 ret = vrDataState.getC2(); break;
             default:
                 System.err.println("VRDevice not yet supported!");
-                ret = new Vector3d[]{new Vector3d((0), (0), (0)), new Vector3d((0), (0), (0))};
+                ret = new Vec3[]{new Vec3((0), (0), (0)), new Vec3((0), (0), (0))};
         }
         return ret;
     }
