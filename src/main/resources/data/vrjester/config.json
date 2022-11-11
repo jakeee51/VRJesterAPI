@@ -1,13 +1,25 @@
 {
 	"WRITE_DATA": "false",
 	"DISPLAY_VOX": "false",
-	"VOX_LENGTH": "0.5",
+	"VOX_LENGTH": "0.4",
 	"GESTURES": [
 		{
-			"name": "KAAAMEEE...HAAAMEEE...HAAAAAA!",
+			"name": "ASCENDO",
+			"movements": "up",
+			"elapsedTime": "0",
+			"velocity": "0.0"
+		},
+		{
+			"name": "DEPULSO",
+			"movements": "downforward",
+			"elapsedTime": "0",
+			"velocity": "0.0"
+		},
+		{
+			"name": "KAAAMEEE...HAAAMEEE...HAAAAA!!!",
 			"movements": "backforward",
-			"elapsedTime": "4000",
-			"velocity": "5.0"
+			"elapsedTime": "3000",
+			"velocity": "0.0"
 		}
     ],
 	"LOG": {

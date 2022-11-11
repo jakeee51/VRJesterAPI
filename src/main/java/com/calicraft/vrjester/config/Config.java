@@ -15,15 +15,15 @@ public class Config {
     public int VOX_GRID_WIDTH = Constants.VOX_GRID_WIDTH;
     public int VOX_GRID_HEIGHT = Constants.VOX_GRID_HEIGHT;
     public float MAX_LISTENING_TIME = Constants.MAX_LISTENING_TIME;
-    public SimpleGesture[] GESTURES;
-    public Log LOG;
+    public SimpleGesture[] GESTURES = new SimpleGesture[]{};
+    public Log LOG = new Log();
 
     public class Log {
         // Class that represents log configuration
         public String name;
         public String gesture;
         public int pose;
-        public String[] devices;
+        public String[] devices = new String[]{};
     }
 
     public class SimpleGesture {
@@ -32,6 +32,28 @@ public class Config {
         public String movements;
         public long elapsedTime;
         public double velocity;
+    }
+
+    public static Config readConfig() {
+        try {
+            StringBuilder sb = new StringBuilder();
+            File configFile = new File(Constants.CONFIG_PATH);
+            Scanner myReader = new Scanner(configFile);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                sb.append(data);
+//                System.out.println("CONFIG: " + data);
+            }
+            myReader.close();
+            GsonBuilder builder = new GsonBuilder();
+            builder.setPrettyPrinting();
+            Gson gson = builder.create();
+            return gson.fromJson(sb.toString(), Config.class);
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred reading config json!");
+            e.printStackTrace();
+        }
+        return new Config();
     }
 
     public static Config readConfig(String configPath) {
@@ -48,12 +70,11 @@ public class Config {
             GsonBuilder builder = new GsonBuilder();
             builder.setPrettyPrinting();
             Gson gson = builder.create();
-            Config configJson = gson.fromJson(sb.toString(), Config.class);
-            return configJson;
+            return gson.fromJson(sb.toString(), Config.class);
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred reading config json!");
             e.printStackTrace();
         }
-        return new Config();
+        return readConfig(); // Use default Minecraft config path
     }
 }

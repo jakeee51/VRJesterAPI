@@ -29,7 +29,7 @@ displayName="VR Jester API" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="vrjesterapi.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+credits="" #optional
 # A text field displayed in the mod UI
 authors="Cali" #optional
 # The description text for the mod (multi line!) (#mandatory)

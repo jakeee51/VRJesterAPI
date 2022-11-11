@@ -46,7 +46,7 @@ public class VRDataWriter {
         }
     }
 
-    public void write(String record) throws IOException { // Write Vox ID data to end of file
+    public void write(String record) throws IOException { // Write data to end of file
         this.create(); String cleanData;
         for (File file: files) {
             cleanData = record.replaceAll("\\[", "").replaceAll("\\]", "");

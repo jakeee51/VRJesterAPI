@@ -4,17 +4,23 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 
 public class Calcs {
-    public static double getMagnitude3D(Vec3 v) {
-        return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2) + Math.pow(v.z, 2));
-    }
-
     public static double getMagnitude2D(Vec3 v) {
         return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.z, 2));
+    }
+
+    public static double getMagnitude3D(Vec3 v) {
+        return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2) + Math.pow(v.z, 2));
     }
 
     public static double getAngle2D(Vec3 v1, Vec3 v2) {
         double dotProduct = v1.multiply((1), (0), (1)).dot(v2.multiply((1), (0), (1)));
         double radians = dotProduct / (getMagnitude2D(v1) * getMagnitude2D(v2));
+        return Math.toDegrees(Math.acos(radians));
+    }
+
+    public static double getAngle3D(Vec3 v1, Vec3 v2) {
+        double dotProduct = v1.dot(v2);
+        double radians = dotProduct / (getMagnitude3D(v1) * getMagnitude3D(v2));
         return Math.toDegrees(Math.acos(radians));
     }
 

@@ -7,18 +7,26 @@ import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.vrdata.*;
 import com.calicraft.vrjester.vox.Vox;
+import com.minecraftserverzone.harrypotter.setup.Registrations;
+import com.minecraftserverzone.harrypotter.setup.capabilities.PlayerStatsProvider;
+import com.minecraftserverzone.harrypotter.setup.network.Networking;
+import com.minecraftserverzone.harrypotter.setup.network.PacketSpells;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static com.calicraft.vrjester.VrJesterApi.*;
-import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
+import static com.calicraft.vrjester.utils.tools.SpawnParticles.moveParticles;
 
 
 public class TriggerEventHandler {
@@ -30,15 +38,15 @@ public class TriggerEventHandler {
     private static final int DELAY = 20; // 1 second
     private static int sleep = 2 * DELAY; // 2 seconds
     private static int iter = 0;
-    private static boolean listener = false;
+    private static boolean listener = false, toggled = false;
     private long elapsedTime = 0;
 
     private static Vox displayRCVox, displayLCVox;
     private static Gesture gesture;
     private static LocalPlayer player;
-    
+
     @SubscribeEvent
-    public void onJesterTrigger(InputEvent.Key event) {
+    public void onJesterTrigger(InputEvent event) throws AWTException {
         if (player == null) {
             player = getMCI().player;
             try {
@@ -46,10 +54,12 @@ public class TriggerEventHandler {
             } catch (NullPointerException e) {
                 System.out.println("Threw NullPointerException trying to call IVRAPI.playerInVR");
             }
+            return;
         }
         // Trigger the gesture listening phase
         if (VIVECRAFTLOADED) {
             if (VrJesterApi.MOD_KEY.isDown() && !listener) {
+                toggleBattleStance();
                 System.out.println("JESTER TRIGGERED");
                 listener = true; elapsedTime = System.nanoTime();
                 config = Config.readConfig(Constants.DEV_CONFIG_PATH);
@@ -57,41 +67,50 @@ public class TriggerEventHandler {
                 voxDataWriter = new VRDataWriter("vox", iter);
             } else {
                 System.out.println("JESTER RELEASED");
-                listener = false; elapsedTime = System.nanoTime() - elapsedTime;
-                gesture = null; elapsedTime = 0;
+                listener = false;
+                elapsedTime = System.nanoTime() - elapsedTime;
+                gesture = null;
+                elapsedTime = 0;
                 if (config.WRITE_DATA)
                     iter++;
                 else
                     iter = 0;
-                // Fire event or trigger something based on recognized gesture
             }
         }
+//        else {
+//            if (VrJesterApi.MOD_KEY.isDown() && !toggled) {
+//                toggled = true;
+//                toggleBattleStance();
+//                selectSpell(1);
+//                KeyMapping.click(InputConstants.Type.MOUSE.getOrCreate(1));
+//                toggleBattleStance();
+//                System.out.println("TRIGGERED");
+//            } else {
+//                toggled = false;
+//            }
+//        }
     }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) throws IOException {
-        // TODO - Attempt to recognize gesture after
-        //  certain amount of data captured or stop listening
-        //  after being idle for some time
-
         if (VrJesterApi.MOD_KEY.isDown() && !VIVECRAFTLOADED)
-            createParticles(ParticleTypes.FLAME, null);
+            moveParticles(ParticleTypes.FLAME, 0);
 
         if (listener) { // Capture VR data in real time after trigger
             VRDataState vrDataRoomPre = preRoomDataAggregator.listen();
             VRDataState vrDataWorldPre = preWorldDataAggregator.listen();
             if (gesture == null) {
                 gesture = new Gesture(vrDataRoomPre);
-//                traceDebugger(new int[]{0, 0, 0}, true);
+                traceDebugger(gesture.rcGesture);
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, true);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, true);
             } else {
                 gesture.track(vrDataRoomPre, vrDataWorldPre);
-                gesture.recognizeTest();
-//                traceDebugger(currentId, false);
+                gesture.recognizeTest(vrDataWorldPre);
+                traceDebugger(gesture.rcGesture);
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, false);
-                dataDebugger(vrDataRoomPre);
+//                dataDebugger(vrDataRoomPre);
             }
 
 //            if (sleep % 20 == 0) // Print every 1 second
@@ -102,6 +121,51 @@ public class TriggerEventHandler {
 //                data.clear(); listener = false;
 //            }
 //            sleep--;
+        }
+    }
+
+    public static void selectSpell(int i) {
+        player.getCapability(PlayerStatsProvider.PLAYER_STATS_CAPABILITY).ifPresent((h) -> {
+            if (h.getBattleTick() == 1) {
+                h.setSelectedHotbar(i);
+                Networking.sendToServer(new PacketSpells(100 + h.getSelectedHotbar()));
+                if (h.getSelectedHotbar() < 0) {
+                    h.setSelectedHotbar(8);
+                    Networking.sendToServer(new PacketSpells(108));
+                } else if (h.getSelectedHotbar() > 8) {
+                    h.setSelectedHotbar(0);
+                    Networking.sendToServer(new PacketSpells(100));
+                }
+            }
+        });
+    }
+
+    public static void toggleBattleStance() {
+        Options keys = getMCI().options;
+        player.getCapability(PlayerStatsProvider.PLAYER_STATS_CAPABILITY).ifPresent((h) -> {
+            if (h.getBattleTick() == 0) {
+                if (player.getMainHandItem().is((Item) Registrations.APPRENTICE_WAND.get())) {
+                    h.setSelectedHotbar(player.getUseItem().getCount());
+                    Networking.sendToServer(new PacketSpells(100 + h.getSelectedHotbar()));
+                    h.setHotbarBeforeBattleStance(player.getUseItem().getCount());
+                    h.setBattleTick(1);
+                }
+            } else {
+                h.setBattleTick(0);
+            }
+        });
+
+        for(int i = 0; i < 9; ++i) {
+            if (keys.keyHotbarSlots[i].isDown()) {
+                int finalI = i;
+                player.getCapability(PlayerStatsProvider.PLAYER_STATS_CAPABILITY).ifPresent((h) -> {
+                    if (h.getBattleTick() == 1) {
+                        h.setSelectedHotbar(finalI);
+                        Networking.sendToServer(new PacketSpells(100 + h.getSelectedHotbar()));
+                        keys.keyHotbarSlots[finalI].consumeClick();
+                    }
+                });
+            }
         }
     }
 
@@ -134,10 +198,9 @@ public class TriggerEventHandler {
             vrDataWriter.write(vrDataState);
     }
 
-    public static void traceDebugger(int[] currentId, boolean init) throws IOException { // For Vox Data
-        // TODO - Upgrade traceDebugger to write trace information
+    public static void traceDebugger(String data) throws IOException { // For Vox Data
         if (config.WRITE_DATA)
-            voxDataWriter.write(Arrays.toString(currentId));
+            voxDataWriter.write(data);
     }
 
 }
