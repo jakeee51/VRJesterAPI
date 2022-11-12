@@ -71,19 +71,6 @@ public class Vox {
         return ret;
     }
 
-    public boolean hasDiamondInRough(Vec3 point) { // Check if point is within only Vox rotated 45 degrees
-        boolean ret = false;
-        Vec3 d1 = vertices.get("d1"); Vec3 d2 = vertices.get("d2");
-        double dx = Math.abs(point.x - centroid.x);
-        double dz = Math.abs(point.z - centroid.z);
-        double diagonal_width = side_length * Math.sqrt(2);
-        double d = dx / diagonal_width + dz / diagonal_width;
-        if (d <= 0.5)
-            if (point.y >= d1.y && point.y <= d2.y)
-                ret = true;
-        return ret;
-    }
-
     private int[] getVoxNeighbor(Vec3 point) { // Get new Vox Id and set traced movement direction based on which side the point withdrew from the Vox
         int[] ret = this.getId().clone();
         Vec3 d1 = vertices.get("d1"); Vec3 d2 = vertices.get("d2");

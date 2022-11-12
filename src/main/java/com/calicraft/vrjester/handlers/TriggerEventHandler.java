@@ -7,12 +7,6 @@ import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.vrdata.*;
 import com.calicraft.vrjester.vox.Vox;
-import com.minecraftserverzone.harrypotter.setup.Registrations;
-import com.minecraftserverzone.harrypotter.setup.capabilities.PlayerStatsProvider;
-import com.minecraftserverzone.harrypotter.setup.network.Networking;
-import com.minecraftserverzone.harrypotter.setup.network.PacketSpells;
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
@@ -58,7 +52,6 @@ public class TriggerEventHandler {
         // Trigger the gesture listening phase
         if (VIVECRAFTLOADED) {
             if (VrJesterApi.MOD_KEY.isDown() && !listener) {
-                enableBattleStance(1);
                 System.out.println("JESTER TRIGGERED");
                 listener = true; elapsedTime = System.nanoTime();
                 config = Config.readConfig(Constants.DEV_CONFIG_PATH);
@@ -74,18 +67,6 @@ public class TriggerEventHandler {
                     iter = 0;
             }
         }
-//        else {
-//            if (VrJesterApi.MOD_KEY.isDown() && !toggled) {
-//                toggled = true;
-//                toggleBattleStance();
-//                selectSpell(1);
-//                KeyMapping.click(InputConstants.Type.MOUSE.getOrCreate(1));
-//                toggleBattleStance();
-//                System.out.println("TRIGGERED");
-//            } else {
-//                toggled = false;
-//            }
-//        }
     }
 
     @SubscribeEvent
@@ -118,73 +99,6 @@ public class TriggerEventHandler {
 //                data.clear(); listener = false;
 //            }
 //            sleep--;
-        }
-    }
-
-    public static void selectSpell(int i) {
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS_CAPABILITY).ifPresent((h) -> {
-            if (h.getBattleTick() == 1) {
-                h.setSelectedHotbar(i);
-                Networking.sendToServer(new PacketSpells(100 + h.getSelectedHotbar()));
-                if (h.getSelectedHotbar() < 0) {
-                    h.setSelectedHotbar(8);
-                    Networking.sendToServer(new PacketSpells(108));
-                } else if (h.getSelectedHotbar() > 8) {
-                    h.setSelectedHotbar(0);
-                    Networking.sendToServer(new PacketSpells(100));
-                }
-            }
-        });
-    }
-
-    public static void disableBattleStance() {
-        Options keys = getMCI().options;
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS_CAPABILITY).ifPresent((h) -> {
-            if (h.getBattleTick() == 1) {
-                if (player.getMainHandItem().is((Item) Registrations.APPRENTICE_WAND.get())) {
-                    h.setBattleTick(0);
-                }
-            }
-        });
-
-        for(int i = 0; i < 9; ++i) {
-            if (keys.keyHotbarSlots[i].isDown()) {
-                int finalI = i;
-                player.getCapability(PlayerStatsProvider.PLAYER_STATS_CAPABILITY).ifPresent((h) -> {
-                    if (h.getBattleTick() == 1) {
-                        h.setSelectedHotbar(finalI);
-                        Networking.sendToServer(new PacketSpells(100 + h.getSelectedHotbar()));
-                        keys.keyHotbarSlots[finalI].consumeClick();
-                    }
-                });
-            }
-        }
-    }
-
-    public static void enableBattleStance(int spell) {
-        Options keys = getMCI().options;
-        player.getCapability(PlayerStatsProvider.PLAYER_STATS_CAPABILITY).ifPresent((h) -> {
-            if (h.getBattleTick() == 0) {
-                if (player.getMainHandItem().is((Item) Registrations.APPRENTICE_WAND.get())) {
-                    h.setSelectedHotbar(spell);
-                    Networking.sendToServer(new PacketSpells(100 + h.getSelectedHotbar()));
-                    h.setHotbarBeforeBattleStance(spell);
-                    h.setBattleTick(1);
-                }
-            }
-        });
-
-        for(int i = 0; i < 9; ++i) {
-            if (keys.keyHotbarSlots[i].isDown()) {
-                int finalI = i;
-                player.getCapability(PlayerStatsProvider.PLAYER_STATS_CAPABILITY).ifPresent((h) -> {
-                    if (h.getBattleTick() == 1) {
-                        h.setSelectedHotbar(finalI);
-                        Networking.sendToServer(new PacketSpells(100 + h.getSelectedHotbar()));
-                        keys.keyHotbarSlots[finalI].consumeClick();
-                    }
-                });
-            }
         }
     }
 

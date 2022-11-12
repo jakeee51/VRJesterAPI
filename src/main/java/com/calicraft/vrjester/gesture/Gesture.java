@@ -7,8 +7,6 @@ import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.gesture.radix.Trace;
 import com.calicraft.vrjester.gesture.radix.Tracer;
 import com.calicraft.vrjester.vox.Vox;
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
-import static com.calicraft.vrjester.handlers.TriggerEventHandler.selectSpell;
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.moveParticles;
 
 public class Gesture {
@@ -102,30 +99,18 @@ public class Gesture {
             if (rcGesture.equals(simpleGesture.movements) || lcGesture.equals(simpleGesture.movements)) {
                 if (tracer.rcElapsedTime >= simpleGesture.elapsedTime || tracer.lcElapsedTime >= simpleGesture.elapsedTime) {
                     ret = true;
-                    if (simpleGesture.name.equals("ASCENDO")) {
-                        sendDebugMsg(simpleGesture.name);
-                        rcGesture = lcGesture = tracer.rcMove = tracer.lcMove = "";
-                        selectSpell(0);
-                        KeyMapping.click(InputConstants.Type.MOUSE.getOrCreate(1));
-                    } else if (simpleGesture.name.equals("DEPULSO")) {
-                        sendDebugMsg(simpleGesture.name);
-                        rcGesture = lcGesture = tracer.rcMove = tracer.lcMove = "";
-                        selectSpell(1);
-                        KeyMapping.click(InputConstants.Type.MOUSE.getOrCreate(1));
-                    } else {
-                        rcParticle = lcParticle = 1;
-                        tracer.rcMove = tracer.lcMove = "";
-                        moveParticles(particleTypes[rcParticle],
-                                vrDataWorldPre.getRc()[0],
-                                vrDataWorldPre.getRc()[1],
-                                config.GESTURES[i].velocity
-                        );
-                        moveParticles(particleTypes[lcParticle],
-                                vrDataWorldPre.getLc()[0],
-                                vrDataWorldPre.getLc()[1],
-                                config.GESTURES[i].velocity
-                        );
-                    }
+                    rcParticle = lcParticle = 1;
+                    tracer.rcMove = tracer.lcMove = "";
+                    moveParticles(particleTypes[rcParticle],
+                            vrDataWorldPre.getRc()[0],
+                            vrDataWorldPre.getRc()[1],
+                            config.GESTURES[i].velocity
+                    );
+                    moveParticles(particleTypes[lcParticle],
+                            vrDataWorldPre.getLc()[0],
+                            vrDataWorldPre.getLc()[1],
+                            config.GESTURES[i].velocity
+                    );
                     break;
                 }
             }

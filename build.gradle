@@ -156,7 +156,6 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:mcvrapi-591092:4073384")
     implementation 'org.jetbrains:annotations:23.0.0'
     implementation files('libs/OptiFine_1.19.2_HD_U_H9.jar')
-    implementation files('libs/harrypotter-forge-1.19-41.0.100-2.0.1.jar')
 //    implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.149'
 //    compileOnly group: 'com.mojang', name: 'authlib', version: '1.5.25'
 
