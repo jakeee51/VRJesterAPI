@@ -2,7 +2,8 @@ package com.calicraft.vrjester.gesture;
 
 public class Recognition {
     // Class that handles identifying a gesture utilizing the RadixTree
-    // TODO - There will be 3 modes of terminating the recognition listener
+    // TODO - There will be 2 modes of triggering & 3 modes of terminating the recognition listener
+    //      - listenOnKey | listenOnPosition
     //      - recognizeOnTime | recognizeOnRecognize | recognizeOnRelease
     //      - Upon terminating the listener, a GestureRecognition Event
     //      will either be fired. As a traced gesture makes its was through

@@ -5,17 +5,19 @@ import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.calicraft.vrjester.utils.tools.Calcs.getAngle2D;
 import static com.calicraft.vrjester.utils.tools.Calcs.getMagnitude3D;
 
 public class Trace {
     // POJO for traced Vox state per VRDevice in an iteration of time
-    public String voxId; // The Vox Id
+    public String voxId; // The Vox ID
     public VRDevice vrDevice; // The VRDevice
     public String movement = "idle"; // Movement taken to get to Vox
-    public String inProximityOf;
+    public final Map<String, Integer> devicesInProximity = new HashMap<>(); // Other VRDevices within this Vox
     private long elapsedTime = 0; // Time spent within Vox in ms (added on the fly while idle)
     private double speed; // Average speed within Vox (calculated on the fly while idle)
     private Vec3 faceDirection, direction, front, back, right, left,
@@ -103,6 +105,14 @@ public class Trace {
 
     public void setDirection(Vec3 direction) {
         this.direction = direction;
+    }
+
+    public void addDeviceInProximity(String vrDevice, Integer elapsedTime) {
+        devicesInProximity.put(vrDevice, elapsedTime);
+    }
+
+    public Map<String, Integer> getDevicesInProximity() {
+        return devicesInProximity;
     }
 
     public void addPose(Vec3[] pose) {
