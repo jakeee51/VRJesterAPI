@@ -7,10 +7,8 @@ import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.vrdata.*;
 import com.calicraft.vrjester.vox.Vox;
-import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
@@ -18,7 +16,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.io.IOException;
 
-import static com.calicraft.vrjester.VrJesterApi.*;
+import static com.calicraft.vrjester.VrJesterApi.VIVECRAFTLOADED;
+import static com.calicraft.vrjester.VrJesterApi.getMCI;
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.moveParticles;
 
 

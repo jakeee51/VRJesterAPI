@@ -41,13 +41,6 @@ public class Vox {
         this.updateVoxPosition(centroidPose[0], false);
     }
 
-    public boolean inProximity(Vec3 point) {
-        // TODO - Check if VRDevice position has been within another VRDevices Vox
-        boolean ret = false;
-
-        return ret;
-    }
-
     public boolean hasPoint(Vec3 point) { // Check if point is within Vox
         boolean ret = false;
         Vec3 p1 = vertices.get("p1"); Vec3 p2 = vertices.get("p2");
@@ -71,6 +64,14 @@ public class Vox {
         return ret;
     }
 
+    public void updateProximity(VRDataState vrDataRoomPre, VRDevice vrDevice) { // Checks if VRDevice is in this Vox
+        Vec3 pos = VRDataState.getVRDevicePose(vrDataRoomPre, this.getVrDevice(), 0);
+        if (hasPoint(pos))
+            trace.addDeviceInProximity(vrDevice.name(), (Long) System.nanoTime());
+        else
+            trace.getDevicesInProximity().remove(vrDevice);
+    }
+
     private int[] getVoxNeighbor(Vec3 point) { // Get new Vox Id and set traced movement direction based on which side the point withdrew from the Vox
         int[] ret = this.getId().clone();
         Vec3 d1 = vertices.get("d1"); Vec3 d2 = vertices.get("d2");
@@ -92,7 +93,13 @@ public class Vox {
     }
 
     public Vec3[] generateVox(VRDataState vrDataRoomPre) { // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns the Trace data
-        Vec3[] pose = VRDataState.getVRDevicePose(vrDataRoomPre, this.getVrDevice());
+        Vec3[] pose = new Vec3[2];
+        for (int i = 0; i < VRDevice.values().length-1; i++) {
+            if (this.getVrDevice().equals(VRDevice.values()[i]))
+                pose = VRDataState.getVRDevicePose(vrDataRoomPre, this.getVrDevice());
+            else
+                updateProximity(vrDataRoomPre, VRDevice.values()[i]);
+        }
         if (!this.hasPoint(pose[0])) { // Check if point is outside of current Vox
             int[] newVoxId = this.getVoxNeighbor(pose[0]);
             updateVoxPosition(pose[0], false);
