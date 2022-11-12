@@ -4,6 +4,7 @@ import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.radix.Trace;
 import com.calicraft.vrjester.utils.tools.Calcs;
+import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import net.minecraft.world.phys.Vec3;
 
@@ -103,13 +104,10 @@ public class Vox {
         return ret;
     }
 
-    public void generateVox(Vec3[] pose) { // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns the Trace data
+    public Vec3[] generateVox(VRDataState vrDataRoomPre) { // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns the Trace data
+        Vec3[] pose = VRDataState.getVRDevicePose(vrDataRoomPre, this.getVrDevice());
         if (!this.hasPoint(pose[0])) { // Check if point is outside of current Vox
             int[] newVoxId = this.getVoxNeighbor(pose[0]);
-            double newX = side_length * (newVoxId[0] - id[0]);
-            double newY = side_length * (newVoxId[1] - id[1]);
-            double newZ = side_length * (newVoxId[2] - id[2]);
-            Vec3 newPointDiff = new Vec3(newX, newY, newZ);
             updateVoxPosition(pose[0], false);
             setId(newVoxId);
             trace.setMovement(movementDirection);
@@ -117,6 +115,7 @@ public class Vox {
         } else {
             trace.addPose(pose); // Constantly update the current Trace
         }
+        return pose;
     }
 
     public void manifestVox(Vec3 point) { // When VRDevice is outside current Vox, new Vox is visualized at neighboring position

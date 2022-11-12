@@ -22,7 +22,6 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.awt.*;
 import java.io.IOException;
 
 import static com.calicraft.vrjester.VrJesterApi.*;
@@ -38,7 +37,7 @@ public class TriggerEventHandler {
     private static final int DELAY = 20; // 1 second
     private static int sleep = 2 * DELAY; // 2 seconds
     private static int iter = 0;
-    private static boolean listener = false, toggled = false;
+    private static boolean listener = false;
     private long elapsedTime = 0;
 
     private static Vox displayRCVox, displayLCVox;
@@ -46,7 +45,7 @@ public class TriggerEventHandler {
     private static LocalPlayer player;
 
     @SubscribeEvent
-    public void onJesterTrigger(InputEvent event) throws AWTException {
+    public void onJesterTrigger(InputEvent event) {
         if (player == null) {
             player = getMCI().player;
             try {
@@ -59,7 +58,7 @@ public class TriggerEventHandler {
         // Trigger the gesture listening phase
         if (VIVECRAFTLOADED) {
             if (VrJesterApi.MOD_KEY.isDown() && !listener) {
-                toggleBattleStance();
+                enableBattleStance(1);
                 System.out.println("JESTER TRIGGERED");
                 listener = true; elapsedTime = System.nanoTime();
                 config = Config.readConfig(Constants.DEV_CONFIG_PATH);
@@ -67,10 +66,8 @@ public class TriggerEventHandler {
                 voxDataWriter = new VRDataWriter("vox", iter);
             } else {
                 System.out.println("JESTER RELEASED");
-                listener = false;
-                elapsedTime = System.nanoTime() - elapsedTime;
-                gesture = null;
-                elapsedTime = 0;
+                listener = false; elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
+                gesture = null; elapsedTime = 0;
                 if (config.WRITE_DATA)
                     iter++;
                 else
@@ -140,18 +137,40 @@ public class TriggerEventHandler {
         });
     }
 
-    public static void toggleBattleStance() {
+    public static void disableBattleStance() {
+        Options keys = getMCI().options;
+        player.getCapability(PlayerStatsProvider.PLAYER_STATS_CAPABILITY).ifPresent((h) -> {
+            if (h.getBattleTick() == 1) {
+                if (player.getMainHandItem().is((Item) Registrations.APPRENTICE_WAND.get())) {
+                    h.setBattleTick(0);
+                }
+            }
+        });
+
+        for(int i = 0; i < 9; ++i) {
+            if (keys.keyHotbarSlots[i].isDown()) {
+                int finalI = i;
+                player.getCapability(PlayerStatsProvider.PLAYER_STATS_CAPABILITY).ifPresent((h) -> {
+                    if (h.getBattleTick() == 1) {
+                        h.setSelectedHotbar(finalI);
+                        Networking.sendToServer(new PacketSpells(100 + h.getSelectedHotbar()));
+                        keys.keyHotbarSlots[finalI].consumeClick();
+                    }
+                });
+            }
+        }
+    }
+
+    public static void enableBattleStance(int spell) {
         Options keys = getMCI().options;
         player.getCapability(PlayerStatsProvider.PLAYER_STATS_CAPABILITY).ifPresent((h) -> {
             if (h.getBattleTick() == 0) {
                 if (player.getMainHandItem().is((Item) Registrations.APPRENTICE_WAND.get())) {
-                    h.setSelectedHotbar(player.getUseItem().getCount());
+                    h.setSelectedHotbar(spell);
                     Networking.sendToServer(new PacketSpells(100 + h.getSelectedHotbar()));
-                    h.setHotbarBeforeBattleStance(player.getUseItem().getCount());
+                    h.setHotbarBeforeBattleStance(spell);
                     h.setBattleTick(1);
                 }
-            } else {
-                h.setBattleTick(0);
             }
         });
 

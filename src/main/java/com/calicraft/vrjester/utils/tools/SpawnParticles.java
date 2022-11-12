@@ -14,18 +14,18 @@ public class SpawnParticles {
 
     // --- VR ---
     // For shooting particles as projectiles at a specified speed
-    public static void moveParticles(SimpleParticleType type, Vec3 position, Vec3 direction, double speed) {
+    public static void moveParticles(SimpleParticleType type, Vec3 position, Vec3 direction, double speedMultiplier) {
         Random rand; Vec3 velocity;
         LocalPlayer player = getMCI().player;
         assert player != null;
         if (player.getCommandSenderWorld().isClientSide()) {
             Level clientWorld = player.getCommandSenderWorld();
-            for (int i = 0; i < 120; i++) {
+            for (int i = 0; i < 100; i++) {
                 rand = new Random();
                 velocity = direction.add((rand.nextGaussian() * 0.005D),
                         (rand.nextGaussian() * 0.005D),
                         (rand.nextGaussian() * 0.005D));
-                velocity = velocity.add((speed), (speed), (speed));
+                velocity = velocity.multiply((speedMultiplier), (speedMultiplier), (speedMultiplier));
                 clientWorld.addParticle(type,
                         position.x, position.y, position.z,
                         velocity.x, velocity.y, velocity.z);
