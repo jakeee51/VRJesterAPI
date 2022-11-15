@@ -17,7 +17,7 @@ public class Trace {
     public String voxId; // The Vox ID
     public VRDevice vrDevice; // The VRDevice
     public String movement = "idle"; // Movement taken to get to Vox
-    public final Map<String, Long> devicesInProximity = new HashMap<>(); // Other VRDevices within this Vox
+    public final Map<String, Integer> devicesInProximity = new HashMap<>(); // Other VRDevices within this Vox
     private long elapsedTime = 0; // Time spent within Vox in ms (added on the fly while idle)
     private double speed; // Average speed within Vox (calculated on the fly while idle)
     private Vec3 faceDirection, direction, front, back, right, left,
@@ -107,11 +107,11 @@ public class Trace {
         this.direction = direction;
     }
 
-    public void addDeviceInProximity(String vrDevice, Long elapsedTime) {
-        devicesInProximity.put(vrDevice, elapsedTime);
+    public void updateDeviceInProximity(String vrDevice, Integer times) {
+        devicesInProximity.put(vrDevice, times+1);
     }
 
-    public Map<String, Long> getDevicesInProximity() {
+    public Map<String, Integer> getDevicesInProximity() {
         return devicesInProximity;
     }
 
@@ -123,13 +123,13 @@ public class Trace {
         return poses;
     }
 
-    public void completeTrace(Vec3 end) {
+    public void completeTrace(Vec3[] end) {
         Vec3 start = poses.get(0)[0];
-        Vec3 gestureDirection = end.subtract(start).normalize();
+        Vec3 gestureDirection = end[0].subtract(start).normalize();
         setMovement(gestureDirection);
         setElapsedTime(System.nanoTime());
-        setSpeed(end);
-        // TODO - Implement way to calculate elapsed time for devices in proximity
+        setSpeed(end[0]);
+        setDirection(end[1]);
     }
 
     private void setMovementBuckets(Vec3 faceDirection) {

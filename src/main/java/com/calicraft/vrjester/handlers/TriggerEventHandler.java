@@ -26,7 +26,6 @@ public class TriggerEventHandler {
     private static final VRDataAggregator preRoomDataAggregator = new VRDataAggregator(VRDataType.VRDATA_ROOM_PRE, false);
     private static final VRDataAggregator preWorldDataAggregator = new VRDataAggregator(VRDataType.VRDATA_WORLD_PRE, false);
     private static VRDataWriter vrDataWriter;
-    private static VRDataWriter voxDataWriter;
     private static final int DELAY = 20; // 1 second
     private static int sleep = 2 * DELAY; // 2 seconds
     private static int iter = 0;
@@ -55,7 +54,6 @@ public class TriggerEventHandler {
                 listener = true; elapsedTime = System.nanoTime();
                 config = Config.readConfig(Constants.DEV_CONFIG_PATH);
                 vrDataWriter = new VRDataWriter("room", iter);
-                voxDataWriter = new VRDataWriter("vox", iter);
             } else {
                 System.out.println("JESTER RELEASED");
                 listener = false; elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
@@ -78,13 +76,11 @@ public class TriggerEventHandler {
             VRDataState vrDataWorldPre = preWorldDataAggregator.listen();
             if (gesture == null) {
                 gesture = new Gesture(vrDataRoomPre);
-                traceDebugger(gesture.rcGesture);
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, true);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, true);
             } else {
                 gesture.track(vrDataRoomPre, vrDataWorldPre);
                 gesture.recognizeTest(vrDataWorldPre);
-                traceDebugger(gesture.rcGesture);
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, false);
 //                dataDebugger(vrDataRoomPre);
@@ -129,10 +125,4 @@ public class TriggerEventHandler {
         if (config.WRITE_DATA)
             vrDataWriter.write(vrDataState);
     }
-
-    public static void traceDebugger(String data) throws IOException { // For Vox Data
-        if (config.WRITE_DATA)
-            voxDataWriter.write(data);
-    }
-
 }

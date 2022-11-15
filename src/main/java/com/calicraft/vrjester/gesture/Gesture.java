@@ -3,6 +3,7 @@ package com.calicraft.vrjester.gesture;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
+import com.calicraft.vrjester.utils.vrdata.VRDataWriter;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.gesture.radix.Trace;
 import com.calicraft.vrjester.gesture.radix.Tracer;
@@ -13,6 +14,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +36,7 @@ public class Gesture {
             ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.CLOUD, ParticleTypes.BUBBLE_POP,
             ParticleTypes.FALLING_WATER};
     public final Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);
+    private final VRDataWriter traceDataWriter;
 
     public Gesture(VRDataState vrDataState) {
         tracer = new Tracer();
@@ -43,16 +46,18 @@ public class Gesture {
         lcVox = new Vox(Constants.LC, VRDevice.LC, lcOrigin, hmdOrigin[1], true);
         voxList.add(hmdVox); voxList.add(rcVox); voxList.add(lcVox);
         rcParticle = -1; lcParticle = -1;
+
+        traceDataWriter = new VRDataWriter("trace", 0);
     }
 
-    public void track(VRDataState vrDataRoomPre, VRDataState vrDataWorldPre) { // Record the Vox trace of each VRDevice and return the resulting data
+    public void track(VRDataState vrDataRoomPre, VRDataState vrDataWorldPre) throws IOException { // Record the Vox trace of each VRDevice and return the resulting data
         for (Vox vox: voxList) { // Loop through each VRDevice's Vox
             Vec3[] currentPoint = vox.generateVox(vrDataRoomPre);
             int[] currentId = vox.getId();
             if (!Arrays.equals(vox.getPreviousId(), currentId)) { // Append new Vox Trace object
                 vox.setPreviousId(currentId.clone());
                 Trace trace = vox.getTrace();
-                trace.completeTrace(vox.centroid);
+                trace.completeTrace(currentPoint);
                 traceTray[vox.getVrDevice().ordinal()] = trace;
 //                System.out.println("BEFORE: " + vox.getName() + ": " + trace.toString());
                 vox.beginTrace(currentPoint);
@@ -65,6 +70,8 @@ public class Gesture {
                     System.out.println("RC GESTURE: " + rcGesture);
                     System.out.println("RC ELAPSED TIME: " + tracer.rcElapsedTime);
                     System.out.println("RC SPEED: " + tracer.rcSpeed);
+                    System.out.println("RC DIRECTION: " + trace.getDirection());
+                    System.out.println("RC PROXIMITY: " + trace.getDevicesInProximity());
                 }
                 if (vox.getVrDevice() == VRDevice.LC) {
                     tracer.lcMove = trace.movement;
@@ -72,6 +79,8 @@ public class Gesture {
                     tracer.lcSpeed = trace.getSpeed();
                     lcGesture += trace.movement;
                 }
+                if (config.WRITE_DATA)
+                    traceDataWriter.write(new String[]{rcGesture, lcGesture});
             }
         }
         if (rcParticle >= 0) {
@@ -118,17 +127,19 @@ public class Gesture {
         if (!ret) {
             if (tracer.rcMove.equals("forward")) {
                 rcParticle = 0; tracer.rcMove = ""; ret = true;
+                Vec3 avgDir = vrDataWorldPre.getRc()[1].add(vrDataWorldPre.getHmd()[1]).multiply((.5), (.5), (.5));
                 moveParticles(particleTypes[rcParticle],
                         vrDataWorldPre.getRc()[0],
-                        vrDataWorldPre.getRc()[1],
+                        avgDir,
                         1
                 );
             }
             if (tracer.lcMove.equals("forward")) {
                 lcParticle = 0; tracer.lcMove = ""; ret = true;
+                Vec3 avgDir = vrDataWorldPre.getLc()[1].add(vrDataWorldPre.getHmd()[1]).multiply((.5), (.5), (.5));
                 moveParticles(particleTypes[lcParticle],
                         vrDataWorldPre.getLc()[0],
-                        vrDataWorldPre.getLc()[1],
+                        avgDir,
                         1
                 );
             }

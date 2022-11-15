@@ -31,7 +31,7 @@ public class Vox {
             side_length = config.VOX_LENGTH;
 
         this.setId(new int[]{0, 0, 0}); // Initialize Vox Id
-        this.previousId = id.clone(); // Initialize soon to be previous Id
+        this.previousId = id.clone(); // Initialize soon to be previous ID
         this.name = name; // Initialize name of Vox
         this.vrDevice = vrDevice; // Initialize VRDevice name
         this.faceDirection = faceDirection; // Initialize facing angle of user
@@ -65,14 +65,14 @@ public class Vox {
     }
 
     public void updateProximity(VRDataState vrDataRoomPre, VRDevice vrDevice) { // Checks if VRDevice is in this Vox
-        Vec3 pos = VRDataState.getVRDevicePose(vrDataRoomPre, this.getVrDevice(), 0);
-        if (hasPoint(pos))
-            trace.addDeviceInProximity(vrDevice.name(), (Long) System.nanoTime());
-        else
-            trace.getDevicesInProximity().remove(vrDevice);
+        Vec3 pos = VRDataState.getVRDevicePose(vrDataRoomPre, vrDevice, 0);
+        if (hasPoint(pos)) {
+            Map<String, Integer> devicesInProximity = trace.getDevicesInProximity();
+            trace.updateDeviceInProximity(vrDevice.name(), devicesInProximity.getOrDefault(vrDevice.name(), 0));
+        }
     }
 
-    private int[] getVoxNeighbor(Vec3 point) { // Get new Vox Id and set traced movement direction based on which side the point withdrew from the Vox
+    private int[] getVoxNeighbor(Vec3 point) { // Get new Vox ID and set traced movement direction based on which side the point withdrew from the Vox
         int[] ret = this.getId().clone();
         Vec3 d1 = vertices.get("d1"); Vec3 d2 = vertices.get("d2");
         if (point.y < d1.y) { // Down
@@ -115,9 +115,6 @@ public class Vox {
     public void manifestVox(Vec3 point) { // When VRDevice is outside current Vox, new Vox is visualized at neighboring position
         if (!this.hasPoint(point)) { // Check if point is outside of current Vox
             int[] newVoxId = this.getVoxNeighbor(point);
-            double newX = side_length * (newVoxId[0] - this.id[0]);
-            double newY = side_length * (newVoxId[1] - this.id[1]);
-            double newZ = side_length * (newVoxId[2] - this.id[2]);
             this.updateVoxPosition(point, false);
             this.setId(newVoxId);
         }
