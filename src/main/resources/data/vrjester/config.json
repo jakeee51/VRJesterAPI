@@ -4,22 +4,28 @@
 	"VOX_LENGTH": "0.4",
 	"GESTURES": [
 		{
-			"name": "ASCENDO",
-			"movements": "up",
+			"name": "Fire Bending Form 1",
+			"rcMovements": "upbackdowndownforward",
+			"lcMovements": "",
 			"elapsedTime": "0",
-			"velocity": "0.0"
+			"velocity": "1.0",
+			"particle": "2"
 		},
 		{
-			"name": "DEPULSO",
-			"movements": "downforward",
+			"name": "Fire Bending Form 1",
+			"rcMovements": "rightleftforward",
+			"lcMovements": "leftrightback",
 			"elapsedTime": "0",
-			"velocity": "0.0"
+			"velocity": "1.0",
+			"particle": "0"
 		},
 		{
 			"name": "KAAAMEEE...HAAAMEEE...HAAAAA!!!",
-			"movements": "backforward",
+			"rcMovements": "backforward",
+			"lcMovements": "backforward",
 			"elapsedTime": "3000",
-			"velocity": "1.0"
+			"velocity": "1.0",
+			"particle": "1"
 		}
     ],
 	"LOG": {

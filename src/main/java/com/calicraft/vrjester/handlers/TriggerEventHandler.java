@@ -53,7 +53,8 @@ public class TriggerEventHandler {
                 System.out.println("JESTER TRIGGERED");
                 listener = true; elapsedTime = System.nanoTime();
                 config = Config.readConfig(Constants.DEV_CONFIG_PATH);
-                vrDataWriter = new VRDataWriter("room", iter);
+                if (config.WRITE_DATA)
+                    vrDataWriter = new VRDataWriter("room", iter);
             } else {
                 System.out.println("JESTER RELEASED");
                 listener = false; elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
@@ -75,7 +76,7 @@ public class TriggerEventHandler {
             VRDataState vrDataRoomPre = preRoomDataAggregator.listen();
             VRDataState vrDataWorldPre = preWorldDataAggregator.listen();
             if (gesture == null) {
-                gesture = new Gesture(vrDataRoomPre);
+                gesture = new Gesture(vrDataRoomPre, iter);
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, true);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, true);
             } else {

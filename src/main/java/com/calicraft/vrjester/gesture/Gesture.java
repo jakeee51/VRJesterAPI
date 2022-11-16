@@ -36,9 +36,9 @@ public class Gesture {
             ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.CLOUD, ParticleTypes.BUBBLE_POP,
             ParticleTypes.FALLING_WATER};
     public final Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);
-    private final VRDataWriter traceDataWriter;
+    private VRDataWriter traceDataWriter;
 
-    public Gesture(VRDataState vrDataState) {
+    public Gesture(VRDataState vrDataState, int iter) {
         tracer = new Tracer();
         hmdOrigin = vrDataState.getHmd(); rcOrigin = vrDataState.getRc(); lcOrigin = vrDataState.getLc();
         hmdVox = new Vox(Constants.HMD, VRDevice.HMD, hmdOrigin, hmdOrigin[1], false);
@@ -47,7 +47,8 @@ public class Gesture {
         voxList.add(hmdVox); voxList.add(rcVox); voxList.add(lcVox);
         rcParticle = -1; lcParticle = -1;
 
-        traceDataWriter = new VRDataWriter("trace", 0);
+        if (config.WRITE_DATA)
+            traceDataWriter = new VRDataWriter("trace", iter);
     }
 
     public void track(VRDataState vrDataRoomPre, VRDataState vrDataWorldPre) throws IOException { // Record the Vox trace of each VRDevice and return the resulting data
@@ -84,19 +85,19 @@ public class Gesture {
             }
         }
         if (rcParticle >= 0) {
-            moveParticles(particleTypes[rcParticle],
-                    vrDataWorldPre.getRc()[0],
-                    vrDataWorldPre.getRc()[1],
-                    tracer.rcSpeed
-            );
+//            moveParticles(particleTypes[rcParticle],
+//                    vrDataWorldPre.getRc()[0],
+//                    vrDataWorldPre.getRc()[1],
+//                    1
+//            );
             rcParticle = -1;
         }
         if (lcParticle >= 0) {
-            moveParticles(particleTypes[lcParticle],
-                    vrDataWorldPre.getLc()[0],
-                    vrDataWorldPre.getLc()[1],
-                    tracer.lcSpeed
-            );
+//            moveParticles(particleTypes[lcParticle],
+//                    vrDataWorldPre.getLc()[0],
+//                    vrDataWorldPre.getLc()[1],
+//                    1
+//            );
             lcParticle = -1;
         }
     }
@@ -105,19 +106,19 @@ public class Gesture {
         boolean ret = false;
         for (int i = 0; i < config.GESTURES.length; i++) {
             Config.SimpleGesture simpleGesture = config.GESTURES[i];
-            if (rcGesture.equals(simpleGesture.movements) || lcGesture.equals(simpleGesture.movements)) {
+            if (rcGesture.equals(simpleGesture.rcMovements) && lcGesture.equals(simpleGesture.lcMovements)) {
                 if (tracer.rcElapsedTime >= simpleGesture.elapsedTime || tracer.lcElapsedTime >= simpleGesture.elapsedTime) {
-                    ret = true;
-                    rcParticle = lcParticle = 1;
-                    tracer.rcMove = tracer.lcMove = "";
+                    ret = true; tracer.rcMove = tracer.lcMove = "";
+                    rcParticle = lcParticle = simpleGesture.particle;
+                    Vec3 avgDir = vrDataWorldPre.getRc()[1].add(vrDataWorldPre.getLc()[1]).multiply((.5), (.5), (.5));
                     moveParticles(particleTypes[rcParticle],
                             vrDataWorldPre.getRc()[0],
-                            vrDataWorldPre.getRc()[1],
+                            avgDir,
                             config.GESTURES[i].velocity
                     );
                     moveParticles(particleTypes[lcParticle],
                             vrDataWorldPre.getLc()[0],
-                            vrDataWorldPre.getLc()[1],
+                            avgDir,
                             config.GESTURES[i].velocity
                     );
                     break;
