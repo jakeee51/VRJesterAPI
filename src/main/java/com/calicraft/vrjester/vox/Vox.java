@@ -2,7 +2,7 @@ package com.calicraft.vrjester.vox;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
-import com.calicraft.vrjester.gesture.radix.Trace;
+import com.calicraft.vrjester.gesture.radix.Track;
 import com.calicraft.vrjester.utils.tools.Calcs;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
@@ -21,7 +21,7 @@ public class Vox {
     private final boolean isDiamond;
     private int[] id, previousId;
     private String name, movementDirection = "idle";
-    private Trace trace;
+    private Track track;
     public Vec3 centroid, faceDirection, offset = new Vec3((0), (0), (0));
     public float side_length = Constants.VOX_LENGTH;
 
@@ -35,7 +35,7 @@ public class Vox {
         this.name = name; // Initialize name of Vox
         this.vrDevice = vrDevice; // Initialize VRDevice name
         this.faceDirection = faceDirection; // Initialize facing angle of user
-        this.trace = new Trace(Arrays.toString(id), vrDevice, centroidPose, faceDirection);
+        this.track = new Track(Arrays.toString(id), vrDevice, centroidPose, faceDirection);
         this.isDiamond = isDiamond;
         // Initialize Vertices of Vox
         this.updateVoxPosition(centroidPose[0], false);
@@ -67,8 +67,8 @@ public class Vox {
     public void updateProximity(VRDataState vrDataRoomPre, VRDevice vrDevice) { // Checks if VRDevice is in this Vox
         Vec3 pos = VRDataState.getVRDevicePose(vrDataRoomPre, vrDevice, 0);
         if (hasPoint(pos)) {
-            Map<String, Integer> devicesInProximity = trace.getDevicesInProximity();
-            trace.updateDeviceInProximity(vrDevice.name(), devicesInProximity.getOrDefault(vrDevice.name(), 0));
+            Map<String, Integer> devicesInProximity = track.getDevicesInProximity();
+            track.updateDeviceInProximity(vrDevice.name(), devicesInProximity.getOrDefault(vrDevice.name(), 0));
         }
     }
 
@@ -104,10 +104,10 @@ public class Vox {
             int[] newVoxId = this.getVoxNeighbor(pose[0]);
             updateVoxPosition(pose[0], false);
             setId(newVoxId);
-            trace.setMovement(movementDirection);
+            track.setMovement(movementDirection);
             movementDirection = "idle";
         } else {
-            trace.addPose(pose); // Constantly update the current Trace
+            track.addPose(pose); // Constantly update the current Trace
         }
         return pose;
     }
@@ -189,13 +189,13 @@ public class Vox {
         return offset;
     }
 
-    public Trace getTrace() {
-        return trace;
+    public Track getTrace() {
+        return track;
     }
 
-    public Trace beginTrace(Vec3[] pose) { // Begin with a new Trace object
-        trace = new Trace(Arrays.toString(id), vrDevice, pose, faceDirection);
-        return trace;
+    public Track beginTrace(Vec3[] pose) { // Begin with a new Trace object
+        track = new Track(Arrays.toString(id), vrDevice, pose, faceDirection);
+        return track;
     }
 
     private void displayVox() {

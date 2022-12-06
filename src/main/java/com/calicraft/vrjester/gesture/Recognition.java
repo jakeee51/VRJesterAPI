@@ -1,6 +1,9 @@
 package com.calicraft.vrjester.gesture;
 
+import java.util.HashMap;
+
 public class Recognition {
+    public final HashMap<Integer, String> gestureMap = new HashMap<>();
     // Class that handles identifying a gesture utilizing the RadixTree
     // TODO - There will be 2 modes of triggering & 3 modes of terminating the recognition listener
     //      - listenOnKey | listenOnPosition

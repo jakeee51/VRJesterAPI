@@ -1,23 +1,15 @@
 {
-	"WRITE_DATA": "false",
+	"WRITE_DATA": "true",
 	"DISPLAY_VOX": "false",
 	"VOX_LENGTH": "0.4",
 	"GESTURES": [
 		{
-			"name": "Fire Bending Form 1",
-			"rcMovements": "upbackdowndownforward",
+			"name": "MARCUS ATTACK",
+			"rcMovements": "forwardrightright",
 			"lcMovements": "",
 			"elapsedTime": "0",
 			"velocity": "1.0",
-			"particle": "2"
-		},
-		{
-			"name": "Fire Bending Form 1",
-			"rcMovements": "rightleftforward",
-			"lcMovements": "leftrightback",
-			"elapsedTime": "0",
-			"velocity": "1.0",
-			"particle": "0"
+			"particle": "3"
 		},
 		{
 			"name": "KAAAMEEE...HAAAMEEE...HAAAAA!!!",
