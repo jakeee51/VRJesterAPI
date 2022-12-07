@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Config {
+    public boolean RECORD_MODE = Constants.RECORD_MODE;
     public boolean WRITE_DATA = Constants.WRITE_DATA;
     public boolean DISPLAY_VOX = Constants.DISPLAY_VOX;
     public float VOX_LENGTH = Constants.VOX_LENGTH;

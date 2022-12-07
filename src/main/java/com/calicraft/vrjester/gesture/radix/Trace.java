@@ -1,24 +1,11 @@
 package com.calicraft.vrjester.gesture.radix;
 
-import com.calicraft.vrjester.utils.vrdata.VRDevice;
+import com.calicraft.vrjester.gesture.Path;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Trace {
-    // Class that represents a complete gesture trace from a single VRDevice
-    // --- TODO - To be deleted
-    public String rcMove = "", lcMove = "";
-    public VRDevice vrDevice;
-    public final List<Track> tracks = new ArrayList<>();
-    public long rcElapsedTime = 0, lcElapsedTime = 0;
-    public Trace(VRDevice vrDevice) {
-        this.vrDevice = vrDevice;
-    }
-    public void add(Track track) {
-        tracks.add(track);
-    }
-    // ---
+    // Class that represents a valid gesture trace leading from a Node
 
     public List<Path> path;
     public Node next;

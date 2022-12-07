@@ -1,5 +1,7 @@
 package com.calicraft.vrjester.gesture.radix;
 
+import com.calicraft.vrjester.gesture.Path;
+
 import java.util.HashMap;
 import java.util.List;
 

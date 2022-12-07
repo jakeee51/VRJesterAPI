@@ -1,4 +1,6 @@
-package com.calicraft.vrjester.gesture.radix;
+package com.calicraft.vrjester.gesture;
+
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import java.util.stream.Stream;
 public record Path(String vrDevice, String movement,
                    long elapsedTime, long maxElapsedTime,
                    double speed, double maxSpeed,
+                   Vec3 direction, Vec3 faceDirection,
                    Map<String, Integer> devicesInProximity) {
 
     @Override
@@ -26,6 +29,13 @@ public record Path(String vrDevice, String movement,
                 movement, elapsedTime, maxElapsedTime, speed, maxSpeed);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(vrDevice, movement, elapsedTime, maxElapsedTime,
+                speed, maxSpeed, direction, faceDirection, devicesInProximity);
+    }
+
+    // TODO - Account for direction & faceDirection
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -41,7 +51,7 @@ public record Path(String vrDevice, String movement,
         }
     }
 
-    public static boolean isWithinTime(long otherMin, long otherMax, long min, long max) {
+    private static boolean isWithinTime(long otherMin, long otherMax, long min, long max) {
 //        System.out.println("isWithinTime:");
 //        System.out.println(min + " <= " + otherMin + " <= " + max + ", otherMax: " + otherMax);
         boolean ret;
@@ -54,7 +64,7 @@ public record Path(String vrDevice, String movement,
         return ret;
     }
 
-    public static boolean isWithinSpeed(double otherMin, double otherMax, double min, double max) {
+    private static boolean isWithinSpeed(double otherMin, double otherMax, double min, double max) {
 //        System.out.println("isWithinSpeed:");
 //        System.out.println(min + " <= " + otherMin + " <= " + max + ", otherMax: " + otherMax);
         boolean ret;
@@ -67,7 +77,7 @@ public record Path(String vrDevice, String movement,
         return ret;
     }
 
-    public static boolean isWithinProximity(long gestureInd, Map<String, Integer> otherDevices, Map<String, Integer> devices) {
+    private static boolean isWithinProximity(long gestureInd, Map<String, Integer> otherDevices, Map<String, Integer> devices) {
         boolean ret;
         if (gestureInd == -1 && devices.isEmpty())
             ret = true;

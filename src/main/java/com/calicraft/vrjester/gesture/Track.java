@@ -1,4 +1,4 @@
-package com.calicraft.vrjester.gesture.radix;
+package com.calicraft.vrjester.gesture;
 
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
@@ -15,7 +15,7 @@ import static com.calicraft.vrjester.utils.tools.Calcs.getMagnitude3D;
 public class Track {
     // POJO for tracing Vox state per VRDevice in an iteration of time
     public String voxId; // The Vox ID
-    public VRDevice vrDevice; // The VRDevice
+    public String vrDevice; // The VRDevice
     public String movement = "idle"; // Movement taken to get to Vox
     public long elapsedTime = 0; // Time spent within Vox in ms (added on the fly while idle)
     public double speed; // Average speed within Vox (calculated on the fly while idle)
@@ -26,7 +26,7 @@ public class Track {
 
     public Track(String voxId, VRDevice vrDevice, Vec3[] pose, Vec3 faceDirection) {
         this.voxId = voxId;
-        this.vrDevice = vrDevice;
+        this.vrDevice = vrDevice.name();
         this.faceDirection = faceDirection;
         setMovementBuckets(faceDirection);
         setElapsedTime(System.nanoTime());
@@ -42,7 +42,7 @@ public class Track {
         return voxId;
     }
 
-    public VRDevice getVrDevice() {
+    public String getVrDevice() {
         return vrDevice;
     }
 
@@ -87,7 +87,7 @@ public class Track {
             elapsedTime = (currentTime - elapsedTime) / 1000000;
     }
 
-    public float getElapsedTime() {
+    public long getElapsedTime() {
         return elapsedTime;
     }
 
@@ -101,6 +101,10 @@ public class Track {
 
     public Vec3 getDirection() {
         return direction;
+    }
+
+    public Vec3 getFaceDirection() {
+        return faceDirection;
     }
 
     public void setDirection(Vec3 direction) {

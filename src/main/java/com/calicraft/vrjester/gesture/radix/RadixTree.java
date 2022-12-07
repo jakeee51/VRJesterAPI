@@ -1,5 +1,7 @@
 package com.calicraft.vrjester.gesture.radix;
 
+import com.calicraft.vrjester.gesture.Path;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +17,7 @@ public class RadixTree {
 
     public String vrDevice;
     private static final int NO_MISMATCH = -1;
-    private Node root;
+    public Node root;
 
     public RadixTree(String vrDevice) {
         this.vrDevice = vrDevice;

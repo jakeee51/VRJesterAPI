@@ -1,24 +1,9 @@
 {
-	"WRITE_DATA": "true",
+	"RECORD_MODE": "false",
+	"WRITE_DATA": "false",
 	"DISPLAY_VOX": "false",
 	"VOX_LENGTH": "0.4",
 	"GESTURES": [
-		{
-			"name": "MARCUS ATTACK",
-			"rcMovements": "forwardrightright",
-			"lcMovements": "",
-			"elapsedTime": "0",
-			"velocity": "1.0",
-			"particle": "3"
-		},
-		{
-			"name": "KAAAMEEE...HAAAMEEE...HAAAAA!!!",
-			"rcMovements": "backforward",
-			"lcMovements": "backforward",
-			"elapsedTime": "3000",
-			"velocity": "1.0",
-			"particle": "1"
-		}
     ],
 	"LOG": {
 		"name": "vrdata",

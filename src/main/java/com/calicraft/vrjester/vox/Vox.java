@@ -2,7 +2,7 @@ package com.calicraft.vrjester.vox;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
-import com.calicraft.vrjester.gesture.radix.Track;
+import com.calicraft.vrjester.gesture.Track;
 import com.calicraft.vrjester.utils.tools.Calcs;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;

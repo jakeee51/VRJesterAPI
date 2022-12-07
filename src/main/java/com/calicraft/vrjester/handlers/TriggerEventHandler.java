@@ -4,6 +4,7 @@ import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
+import com.calicraft.vrjester.gesture.Gestures;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.vrdata.*;
 import com.calicraft.vrjester.vox.Vox;
@@ -34,6 +35,7 @@ public class TriggerEventHandler {
 
     private static Vox displayRCVox, displayLCVox;
     private static Gesture gesture;
+    private static final Gestures gestures = new Gestures();
     private static LocalPlayer player;
 
     @SubscribeEvent
@@ -57,6 +59,10 @@ public class TriggerEventHandler {
                     vrDataWriter = new VRDataWriter("room", iter);
             } else {
                 System.out.println("JESTER RELEASED");
+                if (config.RECORD_MODE)
+                    gestures.store(gesture, config.LOG.gesture);
+                if (config.WRITE_DATA)
+                    gestures.write();
                 listener = false; elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
                 gesture = null; elapsedTime = 0;
                 if (config.WRITE_DATA)
@@ -81,7 +87,6 @@ public class TriggerEventHandler {
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, true);
             } else {
                 gesture.track(vrDataRoomPre, vrDataWorldPre);
-                gesture.recognizeTest(vrDataWorldPre);
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, false);
 //                dataDebugger(vrDataRoomPre);
