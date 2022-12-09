@@ -5,11 +5,17 @@ import java.util.HashMap;
 
 
 public class GestureStore {
-    public VRDevice HMD = new VRDevice();
-    public VRDevice RC = new VRDevice();
-    public VRDevice LC = new VRDevice();
+    public HashMap<String, List<Path>> HMD = new HashMap<>();
+    public HashMap<String, List<Path>> RC = new HashMap<>();
+    public HashMap<String, List<Path>> LC = new HashMap<>();
 
-    public class VRDevice {
-        public HashMap<String, List<Path>> gestures = new HashMap<>();
+    public GestureStore() {}
+
+    public void addGesture(String vrDevice, String gestureName, List<Path> gesture) {
+        switch(vrDevice) {
+            case "HMD" -> HMD.put(gestureName, gesture);
+            case "RC"  -> RC.put(gestureName, gesture);
+            case "LC"  -> LC.put(gestureName, gesture);
+        }
     }
 }

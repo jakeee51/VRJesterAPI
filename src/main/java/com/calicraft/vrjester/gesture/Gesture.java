@@ -37,6 +37,8 @@ public class Gesture {
     public final Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);
     private VRDataWriter traceDataWriter;
 
+    public Gesture() {}
+
     public Gesture(VRDataState vrDataState, int iter) {
         hmdOrigin = vrDataState.getHmd(); rcOrigin = vrDataState.getRc(); lcOrigin = vrDataState.getLc();
         hmdVox = new Vox(Constants.HMD, VRDevice.HMD, hmdOrigin, hmdOrigin[1], false);

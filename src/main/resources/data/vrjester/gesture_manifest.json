@@ -1,0 +1,109 @@
+{
+  "HMD": {
+    "GESTURE 1": [
+      {
+        "vrDevice": "hmd",
+        "movement": "idle",
+        "elapsedTime": 0,
+        "maxElapsedTime": 200,
+        "speed": 0.0,
+        "maxSpeed": 0.0,
+        "direction": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "faceDirection": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "devicesInProximity": {}
+      }
+    ]
+  },
+  "RC": {
+    "GESTURE 2": [
+      {
+        "vrDevice": "rc",
+        "movement": "f",
+        "elapsedTime": 0,
+        "maxElapsedTime": 100,
+        "speed": 0.0,
+        "maxSpeed": 10.0,
+        "direction": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "faceDirection": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "devicesInProximity": {}
+      },
+      {
+        "vrDevice": "rc",
+        "movement": "u",
+        "elapsedTime": 0,
+        "maxElapsedTime": 0,
+        "speed": 0.0,
+        "maxSpeed": 0.0,
+        "direction": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "faceDirection": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "devicesInProximity": {}
+      }
+    ]
+  },
+  "LC": {
+    "GESTURE 3": [
+      {
+        "vrDevice": "lc",
+        "movement": "f",
+        "elapsedTime": 50,
+        "maxElapsedTime": 200,
+        "speed": 0.0,
+        "maxSpeed": 0.0,
+        "direction": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "faceDirection": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "devicesInProximity": {}
+      },
+      {
+        "vrDevice": "lc",
+        "movement": "r",
+        "elapsedTime": 0,
+        "maxElapsedTime": 0,
+        "speed": 0.0,
+        "maxSpeed": 0.0,
+        "direction": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "faceDirection": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "devicesInProximity": {}
+      }
+    ]
+  }
+}

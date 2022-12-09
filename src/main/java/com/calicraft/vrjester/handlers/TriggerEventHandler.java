@@ -5,6 +5,7 @@ import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.gesture.Gestures;
+import com.calicraft.vrjester.gesture.Path;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.vrdata.*;
 import com.calicraft.vrjester.vox.Vox;
@@ -16,6 +17,10 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.calicraft.vrjester.VrJesterApi.VIVECRAFTLOADED;
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
@@ -58,17 +63,54 @@ public class TriggerEventHandler {
                 if (config.WRITE_DATA)
                     vrDataWriter = new VRDataWriter("room", iter);
             } else {
-                System.out.println("JESTER RELEASED");
-                if (config.RECORD_MODE)
-                    gestures.store(gesture, config.LOG.gesture);
+                if (!VrJesterApi.MOD_KEY.isDown()) {
+                    System.out.println("JESTER RELEASED");
+                    if (config.RECORD_MODE)
+                        gestures.store(gesture, config.LOG.gesture);
+                    if (config.WRITE_DATA)
+                        gestures.write();
+                    listener = false;
+                    elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
+                    gesture = null;
+                    elapsedTime = 0;
+                    if (config.WRITE_DATA)
+                        iter++;
+                    else
+                        iter = 0;
+                }
+            }
+        } else {
+            if (VrJesterApi.MOD_KEY.isDown() && !listener) {
+                System.out.println("NON VR JESTER TRIGGERED");
+                listener = true;
+//                if (config.RECORD_MODE) {
+//                    System.out.println("RECORD MODE ACTIVATED");
+//                    Gesture gesture0 = new Gesture();
+//                    Gesture gesture1 = new Gesture();
+//                    Gesture gesture2 = new Gesture();
+//                    Map<String, Integer> devices = new HashMap<>(); //devices.put("rc", 0);
+//                    Vec3 dir = new Vec3((0), (0), (0));
+//                    Path path0 = new Path("hmd", "idle", 0, 200 , 0, 0, dir, dir, devices);
+//                    Path path1 = new Path("rc", "f", 0, 100 , 0, 10, dir, dir, devices);
+//                    Path path2 = new Path("rc", "u", 0, 0, 0, 0, dir, dir, devices);
+//                    Path path3 = new Path("lc", "f", 50, 200, 0, 0, dir, dir, devices);
+//                    Path path4 = new Path("lc", "r", 0, 0, 0, 0, dir, dir, devices);
+//                    gesture0.hmdGesture.add(path0);
+//                    gesture1.rcGesture.add(path1);
+//                    gesture1.rcGesture.add(path2);
+//                    gesture2.lcGesture.add(path3);
+//                    gesture2.lcGesture.add(path4);
+//                    gestures.store(gesture0, "GESTURE 1");
+//                    gestures.store(gesture1, "GESTURE 2");
+//                    gestures.store(gesture2, "GESTURE 3");
+//                }
                 if (config.WRITE_DATA)
-                    gestures.write();
-                listener = false; elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
-                gesture = null; elapsedTime = 0;
-                if (config.WRITE_DATA)
-                    iter++;
-                else
-                    iter = 0;
+                    gestures.load();
+            } else {
+                if (!VrJesterApi.MOD_KEY.isDown() && listener) {
+                    System.out.println("JESTER RELEASED");
+                    listener = false;
+                }
             }
         }
     }
@@ -78,7 +120,7 @@ public class TriggerEventHandler {
         if (VrJesterApi.MOD_KEY.isDown() && !VIVECRAFTLOADED)
             moveParticles(ParticleTypes.FLAME, 0);
 
-        if (listener) { // Capture VR data in real time after trigger
+        if (listener && false) { // Capture VR data in real time after trigger
             VRDataState vrDataRoomPre = preRoomDataAggregator.listen();
             VRDataState vrDataWorldPre = preWorldDataAggregator.listen();
             if (gesture == null) {

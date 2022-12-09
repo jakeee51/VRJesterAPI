@@ -1,6 +1,5 @@
 package com.calicraft.vrjester.gesture;
 
-import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.radix.Node;
 import com.calicraft.vrjester.gesture.radix.RadixTree;
@@ -19,7 +18,8 @@ import java.util.Scanner;
 
 public class Gestures {
     // Class for storing the gestures
-    public final HashMap<Integer, String> gestureMap = new HashMap<>();
+    public final GestureStore gestureStore = new GestureStore();
+    public final HashMap<Integer, String> gestureMapping = new HashMap<>();
     public final RadixTree hmdGestures = new RadixTree("HMD");
     public final RadixTree rcGestures = new RadixTree("RC");
     public final RadixTree lcGestures = new RadixTree("LC");
@@ -27,52 +27,77 @@ public class Gestures {
 
     public Gestures() {}
 
-    public void read() { // TODO - Finish this method
+    public GestureStore read() {
         try {
             StringBuilder sb = new StringBuilder();
             Scanner myReader = new Scanner(gestureManifestFile);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
+                sb.append(data);
                 System.out.println("GESTURE MANIFEST: " + data);
             }
             myReader.close();
             GsonBuilder builder = new GsonBuilder();
             builder.setPrettyPrinting();
             Gson gson = builder.create();
-            gson.fromJson(sb.toString(), Gestures.class); // Load Radix Tree's here
+            return gson.fromJson(sb.toString(), GestureStore.class);
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred reading gesture manifest json!");
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public void load() { // Load up all gestures from gesture store to be ready for use
+        GestureStore gestureStore = read();
+        if (gestureStore != null) {
+            for (String gestureName: gestureStore.HMD.keySet()) {
+                store(hmdGestures, gestureStore.HMD.get(gestureName), gestureName);
+            }
+            for (String gestureName: gestureStore.RC.keySet()) {
+                store(rcGestures, gestureStore.RC.get(gestureName), gestureName);
+            }
+            for (String gestureName: gestureStore.LC.keySet()) {
+                store(lcGestures, gestureStore.LC.get(gestureName), gestureName);
+            }
+        }
+    }
+
+    public void store(RadixTree gestureTree, List<Path> gesture, String name) {
+        gestureTree.insert(gesture);
+        gestureMapping.put(gesture.hashCode(), name);
     }
 
     public void store(Gesture gesture, String name) {
         hmdGestures.insert(gesture.hmdGesture);
         rcGestures.insert(gesture.rcGesture);
         lcGestures.insert(gesture.lcGesture);
-        gestureMap.put(gesture.hmdGesture.hashCode(), name);
-        gestureMap.put(gesture.rcGesture.hashCode(), name);
-        gestureMap.put(gesture.lcGesture.hashCode(), name);
+        gestureMapping.put(gesture.hmdGesture.hashCode(), name);
+        gestureMapping.put(gesture.rcGesture.hashCode(), name);
+        gestureMapping.put(gesture.lcGesture.hashCode(), name);
     }
 
     public void write() {
-        writeGestures(hmdGestures.root, new ArrayList<>());
-        writeGestures(rcGestures.root, new ArrayList<>());
-        writeGestures(lcGestures.root, new ArrayList<>());
+        writeGestures("HMD", hmdGestures.root, new ArrayList<>());
+        writeGestures("RC", rcGestures.root, new ArrayList<>());
+        writeGestures("LC", lcGestures.root, new ArrayList<>());
+        try (FileWriter writer = new FileWriter(gestureManifestFile.getPath())) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(gestureStore, writer);
+            writer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void writeGestures(Node current, List<Path> result) { // TODO - Write with Gson
+    private void writeGestures(String vrDevice, Node current, List<Path> result) { // TODO - Write per device and use gesture name as key
         if (current.isGesture) {
-            try (FileWriter writer = new FileWriter(gestureManifestFile.getPath(), true)) {
-                writer.write(result + "\n");
-                writer.flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            System.out.println(result);
+            gestureStore.addGesture(vrDevice, gestureMapping.get(result.hashCode()), result);
         }
 
         for (Trace trace : current.paths.values()) {
-            writeGestures(trace.next, Path.concat(result, trace.path));
+            writeGestures(vrDevice, trace.next, Path.concat(result, trace.path));
         }
     }
 }

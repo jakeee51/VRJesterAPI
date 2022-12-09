@@ -1,6 +1,6 @@
 {
-	"RECORD_MODE": "false",
-	"WRITE_DATA": "false",
+	"RECORD_MODE": "true",
+	"WRITE_DATA": "true",
 	"DISPLAY_VOX": "false",
 	"VOX_LENGTH": "0.4",
 	"GESTURES": [
