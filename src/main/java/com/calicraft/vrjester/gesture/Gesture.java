@@ -2,7 +2,6 @@ package com.calicraft.vrjester.gesture;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
-import com.calicraft.vrjester.gesture.radix.Trace;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDataWriter;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
@@ -36,8 +35,6 @@ public class Gesture {
             ParticleTypes.FALLING_WATER};
     public final Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);
     private VRDataWriter traceDataWriter;
-
-    public Gesture() {}
 
     public Gesture(VRDataState vrDataState, int iter) {
         hmdOrigin = vrDataState.getHmd(); rcOrigin = vrDataState.getRc(); lcOrigin = vrDataState.getLc();

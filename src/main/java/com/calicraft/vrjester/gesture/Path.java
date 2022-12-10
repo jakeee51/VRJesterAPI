@@ -25,8 +25,8 @@ public record Path(String vrDevice, String movement,
 
     @Override
     public String toString() {
-        return String.format("Path[ movement=%s | time=%d - %d] | speed=%.2f - %.2f",
-                movement, elapsedTime, maxElapsedTime, speed, maxSpeed);
+        return String.format("Path[ %s | movement=%s | time=%d -> %d | speed=%.2f -> %.2f ]",
+                vrDevice, movement, elapsedTime, maxElapsedTime, speed, maxSpeed);
     }
 
     @Override

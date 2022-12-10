@@ -68,7 +68,7 @@ public class TriggerEventHandler {
                     if (config.RECORD_MODE)
                         gestures.store(gesture, config.LOG.gesture);
                     if (config.WRITE_DATA)
-                        gestures.write();
+                        gestures.load();
                     listener = false;
                     elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
                     gesture = null;

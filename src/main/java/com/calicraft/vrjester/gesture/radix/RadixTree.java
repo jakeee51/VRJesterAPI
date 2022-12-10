@@ -35,17 +35,17 @@ public class RadixTree {
     }
 
     //Helpful method to debug and to see all the gestures
-    public void printAllWords() {
-        printAllWords(root, new ArrayList<>());
+    public void printAllGestures() {
+        printAllGestures(root, new ArrayList<>());
     }
 
-    private void printAllWords(Node current, List<Path> result) {
+    private void printAllGestures(Node current, List<Path> result) {
         if (current.isGesture) {
             System.out.println(result);
         }
 
         for (Trace trace : current.paths.values()) {
-            printAllWords(trace.next, Path.concat(result, trace.path));
+            printAllGestures(trace.next, Path.concat(result, trace.path));
         }
     }
 
