@@ -1,0 +1,51 @@
+{
+  "HMD": {},
+  "RC": {
+    "PUSH": [
+      {
+        "vrDevice": "RC",
+        "movement": "forward",
+        "elapsedTime": 0,
+        "maxElapsedTime": 0,
+        "speed": 0.0,
+        "maxSpeed": 0.0,
+        "direction": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "faceDirection": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "devicesInProximity": {
+        }
+      }
+    ]
+  },
+  "LC": {
+    "PUSH": [
+      {
+        "vrDevice": "LC",
+        "movement": "forward",
+        "elapsedTime": 0,
+        "maxElapsedTime": 0,
+        "speed": 0.0,
+        "maxSpeed": 0.0,
+        "direction": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "faceDirection": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "devicesInProximity": {
+        }
+      }
+    ]
+  }
+}

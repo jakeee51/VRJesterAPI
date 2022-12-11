@@ -5,7 +5,7 @@ import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.gesture.Gestures;
-import com.calicraft.vrjester.gesture.Path;
+import com.calicraft.vrjester.gesture.Recognition;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.vrdata.*;
 import com.calicraft.vrjester.vox.Vox;
@@ -17,10 +17,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static com.calicraft.vrjester.VrJesterApi.VIVECRAFTLOADED;
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
@@ -41,11 +37,16 @@ public class TriggerEventHandler {
     private static Vox displayRCVox, displayLCVox;
     private static Gesture gesture;
     private static final Gestures gestures = new Gestures();
+    private static Recognition recognition;
     private static LocalPlayer player;
 
     @SubscribeEvent
     public void onJesterTrigger(InputEvent event) {
         if (player == null) {
+            if (recognition == null) {
+                gestures.load();
+                recognition = new Recognition(gestures);
+            }
             player = getMCI().player;
             try {
                 VIVECRAFTLOADED = PositionTracker.vrAPI.playerInVR(player);
@@ -63,26 +64,28 @@ public class TriggerEventHandler {
                 if (config.WRITE_DATA)
                     vrDataWriter = new VRDataWriter("room", iter);
             } else {
-                if (!VrJesterApi.MOD_KEY.isDown()) {
-                    System.out.println("JESTER RELEASED");
-                    if (config.RECORD_MODE)
-                        gestures.store(gesture, config.LOG.gesture);
-                    if (config.WRITE_DATA)
-                        gestures.load();
-                    listener = false;
-                    elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
-                    gesture = null;
-                    elapsedTime = 0;
-                    if (config.WRITE_DATA)
-                        iter++;
-                    else
-                        iter = 0;
+                System.out.println("JESTER RELEASED");
+                if (config.READ_DATA) {
+                    gestures.clear(); gestures.load();
                 }
+                if (config.RECORD_MODE && gesture != null)
+                    gestures.store(gesture, config.LOG.gesture);
+                if (config.WRITE_DATA)
+                    gestures.write();
+                listener = false;
+                elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
+                gesture = null;
+                elapsedTime = 0;
+                if (config.WRITE_DATA)
+                    iter++;
+                else
+                    iter = 0;
             }
-        } else {
-            if (VrJesterApi.MOD_KEY.isDown() && !listener) {
-                System.out.println("NON VR JESTER TRIGGERED");
-                listener = true;
+        }
+//        else {
+//            if (VrJesterApi.MOD_KEY.isDown() && !listener) {
+//                System.out.println("NON VR JESTER TRIGGERED");
+//                listener = true;
 //                if (config.RECORD_MODE) {
 //                    System.out.println("RECORD MODE ACTIVATED");
 //                    Gesture gesture0 = new Gesture();
@@ -104,15 +107,15 @@ public class TriggerEventHandler {
 //                    gestures.store(gesture1, "GESTURE 2");
 //                    gestures.store(gesture2, "GESTURE 3");
 //                }
-                if (config.WRITE_DATA)
-                    gestures.load();
-            } else {
-                if (!VrJesterApi.MOD_KEY.isDown() && listener) {
-                    System.out.println("JESTER RELEASED");
-                    listener = false;
-                }
-            }
-        }
+//                if (config.WRITE_DATA)
+//                    gestures.load();
+//            } else {
+//                if (!VrJesterApi.MOD_KEY.isDown() && listener) {
+//                    System.out.println("JESTER RELEASED");
+//                    listener = false;
+//                }
+//            }
+//        }
     }
 
     @SubscribeEvent
@@ -120,15 +123,17 @@ public class TriggerEventHandler {
         if (VrJesterApi.MOD_KEY.isDown() && !VIVECRAFTLOADED)
             moveParticles(ParticleTypes.FLAME, 0);
 
-        if (listener && false) { // Capture VR data in real time after trigger
+        if (listener) { // Capture VR data in real time after trigger
             VRDataState vrDataRoomPre = preRoomDataAggregator.listen();
             VRDataState vrDataWorldPre = preWorldDataAggregator.listen();
             if (gesture == null) {
-                gesture = new Gesture(vrDataRoomPre, iter);
+                gesture = new Gesture(vrDataRoomPre);
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, true);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, true);
             } else {
-                gesture.track(vrDataRoomPre, vrDataWorldPre);
+                gesture.track(vrDataRoomPre);
+                String recognizedGesture = recognition.recognize(gesture);
+                System.out.println("recognizedGesture: " + recognizedGesture);
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, false);
 //                dataDebugger(vrDataRoomPre);

@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class Config {
     public boolean RECORD_MODE = Constants.RECORD_MODE;
+    public boolean READ_DATA = Constants.READ_DATA;
     public boolean WRITE_DATA = Constants.WRITE_DATA;
     public boolean DISPLAY_VOX = Constants.DISPLAY_VOX;
     public float VOX_LENGTH = Constants.VOX_LENGTH;
@@ -16,7 +17,6 @@ public class Config {
     public int VOX_GRID_WIDTH = Constants.VOX_GRID_WIDTH;
     public int VOX_GRID_HEIGHT = Constants.VOX_GRID_HEIGHT;
     public float MAX_LISTENING_TIME = Constants.MAX_LISTENING_TIME;
-    public SimpleGesture[] GESTURES = new SimpleGesture[]{};
     public Log LOG = new Log();
 
     public class Log {
@@ -25,16 +25,6 @@ public class Config {
         public String gesture;
         public int pose;
         public String[] devices = new String[]{};
-    }
-
-    public class SimpleGesture {
-        // Class that represents a gesture's overall simple attributes from a collection of Trace objects
-        public String name;
-        public String rcMovements;
-        public String lcMovements;
-        public long elapsedTime;
-        public double velocity;
-        public int particle;
     }
 
     public static Config readConfig() {

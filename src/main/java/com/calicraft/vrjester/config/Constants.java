@@ -3,11 +3,12 @@ package com.calicraft.vrjester.config;
 public abstract class Constants {
     public static final String CONFIG_PATH = "config/VRJesterAPI.cfg";
     public static final String GESTURE_STORE_PATH = "config/gesture_manifest.json";
-    public static final String DEV_GESTURE_STORE_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/src/main/resources/data/vrjester/gesture_manifest.json";
+    public static final String DEV_GESTURE_STORE_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/src/main/resources/data/vrjester/gesture_store.json";
     public static final String DEV_CONFIG_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/src/main/resources/data/vrjester/config.json";
     public static final String DEV_ARCHIVE_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/dev/archive";
 
     public static final boolean RECORD_MODE = false;
+    public static final boolean READ_DATA = false;
     public static final boolean WRITE_DATA = false;
     public static final boolean DISPLAY_VOX = false;
     public static final float VOX_LENGTH = 0.6F;

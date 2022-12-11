@@ -1,13 +1,14 @@
 {
-	"RECORD_MODE": "true",
-	"WRITE_DATA": "true",
+	"RECORD_MODE": "false",
+	"READ_DATA": "true",
+	"WRITE_DATA": "false",
 	"DISPLAY_VOX": "false",
 	"VOX_LENGTH": "0.4",
 	"GESTURES": [
     ],
 	"LOG": {
 		"name": "vrdata",
-		"gesture": "punch",
+		"gesture": "STRIKE",
 		"devices": ["rc", "lc"],
 		"pose": "0"
 	}

@@ -2,6 +2,7 @@ package com.calicraft.vrjester.gesture;
 
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,7 +36,7 @@ public record Path(String vrDevice, String movement,
                 speed, maxSpeed, direction, faceDirection, devicesInProximity);
     }
 
-    // TODO - Account for direction & faceDirection
+    // TODO - Account for direction & faceDirection & devicesInProximity
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -82,7 +83,7 @@ public record Path(String vrDevice, String movement,
         if (gestureInd == -1 && devices.isEmpty())
             ret = true;
         else
-            ret = Objects.equals(devices, otherDevices);
+            ret = Objects.equals(devices.keySet(), otherDevices.keySet());
         return ret;
     }
 
@@ -91,6 +92,10 @@ public record Path(String vrDevice, String movement,
     }
 
     public static List<Path> concat(List<Path> path1, List<Path> path2) {
+        if(path1 == null)
+            path1 = new ArrayList<>();
+        if(path2 == null)
+            path2 = new ArrayList<>();
         return Stream.concat(path1.stream(), path2.stream()).toList();
     }
 }

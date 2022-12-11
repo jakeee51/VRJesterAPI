@@ -3,6 +3,7 @@ package com.calicraft.vrjester.gesture.radix;
 import com.calicraft.vrjester.gesture.Path;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class RadixTree {
@@ -35,18 +36,16 @@ public class RadixTree {
     }
 
     //Helpful method to debug and to see all the gestures
-    public void printAllGestures() {
-        printAllGestures(root, new ArrayList<>());
+    public void printAllGestures(HashMap<Integer, String> gestureMapping) {
+        printAllGestures(root, new ArrayList<>(), gestureMapping);
     }
 
-    private void printAllGestures(Node current, List<Path> result) {
-        if (current.isGesture) {
-            System.out.println(result);
-        }
+    private void printAllGestures(Node current, List<Path> result, HashMap<Integer, String> gestureMapping) {
+        if (current.isGesture)
+            System.out.println(gestureMapping.get(result.hashCode()) + ": " + result);
 
-        for (Trace trace : current.paths.values()) {
-            printAllGestures(trace.next, Path.concat(result, trace.path));
-        }
+        for (Trace trace : current.paths.values())
+            printAllGestures(trace.next, Path.concat(result, trace.path), gestureMapping);
     }
 
     public void insert(List<Path> gesture) {
@@ -139,7 +138,7 @@ public class RadixTree {
     }
 
     public List<Path> search(List<Path> gesture) { // Returns matched gesture is found and null if not found
-        List<Path> ret = new ArrayList<>();
+        List<Path> ret = null;
         Node current = root;
         int currIndex = 0;
         while (currIndex < gesture.size()) {
