@@ -34,7 +34,6 @@ public class Recognition {
     }
 
     public String recognize(Gesture gesture) { // Recognize the gesture by searching for matches in RadixTrees
-        //  See the idle state for a VRDevice where we don't care about it's stored gesture value
         String ret, id = "";
         List<Path> foundHmdGesture = gestures.hmdGestures.search(gesture.hmdGesture);
         List<Path> foundRcGesture = gestures.rcGestures.search(gesture.rcGesture);
