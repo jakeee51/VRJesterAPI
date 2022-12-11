@@ -33,8 +33,8 @@ public class Recognition {
         this.gestures = gestures;
     }
 
-    public String recognize(Gesture gesture) { // Recognize the gesture by searching for matches in RadixTrees
-        String ret, id = "";
+    public String recognize(Gesture gesture) { // Recognize the gesture & return its name
+        String gestureName, id = "";
         List<Path> foundHmdGesture = gestures.hmdGestures.search(gesture.hmdGesture);
         List<Path> foundRcGesture = gestures.rcGestures.search(gesture.rcGesture);
         List<Path> foundLcGesture = gestures.lcGestures.search(gesture.lcGesture);
@@ -48,8 +48,8 @@ public class Recognition {
         System.out.println("foundHmdGesture: " + foundHmdGesture);
         System.out.println("foundRcGesture: " + foundRcGesture);
         System.out.println("foundRcGesture: " + foundLcGesture);
-        ret = gestures.gestureNameSpace.get(id);
-        return ret;
+        gestureName = gestures.gestureNameSpace.get(id);
+        return gestureName;
     }
 
 //    public boolean recognizeTest(VRDataState vrDataWorldPre) {
