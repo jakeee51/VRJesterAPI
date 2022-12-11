@@ -8,7 +8,7 @@
     ],
 	"LOG": {
 		"name": "vrdata",
-		"gesture": "STRIKE",
+		"gesture": "PUSH",
 		"devices": ["rc", "lc"],
 		"pose": "0"
 	}

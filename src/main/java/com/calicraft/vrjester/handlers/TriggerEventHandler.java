@@ -11,6 +11,8 @@ import com.calicraft.vrjester.utils.vrdata.*;
 import com.calicraft.vrjester.vox.Vox;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
@@ -33,27 +35,33 @@ public class TriggerEventHandler {
     private static int iter = 0;
     private static boolean listener = false;
     private long elapsedTime = 0;
-
-    private static Vox displayRCVox, displayLCVox;
     private static Gesture gesture;
     private static final Gestures gestures = new Gestures();
     private static Recognition recognition;
     private static LocalPlayer player;
 
+    private static Vox displayRCVox, displayLCVox;
+    private static int rcParticle, lcParticle;
+    private static boolean msgSentOnce = false;
+    private static final SimpleParticleType[] particleTypes = new SimpleParticleType[]{ParticleTypes.FLAME,
+            ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.CLOUD, ParticleTypes.BUBBLE_POP,
+            ParticleTypes.FALLING_WATER};
+
     @SubscribeEvent
     public void onJesterTrigger(InputEvent event) {
-        if (player == null) {
-            if (recognition == null) {
-                gestures.load();
-                recognition = new Recognition(gestures);
-            }
+        if (player == null || recognition == null) {
+            rcParticle = 0; lcParticle = 0;
+            gestures.load();
+            recognition = new Recognition(gestures);
             player = getMCI().player;
+            if (player == null)
+                return;
             try {
                 VIVECRAFTLOADED = PositionTracker.vrAPI.playerInVR(player);
             } catch (NullPointerException e) {
                 System.out.println("Threw NullPointerException trying to call IVRAPI.playerInVR");
+                return;
             }
-            return;
         }
         // Trigger the gesture listening phase
         if (VIVECRAFTLOADED) {
@@ -68,14 +76,12 @@ public class TriggerEventHandler {
                 if (config.READ_DATA) {
                     gestures.clear(); gestures.load();
                 }
-                if (config.RECORD_MODE && gesture != null)
+                if (config.RECORD_MODE)
                     gestures.store(gesture, config.LOG.gesture);
                 if (config.WRITE_DATA)
                     gestures.write();
-                listener = false;
-                elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
-                gesture = null;
-                elapsedTime = 0;
+                listener = false; elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
+                gesture = null; msgSentOnce = false; elapsedTime = 0;
                 if (config.WRITE_DATA)
                     iter++;
                 else
@@ -133,7 +139,20 @@ public class TriggerEventHandler {
             } else {
                 gesture.track(vrDataRoomPre);
                 String recognizedGesture = recognition.recognize(gesture);
-                System.out.println("recognizedGesture: " + recognizedGesture);
+                if (recognizedGesture.equals("PUSH")) {
+                    sendDebugMsg("RECOGNIZED: " + recognizedGesture);
+                    Vec3 avgDir = vrDataWorldPre.getRc()[1].add(vrDataWorldPre.getHmd()[1]).multiply((.5), (.5), (.5));
+                    moveParticles(particleTypes[rcParticle],
+                            vrDataWorldPre.getRc()[0],
+                            avgDir,
+                            1
+                    );
+                    moveParticles(particleTypes[lcParticle],
+                            vrDataWorldPre.getLc()[0],
+                            avgDir,
+                            1
+                    );
+                }
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, false);
 //                dataDebugger(vrDataRoomPre);
@@ -147,6 +166,16 @@ public class TriggerEventHandler {
 //                data.clear(); listener = false;
 //            }
 //            sleep--;
+        }
+    }
+
+    public static void sendDebugMsg(String msg) {
+        if (!msgSentOnce) {
+            msgSentOnce = true;
+            LocalPlayer player = getMCI().player;
+            Component text = Component.literal(msg);
+            assert player != null;
+            player.sendSystemMessage(text);
         }
     }
 

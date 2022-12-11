@@ -20,14 +20,13 @@ public class Track {
     public long elapsedTime = 0; // Time spent within Vox in ms (added on the fly while idle)
     public double speed; // Average speed within Vox (calculated on the fly while idle)
     public final Map<String, Integer> devicesInProximity = new HashMap<>(); // Other VRDevices within this Vox
-    private Vec3 faceDirection, direction, front, back, right, left,
+    private Vec3 direction, front, back, right, left,
                      frontRight, frontLeft, backRight, backLeft;
     private final List<Vec3[]> poses = new ArrayList<>(); // Poses captured within Vox
 
     public Track(String voxId, VRDevice vrDevice, Vec3[] pose, Vec3 faceDirection) {
         this.voxId = voxId;
         this.vrDevice = vrDevice.name();
-        this.faceDirection = faceDirection;
         setMovementBuckets(faceDirection);
         setElapsedTime(System.nanoTime());
         poses.add(pose);
@@ -101,10 +100,6 @@ public class Track {
 
     public Vec3 getDirection() {
         return direction;
-    }
-
-    public Vec3 getFaceDirection() {
-        return faceDirection;
     }
 
     public void setDirection(Vec3 direction) {

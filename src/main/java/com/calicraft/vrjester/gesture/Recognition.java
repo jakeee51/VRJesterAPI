@@ -1,11 +1,6 @@
 package com.calicraft.vrjester.gesture;
 
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
-
 import java.util.List;
-
-import static com.calicraft.vrjester.utils.tools.SpawnParticles.moveParticles;
 
 public class Recognition {
     // Class that handles identifying a gesture utilizing the RadixTree
@@ -16,20 +11,14 @@ public class Recognition {
     //      - recognizeOnTime | recognizeOnRecognize | recognizeOnRelease
     //      - Upon terminating the listener, a GestureRecognition Event
     //      will either be fired. As a traced gesture makes its way through
-    //      the radix sort tree, each "unlocked node" will be fired to
+    //      the radix sort tree, each "isGesture node" will be fired to
     //      InterMod Event Bus to notify consumers of the API that a "step"
     //      in a gesture's path has been fulfilled. This allows a way for
     //      users/devs to know if and when their gestures are being recognized
 
-    private static int rcParticle, lcParticle;
-    private static final SimpleParticleType[] particleTypes = new SimpleParticleType[]{ParticleTypes.FLAME,
-            ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.CLOUD, ParticleTypes.BUBBLE_POP,
-            ParticleTypes.FALLING_WATER};
-
     public Gestures gestures;
 
     public Recognition(Gestures gestures) {
-        rcParticle = -1; lcParticle = -1;
         this.gestures = gestures;
     }
 
@@ -44,12 +33,14 @@ public class Recognition {
             id += foundRcGesture.hashCode();
         if (foundLcGesture != null)
             id += foundLcGesture.hashCode();
-        System.out.println(gesture);
-        System.out.println("foundHmdGesture: " + foundHmdGesture);
-        System.out.println("foundRcGesture: " + foundRcGesture);
-        System.out.println("foundRcGesture: " + foundLcGesture);
+//        System.out.println(gesture);
+//        System.out.println("foundHmdGesture: " + foundHmdGesture);
+//        System.out.println("foundRcGesture: " + foundRcGesture);
+//        System.out.println("foundLcGesture: " + foundLcGesture);
+//        System.out.println("RECOGNIZE ID:" + id);
+//        System.out.println("GESTURE NAMESPACE: " + gestures.gestureNameSpace);
         gestureName = gestures.gestureNameSpace.get(id);
-        return gestureName;
+        return gestureName != null ? gestureName : "";
     }
 
 //    public boolean recognizeTest(VRDataState vrDataWorldPre) {

@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 public record Path(String vrDevice, String movement,
                    long elapsedTime, long maxElapsedTime,
                    double speed, double maxSpeed,
-                   Vec3 direction, Vec3 faceDirection,
+                   Vec3 direction,
                    Map<String, Integer> devicesInProximity) {
 
     @Override
@@ -33,10 +33,10 @@ public record Path(String vrDevice, String movement,
     @Override
     public int hashCode() {
         return Objects.hash(vrDevice, movement, elapsedTime, maxElapsedTime,
-                speed, maxSpeed, direction, faceDirection, devicesInProximity);
+                speed, maxSpeed, direction, devicesInProximity);
     }
 
-    // TODO - Account for direction & faceDirection & devicesInProximity
+    // TODO - Account for direction & devicesInProximity
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -88,7 +88,11 @@ public record Path(String vrDevice, String movement,
     }
 
     public static boolean startsWith(List<Path> path, List<Path> subPath) {
-        return path.subList(0, subPath.size()).equals(subPath);
+        try {
+            return path.subList(0, subPath.size()).equals(subPath);
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
     public static List<Path> concat(List<Path> path1, List<Path> path2) {

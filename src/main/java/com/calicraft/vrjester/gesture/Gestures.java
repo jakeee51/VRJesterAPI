@@ -60,7 +60,8 @@ public class Gestures {
     public void load() { // Load up all gestures from gesture store into the radix trees & namespaces
         GestureStore gestureStore = read(); clear();
         if (gestureStore != null) {
-            Set<String> gestureNames = gestureStore.HMD.keySet();
+            Set<String> gestureNames = new HashSet<>();
+            gestureNames.addAll(gestureStore.HMD.keySet());
             gestureNames.addAll(gestureStore.RC.keySet());
             gestureNames.addAll(gestureStore.LC.keySet());
             for (String gestureName: gestureNames) { // Iterate through & store each gesture

@@ -35,7 +35,7 @@ public class Gesture {
         if (rcGesture != null)
             this.rcGesture = rcGesture;
         if (lcGesture != null)
-            this.hmdGesture = lcGesture;
+            this.lcGesture = lcGesture;
 
     }
 
@@ -69,14 +69,7 @@ public class Gesture {
 
     private Path convertToPath(Track track) {
         return new Path(track.getVrDevice(), track.getMovement(), track.getElapsedTime(), -1,
-                track.getSpeed(), -1, track.getDirection(), track.getFaceDirection(),
+                track.getSpeed(), -1, track.getDirection(),
                 track.getDevicesInProximity());
-    }
-
-    public static void sendDebugMsg(String msg) {
-        LocalPlayer player = getMCI().player;
-        Component text = Component.literal(msg);
-        assert player != null;
-        player.sendSystemMessage(text);
     }
 }
