@@ -56,18 +56,11 @@ public class Gesture {
                 vox.beginTrace(currentPoint);
 //                System.out.println("AFTER: " + vox.getName() + ": " + vox.getTrace().toString());
                 switch (vox.getVrDevice()) {
-                    case HMD -> hmdGesture.add(toGestureComponent(gestureTrace));
-                    case RC  -> rcGesture.add(toGestureComponent(gestureTrace));
-                    case LC  -> lcGesture.add(toGestureComponent(gestureTrace));
+                    case HMD -> hmdGesture.add(gestureTrace.toGestureComponent());
+                    case RC  -> rcGesture.add(gestureTrace.toGestureComponent());
+                    case LC  -> lcGesture.add(gestureTrace.toGestureComponent());
                 }
             }
         }
-    }
-
-    // Convert Track object to GestureComponent
-    private GestureComponent toGestureComponent(GestureTrace gestureTrace) {
-        return new GestureComponent(gestureTrace.getVrDevice(), gestureTrace.getMovement(), gestureTrace.getElapsedTime(), -1,
-                gestureTrace.getSpeed(), -1, gestureTrace.getDirection(),
-                gestureTrace.getDevicesInProximity());
     }
 }

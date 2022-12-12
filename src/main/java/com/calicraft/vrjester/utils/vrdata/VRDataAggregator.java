@@ -1,8 +1,8 @@
 package com.calicraft.vrjester.utils.vrdata;
 
-import com.calicraft.vrjester.config.Context;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import net.blf02.vrapi.api.data.IVRPlayer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +11,6 @@ public class VRDataAggregator {
     private final List<VRDataState> data = new ArrayList<>();
     private final VRDataType vrDataType;
     private final boolean saveState;
-    public Context ctx;
 
     public VRDataAggregator(VRDataType vrDataType, boolean saveState) {
         this.vrDataType = vrDataType;

@@ -38,6 +38,12 @@ public class GestureTrace {
         return String.format("VRDEVICE: %s | MOVED: %s | Time Elapsed: %dl", vrDevice, movement, elapsedTime);
     }
 
+    // Convert Track object to GestureComponent
+    public GestureComponent toGestureComponent() {
+        return new GestureComponent(getVrDevice(), getMovement(), getElapsedTime(), -1,
+                getSpeed(), -1, getDirection(), getDevicesInProximity());
+    }
+
     public String getVoxId() {
         return voxId;
     }
@@ -92,6 +98,7 @@ public class GestureTrace {
         return elapsedTime;
     }
 
+    // Set speed in ms
     public void setSpeed(Vec3 end) {
         this.speed = (getMagnitude3D(end.subtract(poses.get(0)[0])) / elapsedTime) * 1000000;
     }
