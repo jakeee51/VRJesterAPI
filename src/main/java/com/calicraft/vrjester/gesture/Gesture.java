@@ -11,13 +11,16 @@ import java.util.List;
 
 public class Gesture {
     // Class that handles compiling the GestureComponent list for each VRDevice
+    // Note: A list of GestureComponent's represents a gesture for an individual VRDevice
 
     private final List<Vox> voxList = new ArrayList<>();
     public List<GestureComponent> hmdGesture = new ArrayList<>();
     public List<GestureComponent> rcGesture = new ArrayList<>();
     public List<GestureComponent> lcGesture = new ArrayList<>();
 
+    // Initialize the first gesture trace and continue tracking until completion of gesture
     public Gesture(VRDataState vrDataState) {
+        // Note: Facing direction is set here, meaning all movements after tracing this Gesture object are relative to that
         Vec3[] hmdOrigin = vrDataState.getHmd(), rcOrigin = vrDataState.getRc(), lcOrigin = vrDataState.getLc();
         Vox hmdVox = new Vox(VRDevice.HMD, hmdOrigin, hmdOrigin[1], false);
         Vox rcVox = new Vox(VRDevice.RC, rcOrigin, hmdOrigin[1], true);
@@ -25,6 +28,7 @@ public class Gesture {
         voxList.add(hmdVox); voxList.add(rcVox); voxList.add(lcVox);
     }
 
+    // Initialize Gesture with already set gestures for each VRDevice
     public Gesture(List<GestureComponent> hmdGesture, List<GestureComponent> rcGesture, List<GestureComponent> lcGesture) {
         if (hmdGesture != null)
             this.hmdGesture = hmdGesture;

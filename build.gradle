@@ -16,7 +16,7 @@ plugins {
 }
 
 apply plugin: 'net.minecraftforge.gradle'
-version = '1.19.2-0.4.6'
+version = '1.19.2-0.4.7'
 group = 'com.calicraft.vrjester' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'VRJesterAPI'
 

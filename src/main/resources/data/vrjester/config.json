@@ -5,8 +5,18 @@
 	"WRITE_DATA": "false",
 	"DISPLAY_VOX": "false",
 	"VOX_LENGTH": "0.4",
-	"GESTURES": [
-    ],
+	"GESTURES": {
+		"PUSH": {
+			"velocity": "1.0",
+			"rcParticle": "0",
+			"lcParticle": "0"
+		},
+		"PULL": {
+			"velocity": "1.0",
+			"rcParticle": "5",
+			"lcParticle": "5"
+		}
+	},
 	"LOG": {
 		"name": "vrdata",
 		"gesture": "PUSH",

@@ -2,7 +2,7 @@ package com.calicraft.vrjester.config;
 
 public abstract class Constants {
     public static final String CONFIG_PATH = "config/VRJesterAPI.cfg";
-    public static final String GESTURE_STORE_PATH = "config/gesture_manifest.json";
+    public static final String GESTURE_STORE_PATH = "config/gesture_store.json";
     public static final String DEV_GESTURE_STORE_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/src/main/resources/data/vrjester/gesture_store.json";
     public static final String DEV_CONFIG_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/src/main/resources/data/vrjester/config.json";
     public static final String DEV_ARCHIVE_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/dev/archive";

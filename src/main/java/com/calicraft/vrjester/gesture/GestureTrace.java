@@ -87,6 +87,7 @@ public class GestureTrace {
         }
     }
 
+    // Set elapsed time in ms
     public void setElapsedTime(long currentTime) {
         if (elapsedTime == 0)
             elapsedTime = currentTime;
@@ -131,8 +132,9 @@ public class GestureTrace {
         return poses;
     }
 
-    // Set all final values resulting from a VRDevice entering moving into a new Vox
+    // Set all final values resulting from a VRDevice moving into a new Vox
     public void completeTrace(Vec3[] end) {
+        // Note: After this executes, it is ready to be converted into a GestureComponent
         Vec3 start = poses.get(0)[0];
         Vec3 gestureDirection = end[0].subtract(start).normalize();
         setMovement(gestureDirection);

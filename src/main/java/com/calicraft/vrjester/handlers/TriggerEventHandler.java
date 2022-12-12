@@ -3,6 +3,7 @@ package com.calicraft.vrjester.handlers;
 import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.config.Test;
 import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.gesture.Gestures;
 import com.calicraft.vrjester.gesture.Recognition;
@@ -19,6 +20,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.calicraft.vrjester.VrJesterApi.VIVECRAFTLOADED;
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
@@ -29,7 +31,6 @@ public class TriggerEventHandler {
     private static Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);
     private static final VRDataAggregator preRoomDataAggregator = new VRDataAggregator(VRDataType.VRDATA_ROOM_PRE, false);
     private static final VRDataAggregator preWorldDataAggregator = new VRDataAggregator(VRDataType.VRDATA_WORLD_PRE, false);
-    private static VRDataWriter vrDataWriter;
     private static final int DELAY = 20; // 1 second
     private static int sleep = 2 * DELAY; // 2 seconds
     private static int iter = 0;
@@ -37,22 +38,18 @@ public class TriggerEventHandler {
     private long elapsedTime = 0;
     private static Gesture gesture;
     private static final Gestures gestures = new Gestures();
-    private static Recognition recognition;
+    private static final Recognition recognition = new Recognition(gestures);
     private static LocalPlayer player;
 
+    private static VRDataWriter vrDataWriter;
     private static Vox displayRCVox, displayLCVox;
-    private static int rcParticle, lcParticle;
     private static boolean msgSentOnce = false;
-    private static final SimpleParticleType[] particleTypes = new SimpleParticleType[]{ParticleTypes.FLAME,
-            ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.CLOUD, ParticleTypes.BUBBLE_POP,
-            ParticleTypes.FALLING_WATER};
+    private static final Test test = new Test(gestures);
 
     @SubscribeEvent
     public void onJesterTrigger(InputEvent event) {
-        if (player == null || recognition == null) {
-            rcParticle = 0; lcParticle = 0;
+        if (player == null) {
             gestures.load();
-            recognition = new Recognition(gestures);
             player = getMCI().player;
             if (player == null)
                 return;
@@ -109,19 +106,10 @@ public class TriggerEventHandler {
                 gesture.track(vrDataRoomPre);
                 if (config.RECOGNIZE_ON.equals("RECOGNIZE")) {
                     String recognizedGesture = recognition.recognize(gesture);
-                    if (recognizedGesture.equals("PUSH")) {
+                    if (!recognizedGesture.isEmpty()) {
                         sendDebugMsg("RECOGNIZED: " + recognizedGesture);
-                        Vec3 avgDir = vrDataWorldPre.getRc()[1].add(vrDataWorldPre.getHmd()[1]).multiply((.5), (.5), (.5));
-                        moveParticles(particleTypes[rcParticle],
-                                vrDataWorldPre.getRc()[0],
-                                avgDir,
-                                1
-                        );
-                        moveParticles(particleTypes[lcParticle],
-                                vrDataWorldPre.getLc()[0],
-                                avgDir,
-                                1
-                        );
+                        test.trigger(recognizedGesture, vrDataWorldPre, config);
+                        listener = false; gesture = null;
                     }
                 }
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
