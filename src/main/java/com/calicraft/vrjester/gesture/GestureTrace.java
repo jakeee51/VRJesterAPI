@@ -12,8 +12,9 @@ import java.util.Map;
 import static com.calicraft.vrjester.utils.tools.Calcs.getAngle2D;
 import static com.calicraft.vrjester.utils.tools.Calcs.getMagnitude3D;
 
-public class Track {
+public class GestureTrace {
     // POJO for tracing Vox state per VRDevice in an iteration of time
+
     public String voxId; // The Vox ID
     public String vrDevice; // The VRDevice
     public String movement = "idle"; // Movement taken to get to Vox
@@ -24,7 +25,7 @@ public class Track {
                      frontRight, frontLeft, backRight, backLeft;
     private final List<Vec3[]> poses = new ArrayList<>(); // Poses captured within Vox
 
-    public Track(String voxId, VRDevice vrDevice, Vec3[] pose, Vec3 faceDirection) {
+    public GestureTrace(String voxId, VRDevice vrDevice, Vec3[] pose, Vec3 faceDirection) {
         this.voxId = voxId;
         this.vrDevice = vrDevice.name();
         setMovementBuckets(faceDirection);
@@ -53,6 +54,7 @@ public class Track {
         this.movement = movement;
     }
 
+    // Set the movement the VRDevice took to arrive at this current Trace
     public void setMovement(Vec3 gestureDirection) {
         // TODO - Divide Constants.DEGREE_SPAN by 2 after adding diagonals handler
         if (!movement.equals("idle")) {
@@ -122,6 +124,7 @@ public class Track {
         return poses;
     }
 
+    // Set all final values resulting from a VRDevice entering moving into a new Vox
     public void completeTrace(Vec3[] end) {
         Vec3 start = poses.get(0)[0];
         Vec3 gestureDirection = end[0].subtract(start).normalize();
@@ -131,6 +134,7 @@ public class Track {
         setDirection(end[1]);
     }
 
+    // Set all movement directional buckets used to determine movement
     private void setMovementBuckets(Vec3 faceDirection) {
         front = faceDirection;
         back = new Vec3(-faceDirection.x, faceDirection.y, -faceDirection.z);

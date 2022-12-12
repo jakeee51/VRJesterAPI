@@ -73,6 +73,9 @@ public class TriggerEventHandler {
                     vrDataWriter = new VRDataWriter("room", iter);
             } else {
                 System.out.println("JESTER RELEASED");
+                if (config.RECOGNIZE_ON.equals("RELEASE")) {
+                    String recognizedGesture = recognition.recognize(gesture);
+                }
                 if (config.READ_DATA) {
                     gestures.clear(); gestures.load();
                 }
@@ -88,40 +91,6 @@ public class TriggerEventHandler {
                     iter = 0;
             }
         }
-//        else {
-//            if (VrJesterApi.MOD_KEY.isDown() && !listener) {
-//                System.out.println("NON VR JESTER TRIGGERED");
-//                listener = true;
-//                if (config.RECORD_MODE) {
-//                    System.out.println("RECORD MODE ACTIVATED");
-//                    Gesture gesture0 = new Gesture();
-//                    Gesture gesture1 = new Gesture();
-//                    Gesture gesture2 = new Gesture();
-//                    Map<String, Integer> devices = new HashMap<>(); //devices.put("rc", 0);
-//                    Vec3 dir = new Vec3((0), (0), (0));
-//                    Path path0 = new Path("hmd", "idle", 0, 200 , 0, 0, dir, dir, devices);
-//                    Path path1 = new Path("rc", "f", 0, 100 , 0, 10, dir, dir, devices);
-//                    Path path2 = new Path("rc", "u", 0, 0, 0, 0, dir, dir, devices);
-//                    Path path3 = new Path("lc", "f", 50, 200, 0, 0, dir, dir, devices);
-//                    Path path4 = new Path("lc", "r", 0, 0, 0, 0, dir, dir, devices);
-//                    gesture0.hmdGesture.add(path0);
-//                    gesture1.rcGesture.add(path1);
-//                    gesture1.rcGesture.add(path2);
-//                    gesture2.lcGesture.add(path3);
-//                    gesture2.lcGesture.add(path4);
-//                    gestures.store(gesture0, "GESTURE 1");
-//                    gestures.store(gesture1, "GESTURE 2");
-//                    gestures.store(gesture2, "GESTURE 3");
-//                }
-//                if (config.WRITE_DATA)
-//                    gestures.load();
-//            } else {
-//                if (!VrJesterApi.MOD_KEY.isDown() && listener) {
-//                    System.out.println("JESTER RELEASED");
-//                    listener = false;
-//                }
-//            }
-//        }
     }
 
     @SubscribeEvent
@@ -138,20 +107,22 @@ public class TriggerEventHandler {
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, true);
             } else {
                 gesture.track(vrDataRoomPre);
-                String recognizedGesture = recognition.recognize(gesture);
-                if (recognizedGesture.equals("PUSH")) {
-                    sendDebugMsg("RECOGNIZED: " + recognizedGesture);
-                    Vec3 avgDir = vrDataWorldPre.getRc()[1].add(vrDataWorldPre.getHmd()[1]).multiply((.5), (.5), (.5));
-                    moveParticles(particleTypes[rcParticle],
-                            vrDataWorldPre.getRc()[0],
-                            avgDir,
-                            1
-                    );
-                    moveParticles(particleTypes[lcParticle],
-                            vrDataWorldPre.getLc()[0],
-                            avgDir,
-                            1
-                    );
+                if (config.RECOGNIZE_ON.equals("RECOGNIZE")) {
+                    String recognizedGesture = recognition.recognize(gesture);
+                    if (recognizedGesture.equals("PUSH")) {
+                        sendDebugMsg("RECOGNIZED: " + recognizedGesture);
+                        Vec3 avgDir = vrDataWorldPre.getRc()[1].add(vrDataWorldPre.getHmd()[1]).multiply((.5), (.5), (.5));
+                        moveParticles(particleTypes[rcParticle],
+                                vrDataWorldPre.getRc()[0],
+                                avgDir,
+                                1
+                        );
+                        moveParticles(particleTypes[lcParticle],
+                                vrDataWorldPre.getLc()[0],
+                                avgDir,
+                                1
+                        );
+                    }
                 }
 //                displayRCDebugger(vrDataWorldPre, VRDevice.RC, false);
 //                displayLCDebugger(vrDataWorldPre, VRDevice.LC, false);
@@ -184,7 +155,7 @@ public class TriggerEventHandler {
         if (config.DISPLAY_VOX) {
             if (init) {
                 displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
-                displayRCVox = new Vox(Constants.RC, vrDevice, displayOrigin, hmdOrigin[1], true);
+                displayRCVox = new Vox(vrDevice, displayOrigin, hmdOrigin[1], true);
             } else {
                 displayRCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0));
             }
@@ -196,7 +167,7 @@ public class TriggerEventHandler {
         if (config.DISPLAY_VOX) {
             if (init) {
                 displayOrigin = VRDataState.getVRDevicePose(vrDataState, vrDevice);
-                displayLCVox = new Vox(Constants.LC, vrDevice, displayOrigin, hmdOrigin[1], true);
+                displayLCVox = new Vox(vrDevice, displayOrigin, hmdOrigin[1], true);
             } else {
                 displayLCVox.manifestVox(VRDataState.getVRDevicePose(vrDataState, vrDevice, 0));
             }

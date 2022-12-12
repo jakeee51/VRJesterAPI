@@ -9,20 +9,20 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
- * @param vrDevice           ; // The VRDevice
+ * @param vrDevice           = "RC"; // The VRDevice
  * @param movement           = "idle"; // Movement taken to get to Vox
- * @param elapsedTime
- * @param maxElapsedTime     = 0; // Time spent within Vox in ms (added on the fly while idle)
- * @param speed              ; // Average speed within Vox (calculated on the fly while idle)
- * @param maxSpeed
- * @param devicesInProximity = new HashMap<>(); // Other VRDevices within this Vox
+ * @param elapsedTime        = 0; // Time spent within Vox in ms (added on the fly while idle)
+ * @param maxElapsedTime     = -1; // Is -1 if it's part of a traced gesture
+ * @param speed              = 0.0; // Is -1 if it's part of a traced gesture
+ * @param maxSpeed           = -1.0; // Average speed within Vox (calculated on the fly while idle)
+ * @param devicesInProximity = new HashMap<>(); // Other VRDevices within the Vox
  */
 
-public record Path(String vrDevice, String movement,
-                   long elapsedTime, long maxElapsedTime,
-                   double speed, double maxSpeed,
-                   Vec3 direction,
-                   Map<String, Integer> devicesInProximity) {
+// This record represents a piece of a gesture & its attributes in an iteration in time per VRDevice
+public record GestureComponent(String vrDevice, String movement,
+                               long elapsedTime, long maxElapsedTime,
+                               double speed, double maxSpeed,
+                               Vec3 direction, Map<String, Integer> devicesInProximity) {
 
     @Override
     public String toString() {
@@ -37,11 +37,12 @@ public record Path(String vrDevice, String movement,
     }
 
     // TODO - Account for direction & devicesInProximity
+    // Check if the traced gesture is within the parameters of a stored gesture
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
-        } else if (!(obj instanceof Path other)) {
+        } else if (!(obj instanceof GestureComponent other)) {
             return false;
         } else {
             return Objects.equals(vrDevice, other.vrDevice) &&
@@ -52,9 +53,8 @@ public record Path(String vrDevice, String movement,
         }
     }
 
+    // Check if traced gesture is within the elapsed time range
     private static boolean isWithinTime(long otherMin, long otherMax, long min, long max) {
-//        System.out.println("isWithinTime:");
-//        System.out.println(min + " <= " + otherMin + " <= " + max + ", otherMax: " + otherMax);
         boolean ret;
         if (max == 0)
             ret = min <= otherMin;
@@ -65,9 +65,8 @@ public record Path(String vrDevice, String movement,
         return ret;
     }
 
+    // Check if traced gesture is within the speed range
     private static boolean isWithinSpeed(double otherMin, double otherMax, double min, double max) {
-//        System.out.println("isWithinSpeed:");
-//        System.out.println(min + " <= " + otherMin + " <= " + max + ", otherMax: " + otherMax);
         boolean ret;
         if (max == 0)
             ret = min <= otherMin;
@@ -78,6 +77,7 @@ public record Path(String vrDevice, String movement,
         return ret;
     }
 
+    // Check if traced gesture has the same devices within proximity of the stored gesture
     private static boolean isWithinProximity(long gestureInd, Map<String, Integer> otherDevices, Map<String, Integer> devices) {
         boolean ret;
         if (gestureInd == -1 && devices.isEmpty())
@@ -87,19 +87,21 @@ public record Path(String vrDevice, String movement,
         return ret;
     }
 
-    public static boolean startsWith(List<Path> path, List<Path> subPath) {
+    // Check if the gestureComponent starts with the subGestureComponent (i.e.: does 'cat' start with 'c')
+    public static boolean startsWith(List<GestureComponent> gestureComponent, List<GestureComponent> subGestureComponent) {
         try {
-            return path.subList(0, subPath.size()).equals(subPath);
+            return gestureComponent.subList(0, subGestureComponent.size()).equals(subGestureComponent);
         } catch (IndexOutOfBoundsException e) {
             return false;
         }
     }
 
-    public static List<Path> concat(List<Path> path1, List<Path> path2) {
-        if(path1 == null)
-            path1 = new ArrayList<>();
-        if(path2 == null)
-            path2 = new ArrayList<>();
-        return Stream.concat(path1.stream(), path2.stream()).toList();
+    // Concatenate the 2 GestureComponent lists and return the new one
+    public static List<GestureComponent> concat(List<GestureComponent> gestureComponent1, List<GestureComponent> gestureComponent2) {
+        if(gestureComponent1 == null)
+            gestureComponent1 = new ArrayList<>();
+        if(gestureComponent2 == null)
+            gestureComponent2 = new ArrayList<>();
+        return Stream.concat(gestureComponent1.stream(), gestureComponent2.stream()).toList();
     }
 }

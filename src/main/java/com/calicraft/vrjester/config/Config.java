@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Config {
+    public String RECOGNIZE_ON = Constants.RECOGNIZE_ON;
     public boolean RECORD_MODE = Constants.RECORD_MODE;
     public boolean READ_DATA = Constants.READ_DATA;
     public boolean WRITE_DATA = Constants.WRITE_DATA;

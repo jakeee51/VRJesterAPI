@@ -1,4 +1,5 @@
 {
+	"RECOGNIZE_ON": "RECOGNIZE",
 	"RECORD_MODE": "false",
 	"READ_DATA": "true",
 	"WRITE_DATA": "false",

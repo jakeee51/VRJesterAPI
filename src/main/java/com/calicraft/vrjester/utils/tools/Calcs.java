@@ -4,26 +4,33 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 
 public class Calcs {
+    // Class that holds mathematical functions
+
+    // Get magnitude/length of 2D vector v
     public static double getMagnitude2D(Vec3 v) {
         return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.z, 2));
     }
 
+    // Get magnitude/length of 3D vector v
     public static double getMagnitude3D(Vec3 v) {
         return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2) + Math.pow(v.z, 2));
     }
 
+    // Get angle between two 2D vectors
     public static double getAngle2D(Vec3 v1, Vec3 v2) {
         double dotProduct = v1.multiply((1), (0), (1)).dot(v2.multiply((1), (0), (1)));
         double radians = dotProduct / (getMagnitude2D(v1) * getMagnitude2D(v2));
         return Math.toDegrees(Math.acos(radians));
     }
 
+    // Get angle between two 3D vectors
     public static double getAngle3D(Vec3 v1, Vec3 v2) {
         double dotProduct = v1.dot(v2);
         double radians = dotProduct / (getMagnitude3D(v1) * getMagnitude3D(v2));
         return Math.toDegrees(Math.acos(radians));
     }
 
+    // Check if list of point vectors are collinear with 0.15% error
     public static boolean isCollinear(ArrayList<Vec3> vectors) {
         boolean ret = false;
         Vec3 p1 = vectors.get(0);
@@ -40,14 +47,14 @@ public class Calcs {
         return ret;
     }
 
+    // Get percent difference between two slopes
     public static double getDiff(double slope1, double slope2) {
-        // Get percent difference between two slopes
         double ret = Math.abs(slope1 - slope2);
         return ret / ((slope1 + slope2) / 2);
     }
 
+    // Get slope of two 3D points
     public static double getSlope(Vec3 p1, Vec3 p2) {
-        // Get slope of two 3D points
         double xyd = Math.pow(Math.abs(p1.x - p2.x), 2) + Math.pow(Math.abs(p1.y - p2.y), 2);
         double run = Math.sqrt(xyd);
         double rise = Math.abs(p1.z - p2.z);
@@ -56,5 +63,4 @@ public class Calcs {
             ret = rise / run;
         return ret;
     }
-
 }

@@ -7,6 +7,8 @@ public abstract class Constants {
     public static final String DEV_CONFIG_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/src/main/resources/data/vrjester/config.json";
     public static final String DEV_ARCHIVE_PATH = "C:/Users/jakem/Documents/GitHub/VRJesterAPI/dev/archive";
 
+    // RECOGNIZE -> fire event right when recognized | RELEASE -> fire event when key is released
+    public static final String RECOGNIZE_ON = "RECOGNIZE";
     public static final boolean RECORD_MODE = false;
     public static final boolean READ_DATA = false;
     public static final boolean WRITE_DATA = false;

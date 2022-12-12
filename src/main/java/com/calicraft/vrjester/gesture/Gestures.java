@@ -3,7 +3,7 @@ package com.calicraft.vrjester.gesture;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.radix.Node;
 import com.calicraft.vrjester.gesture.radix.RadixTree;
-import com.calicraft.vrjester.gesture.radix.Trace;
+import com.calicraft.vrjester.gesture.radix.Path;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -23,6 +23,7 @@ import java.util.*;
 
 public class Gestures {
     // Class for storing the gestures in a namespace for each VRDevice
+
     private final File gestureStoreFile = new File(Constants.DEV_GESTURE_STORE_PATH);
     public final GestureStore gestureStore = new GestureStore();
     public HashMap<String, String> gestureNameSpace = new HashMap<>();
@@ -35,7 +36,8 @@ public class Gestures {
 
     public Gestures() {}
 
-    public GestureStore read() { // Read in gestures from gesture store file and return GestureStore object
+    // Read in gestures from gesture store file and return GestureStore object
+    public GestureStore read() {
         try {
             StringBuilder sb = new StringBuilder();
             Scanner myReader = new Scanner(gestureStoreFile);
@@ -57,7 +59,8 @@ public class Gestures {
         return null;
     }
 
-    public void load() { // Load up all gestures from gesture store into the radix trees & namespaces
+    // Load up all gestures from gesture store into the radix trees & namespaces
+    public void load() {
         GestureStore gestureStore = read(); clear();
         if (gestureStore != null) {
             Set<String> gestureNames = new HashSet<>();
@@ -78,15 +81,17 @@ public class Gestures {
         lcGestures.printAllGestures(lcGestureMapping);
     }
 
+    // Store a new gesture into a specified VRDevice namespace
     public void store(RadixTree gestureTree, HashMap<Integer, String> gestureMapping,
-                      List<Path> gesture, String name) { // Store a new gesture into a specified VRDevice namespace
+                      List<GestureComponent> gesture, String name) {
         gestureTree.insert(gesture);
         gestureMapping.put(gesture.hashCode(), name);
         String id = "" + gesture.hashCode();
         gestureNameSpace.put(id, name);
     }
 
-    public void store(Gesture gesture, String name) { // Store a new gesture encompassing all VRDevices
+    // Store a new gesture encompassing all VRDevices
+    public void store(Gesture gesture, String name) {
         String id = "";
         if (!gesture.hmdGesture.isEmpty()) {
             hmdGestures.insert(gesture.hmdGesture);
@@ -106,7 +111,8 @@ public class Gestures {
         gestureNameSpace.put(id, name);
     }
 
-    public void write() { // Write all stored gestures to gesture store file.
+    // Write all stored gestures to gesture store file
+    public void write() {
         writeGestures("HMD", hmdGestures.root, new ArrayList<>());
         writeGestures("RC", rcGestures.root, new ArrayList<>());
         writeGestures("LC", lcGestures.root, new ArrayList<>());
@@ -119,17 +125,19 @@ public class Gestures {
         }
     }
 
-    private void writeGestures(String vrDevice, Node current, List<Path> result) { // Add each gesture to GestureStore object
+    // Add each gesture to GestureStore object for writing to gesture store file
+    private void writeGestures(String vrDevice, Node current, List<GestureComponent> result) {
         if (current.isGesture) {
             System.out.println(result);
             gestureStore.addGesture(vrDevice, getGestureMapping(vrDevice).get(result.hashCode()), result);
         }
-        for (Trace trace : current.paths.values()) {
-            writeGestures(vrDevice, trace.next, Path.concat(result, trace.path));
+        for (Path path : current.paths.values()) {
+            writeGestures(vrDevice, path.next, GestureComponent.concat(result, path.gestureComponent));
         }
     }
 
-    public void clear() { // Reset the gestures namespace
+    // Reset the gestures namespace
+    public void clear() {
         gestureNameSpace = new HashMap<>();
         hmdGestures = new RadixTree("HMD");
         rcGestures = new RadixTree("RC");
@@ -139,7 +147,8 @@ public class Gestures {
         lcGestureMapping = new HashMap<>();
     }
 
-    private HashMap<Integer, String> getGestureMapping(String vrDevice) { // Return gesture mapping based on VRDevice
+    // Return gesture mapping based on VRDevice
+    private HashMap<Integer, String> getGestureMapping(String vrDevice) {
         HashMap<Integer, String> gestureMapping = new HashMap<>();
         switch(vrDevice) {
             case "HMD" -> gestureMapping = hmdGestureMapping;
@@ -149,7 +158,8 @@ public class Gestures {
         return gestureMapping;
     }
 
-    public static class RecordTypeAdapterFactory implements TypeAdapterFactory { // Gson 2.8.9 workaround for Java records
+    // Gson 2.8.9 workaround for Java records
+    public static class RecordTypeAdapterFactory implements TypeAdapterFactory {
 
         @Override
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {

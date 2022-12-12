@@ -46,38 +46,34 @@ public class VRDataState {
         return c2;
     }
 
-    public static Vec3 getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice, int pose) { // Return pose based on VRDevice
+    // Return position or direction based on VRDevice
+    public static Vec3 getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice, int pose) {
         Vec3 ret;
-        switch(vrDevice) {
-            case HMD:
-                ret = vrDataState.getHmd()[pose]; break;
-            case RC:
-                ret = vrDataState.getRc()[pose]; break;
-            case LC:
-                ret = vrDataState.getLc()[pose]; break;
-            case C2:
-                ret = vrDataState.getC2()[pose]; break;
-            default:
+        switch (vrDevice) {
+            case HMD -> ret = vrDataState.getHmd()[pose];
+            case RC -> ret = vrDataState.getRc()[pose];
+            case LC -> ret = vrDataState.getLc()[pose];
+            case C2 -> ret = vrDataState.getC2()[pose];
+            default -> {
                 System.err.println("VRDevice not yet supported!");
                 ret = new Vec3((0), (0), (0));
+            }
         }
         return ret;
     }
 
-    public static Vec3[] getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice) { // Return pose based on VRDevice
+    // Return pose based on VRDevice
+    public static Vec3[] getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice) {
         Vec3[] ret;
-        switch(vrDevice) {
-            case HMD:
-                ret = vrDataState.getHmd(); break;
-            case RC:
-                ret = vrDataState.getRc(); break;
-            case LC:
-                ret = vrDataState.getLc(); break;
-            case C2:
-                ret = vrDataState.getC2(); break;
-            default:
+        switch (vrDevice) {
+            case HMD -> ret = vrDataState.getHmd();
+            case RC -> ret = vrDataState.getRc();
+            case LC -> ret = vrDataState.getLc();
+            case C2 -> ret = vrDataState.getC2();
+            default -> {
                 System.err.println("VRDevice not yet supported!");
                 ret = new Vec3[]{new Vec3((0), (0), (0)), new Vec3((0), (0), (0))};
+            }
         }
         return ret;
     }

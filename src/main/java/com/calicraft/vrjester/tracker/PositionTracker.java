@@ -5,7 +5,6 @@ import net.blf02.vrapi.api.VRAPIPlugin;
 import net.blf02.vrapi.api.VRAPIPluginProvider;
 import net.blf02.vrapi.api.data.IVRPlayer;
 
-
 @VRAPIPlugin
 public class PositionTracker implements VRAPIPluginProvider {
     // Class for consuming & tracking VRPlayer data from Vivecraft
@@ -22,11 +21,13 @@ public class PositionTracker implements VRAPIPluginProvider {
     }
 
     // Note: VR data getters must be called later after initialization to avoid NullPointerException (i.e.: ExceptionInInitializerError: null)
-    public static IVRPlayer getVRDataRoomPre() { // Return real world VR data pre-tick
+    // Return real world VR data pre-tick
+    public static IVRPlayer getVRDataRoomPre() {
         return vrAPI.getPreTickRoomVRPlayer();
     }
 
-    public static IVRPlayer getVRDataWorldPre() { // Return in-game world VR data pre-tick
+    // Return in-game world VR data pre-tick
+    public static IVRPlayer getVRDataWorldPre() {
         return vrAPI.getPreTickVRPlayer();
     }
 }

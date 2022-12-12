@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VRDataAggregator {
-    // Class for consuming VR Data from Vivecraft Tracker
-    // to later pass to gesture recognition phase
+    // Class for consuming VR Data from Tracker
     private final List<VRDataState> data = new ArrayList<>();
-    private VRDataType vrDataType;
-    private boolean saveState;
+    private final VRDataType vrDataType;
+    private final boolean saveState;
     public Context ctx;
 
     public VRDataAggregator(VRDataType vrDataType, boolean saveState) {
@@ -23,16 +22,13 @@ public class VRDataAggregator {
         return data;
     }
 
-    public VRDataState listen() { // Consume Vivecraft VRDevicePose data from TRACKER
-        IVRPlayer ivrPlayer;
-        switch(vrDataType) {
-            case VRDATA_ROOM_PRE:
-                ivrPlayer = PositionTracker.getVRDataRoomPre(); break;
-            case VRDATA_WORLD_PRE:
-                ivrPlayer = PositionTracker.getVRDataWorldPre(); break;
-            default:
-                ivrPlayer = null;
-        }
+    // Consume Vivecraft VRDevicePose data from TRACKER
+    public VRDataState listen() {
+        IVRPlayer ivrPlayer = switch (vrDataType) {
+            case VRDATA_ROOM_PRE -> PositionTracker.getVRDataRoomPre();
+            case VRDATA_WORLD_PRE -> PositionTracker.getVRDataWorldPre();
+            default -> null;
+        };
         assert ivrPlayer != null;
         VRDataState dataState = new VRDataState(ivrPlayer);
         if (saveState)
@@ -40,7 +36,8 @@ public class VRDataAggregator {
         return dataState;
     }
 
-    public void clear() { // Clear data only after sending
+    // Clear data only after sending
+    public void clear() {
         data.clear();
     }
 }

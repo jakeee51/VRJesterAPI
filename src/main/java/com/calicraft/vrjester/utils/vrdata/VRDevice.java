@@ -1,6 +1,6 @@
 package com.calicraft.vrjester.utils.vrdata;
 
-// Add new VRDevices here if need be
+// Add new VRDevices here
 public enum VRDevice {
     HMD,
     RC,

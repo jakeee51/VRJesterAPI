@@ -16,7 +16,8 @@ public class VRDataWriter {
     public Config config;
     public ArrayList<File> files = new ArrayList<>();
 
-    public VRDataWriter(String mode, int iteration) { // Setup file objects to create & write VRDevice data
+    // Setup file objects to create & write VRDevice data
+    public VRDataWriter(String mode, int iteration) {
         config = Config.readConfig(Constants.DEV_CONFIG_PATH);
         String[] devices;
         File path = new File(Constants.DEV_ARCHIVE_PATH + String.format("/iteration_%s", iteration));
@@ -27,14 +28,14 @@ public class VRDataWriter {
             fileName = "trace_" + config.LOG.gesture;
         else
             fileName = mode + "_" + config.LOG.name;
-        for (int i = 0; i < devices.length; i++) {
-            String device = devices[i];
+        for (String device : devices) {
             if (path.exists())
                 files.add(new File(path.getPath() + String.format("/%s_%s_%s.csv", device, fileName, iteration)));
         }
     }
 
-    public void write(VRDataState record) throws IOException { // Write specified VRDataState data to end of file
+    // Write specified VRDataState data to end of file
+    public void write(VRDataState record) throws IOException {
         this.create(); String cleanData;
         for (File file: files) {
             cleanData = parse(record, file.getName().substring(0,3).replaceAll("_", ""), pose);
@@ -46,7 +47,8 @@ public class VRDataWriter {
         }
     }
 
-    public void write(String[] record) throws IOException { // Write data to end of file
+    // Write data to end of file
+    public void write(String[] record) throws IOException {
         this.create(); String cleanData;
         for (File file: files) {
             cleanData = parse(record, file.getName().substring(0,3).replaceAll("_", ""));
@@ -58,14 +60,16 @@ public class VRDataWriter {
         }
     }
 
-    private void create() throws IOException { // Create VRData file
+    // Create VRData file
+    private void create() throws IOException {
         for (File file: files) {
             if (file.createNewFile())
                 System.out.println(file.getName() + " file created!");
         }
     }
 
-    private String parse(VRDataState record, String device, int pose) { // Parse VRData for specified device & pose
+    // Parse VRData for specified device & pose
+    private String parse(VRDataState record, String device, int pose) {
         String ret = switch (device) {
             case "hmd" -> record.getHmd()[pose].toString();
             case "rc" -> record.getRc()[pose].toString();
@@ -77,10 +81,11 @@ public class VRDataWriter {
         return ret;
     }
 
-    private String parse(String[] record, String device) { // Parse VRData for specified device & pose
+    // Parse VRData for specified device & pose
+    private String parse(String[] record, String device) {
         String ret = switch (device) {
-            case "rc" -> record[0].toString();
-            case "lc" -> record[1].toString();
+            case "rc" -> record[0];
+            case "lc" -> record[1];
             default -> "N/A";
         };
         ret = ret.replaceAll("(\\(|\\)| )", "");

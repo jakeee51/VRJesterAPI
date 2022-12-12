@@ -2,7 +2,7 @@ package com.calicraft.vrjester.vox;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
-import com.calicraft.vrjester.gesture.Track;
+import com.calicraft.vrjester.gesture.GestureTrace;
 import com.calicraft.vrjester.utils.tools.Calcs;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
@@ -20,28 +20,28 @@ public class Vox {
     public final Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);
     private final boolean isDiamond;
     private int[] id, previousId;
-    private String name, movementDirection = "idle";
-    private Track track;
-    public Vec3 centroid, faceDirection, offset = new Vec3((0), (0), (0));
-    public float side_length = Constants.VOX_LENGTH;
+    private String movementDirection = "idle";
+    private GestureTrace gestureTrace;
+    public Vec3 centroid, faceDirection;
+    public float voxLength = Constants.VOX_LENGTH;
 
-    public Vox(String name, VRDevice vrDevice, Vec3[] centroidPose, Vec3 faceDirection, boolean isDiamond) {
+    public Vox(VRDevice vrDevice, Vec3[] centroidPose, Vec3 faceDirection, boolean isDiamond) {
         // Override defaults
-        if (config.VOX_LENGTH != side_length)
-            side_length = config.VOX_LENGTH;
+        if (config.VOX_LENGTH != voxLength)
+            voxLength = config.VOX_LENGTH;
 
         this.setId(new int[]{0, 0, 0}); // Initialize Vox Id
         this.previousId = id.clone(); // Initialize soon to be previous ID
-        this.name = name; // Initialize name of Vox
         this.vrDevice = vrDevice; // Initialize VRDevice name
         this.faceDirection = faceDirection; // Initialize facing angle of user
-        this.track = new Track(Arrays.toString(id), vrDevice, centroidPose, faceDirection);
+        this.gestureTrace = new GestureTrace(Arrays.toString(id), vrDevice, centroidPose, faceDirection);
         this.isDiamond = isDiamond;
         // Initialize Vertices of Vox
         this.updateVoxPosition(centroidPose[0], false);
     }
 
-    public boolean hasPoint(Vec3 point) { // Check if point is within Vox
+    // Check if point is within Vox
+    public boolean hasPoint(Vec3 point) {
         boolean ret = false;
         Vec3 p1 = vertices.get("p1"); Vec3 p2 = vertices.get("p2");
         Vec3 p3 = vertices.get("p3"); Vec3 p5 = vertices.get("p5");
@@ -64,15 +64,17 @@ public class Vox {
         return ret;
     }
 
-    public void updateProximity(VRDataState vrDataRoomPre, VRDevice vrDevice) { // Checks if VRDevice is in this Vox
+    // Checks if VRDevice is in this Vox
+    public void updateProximity(VRDataState vrDataRoomPre, VRDevice vrDevice) {
         Vec3 pos = VRDataState.getVRDevicePose(vrDataRoomPre, vrDevice, 0);
         if (hasPoint(pos)) {
-            Map<String, Integer> devicesInProximity = track.getDevicesInProximity();
-            track.updateDeviceInProximity(vrDevice.name(), devicesInProximity.getOrDefault(vrDevice.name(), 0));
+            Map<String, Integer> devicesInProximity = gestureTrace.getDevicesInProximity();
+            gestureTrace.updateDeviceInProximity(vrDevice.name(), devicesInProximity.getOrDefault(vrDevice.name(), 0));
         }
     }
 
-    private int[] getVoxNeighbor(Vec3 point) { // Get new Vox ID and set traced movement direction based on which side the point withdrew from the Vox
+    // Get new Vox ID and set traced movement direction based on which side the point withdrew from the Vox
+    private int[] getVoxNeighbor(Vec3 point) {
         int[] ret = this.getId().clone();
         Vec3 d1 = vertices.get("d1"); Vec3 d2 = vertices.get("d2");
         if (point.y < d1.y) { // Down
@@ -92,7 +94,8 @@ public class Vox {
         return ret;
     }
 
-    public Vec3[] generateVox(VRDataState vrDataRoomPre) { // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns the Trace data
+    // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns the Trace data
+    public Vec3[] generateVox(VRDataState vrDataRoomPre) {
         Vec3[] pose = new Vec3[2];
         for (int i = 0; i < VRDevice.values().length-1; i++) {
             if (this.getVrDevice().equals(VRDevice.values()[i]))
@@ -104,15 +107,16 @@ public class Vox {
             int[] newVoxId = this.getVoxNeighbor(pose[0]);
             updateVoxPosition(pose[0], false);
             setId(newVoxId);
-            track.setMovement(movementDirection);
+            gestureTrace.setMovement(movementDirection);
             movementDirection = "idle";
         } else {
-            track.addPose(pose); // Constantly update the current Trace
+            gestureTrace.addPose(pose); // Constantly update the current Trace
         }
         return pose;
     }
 
-    public void manifestVox(Vec3 point) { // When VRDevice is outside current Vox, new Vox is visualized at neighboring position
+    // When VRDevice is outside current Vox, new Vox is visualized at neighboring position
+    public void manifestVox(Vec3 point) {
         if (!this.hasPoint(point)) { // Check if point is outside of current Vox
             int[] newVoxId = this.getVoxNeighbor(point);
             this.updateVoxPosition(point, false);
@@ -121,7 +125,8 @@ public class Vox {
         this.displayVox();
     }
 
-    public void updateVoxPosition(Vec3 dif, boolean useDif) { // Update Vox position values based on delta movement
+    // Update Vox position values based on delta movement
+    public void updateVoxPosition(Vec3 dif, boolean useDif) {
         // Center of Vox
         if (useDif)
             centroid = centroid.add(dif);
@@ -129,25 +134,26 @@ public class Vox {
             centroid = dif;
 
         // Diagonals
-        vertices.put("d1", centroid.subtract((side_length /2), (side_length /2), (side_length /2)));
-        vertices.put("d2", centroid.add((side_length /2), (side_length /2), (side_length /2)));
+        vertices.put("d1", centroid.subtract((voxLength /2), (voxLength /2), (voxLength /2)));
+        vertices.put("d2", centroid.add((voxLength /2), (voxLength /2), (voxLength /2)));
 
         // Bottom square plane
         vertices.put("p1", vertices.get("d1"));
-        vertices.put("p2", centroid.add((side_length /2), -(side_length /2), -(side_length /2)));
-        vertices.put("p3", centroid.add(-(side_length /2), -(side_length /2), (side_length /2)));
-        vertices.put("p4", centroid.add((side_length /2), -(side_length /2), (side_length /2)));
+        vertices.put("p2", centroid.add((voxLength /2), -(voxLength /2), -(voxLength /2)));
+        vertices.put("p3", centroid.add(-(voxLength /2), -(voxLength /2), (voxLength /2)));
+        vertices.put("p4", centroid.add((voxLength /2), -(voxLength /2), (voxLength /2)));
 
         // Top square plane
-        vertices.put("p5", centroid.add(-(side_length /2), (side_length /2), -(side_length /2)));
-        vertices.put("p6", centroid.add((side_length /2), (side_length /2), -(side_length /2)));
-        vertices.put("p7", centroid.add(-(side_length /2), (side_length /2), (side_length /2)));
+        vertices.put("p5", centroid.add(-(voxLength /2), (voxLength /2), -(voxLength /2)));
+        vertices.put("p6", centroid.add((voxLength /2), (voxLength /2), -(voxLength /2)));
+        vertices.put("p7", centroid.add(-(voxLength /2), (voxLength /2), (voxLength /2)));
         vertices.put("p8", vertices.get("d2"));
         // Rotate Vox to form diamond
         if (isDiamond)
             this.rotateVoxAround((45.0F));
     }
 
+    // Rotate Vox on Y-axis based on the degrees passed
     public void rotateVoxAround(float degrees){
         for (String i: vertices.keySet()) {
             Vec3 pt = vertices.get(i);
@@ -159,6 +165,16 @@ public class Vox {
                         (Math.sin(rads) * (pt.x - centroid.x) + Math.cos(rads) * (pt.z - centroid.z) + centroid.z)
                 ));
         }
+    }
+
+    public GestureTrace getTrace() {
+        return gestureTrace;
+    }
+
+    // Begin with a new Trace object
+    public GestureTrace beginTrace(Vec3[] pose) {
+        gestureTrace = new GestureTrace(Arrays.toString(id), vrDevice, pose, faceDirection);
+        return gestureTrace;
     }
 
     public int[] getId() {
@@ -177,25 +193,8 @@ public class Vox {
         this.previousId = previousId;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public VRDevice getVrDevice() {
         return vrDevice;
-    }
-
-    public Vec3 getOffset() {
-        return offset;
-    }
-
-    public Track getTrace() {
-        return track;
-    }
-
-    public Track beginTrace(Vec3[] pose) { // Begin with a new Trace object
-        track = new Track(Arrays.toString(id), vrDevice, pose, faceDirection);
-        return track;
     }
 
     private void displayVox() {
