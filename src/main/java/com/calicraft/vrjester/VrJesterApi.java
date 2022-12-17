@@ -25,20 +25,20 @@ import java.util.stream.Collectors;
 public class VrJesterApi {
     // Main entry point
     public static final Logger LOGGER = LogManager.getLogger();
-    public static boolean VIVECRAFTLOADED = false;
+    public static boolean VIVECRAFT_LOADED = false;
     public static final String MOD_ID = "vrjester";
     public static final KeyMapping MOD_KEY = new KeyMapping("key.vrjester.71", 71, MOD_ID);
 
     public VrJesterApi() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // Register the setup method for modloading
+        // Register the setup method for mod loading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        // Register the enqueueIMC method for modloading
+        // Register the enqueueIMC method for mod loading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        // Register the processIMC method for modloading
+        // Register the processIMC method for mod loading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        // Register the registerBindings method for modloading
+        // Register the registerBindings method for mod loading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerBindings);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

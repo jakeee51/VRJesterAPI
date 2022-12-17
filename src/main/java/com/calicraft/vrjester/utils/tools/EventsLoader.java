@@ -1,5 +1,7 @@
 package com.calicraft.vrjester.utils.tools;
 
+import com.calicraft.vrjester.api.VRPlayerEvent;
+import com.calicraft.vrjester.handlers.GestureEventHandler;
 import com.calicraft.vrjester.handlers.TriggerEventHandler;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -9,6 +11,7 @@ public class EventsLoader {
     public static void register() {
         // Register for relevant vrjester events
         MinecraftForge.EVENT_BUS.register(new TriggerEventHandler());
+        MinecraftForge.EVENT_BUS.register(new GestureEventHandler());
 //        MinecraftForge.EVENT_BUS.register(new PlayerInitHandler());
     }
 }

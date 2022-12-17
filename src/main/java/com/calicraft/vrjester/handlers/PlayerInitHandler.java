@@ -14,6 +14,6 @@ public class PlayerInitHandler {
         System.out.println("HANDLE PLAYER LOGIN EVENT");
         LocalPlayer player = getMCI().player;
         assert player != null;
-        VrJesterApi.VIVECRAFTLOADED = PositionTracker.vrAPI.playerInVR(player);
+        VrJesterApi.VIVECRAFT_LOADED = PositionTracker.vrAPI.playerInVR(player);
     }
 }
