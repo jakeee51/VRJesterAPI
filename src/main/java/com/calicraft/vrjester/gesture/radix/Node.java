@@ -28,12 +28,19 @@ public class Node {
         return paths.size();
     }
 
-    public Path getTracedGestureComponent(GestureComponent transitionGestureComponent) {
+    public Path getMatchededPath(GestureComponent transitionGestureComponent) {
+        Path newTransition = null;
+        long maxTime = 0; double maxSpeed = 0.0;
         for (GestureComponent gestureComponent : paths.keySet()) {
-            if (gestureComponent.equals(transitionGestureComponent))
-                return paths.get(gestureComponent);
+            if (gestureComponent.matches(transitionGestureComponent)) {
+                if (gestureComponent.elapsedTime() >= maxTime && gestureComponent.speed() >= maxSpeed) {
+                    maxTime = gestureComponent.elapsedTime();
+                    maxSpeed = gestureComponent.speed();
+                    newTransition = paths.get(gestureComponent);
+                }
+            }
         }
-        return null;
+        return newTransition;
     }
 
     @Override

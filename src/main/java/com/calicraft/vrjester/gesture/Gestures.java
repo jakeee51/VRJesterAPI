@@ -132,7 +132,7 @@ public class Gestures {
             gestureStore.addGesture(vrDevice, getGestureMapping(vrDevice).get(result.hashCode()), result);
         }
         for (Path path : current.paths.values()) {
-            writeGestures(vrDevice, path.next, GestureComponent.concat(result, path.gestureComponent));
+            writeGestures(vrDevice, path.next, GestureComponent.concat(result, path.gesture));
         }
     }
 

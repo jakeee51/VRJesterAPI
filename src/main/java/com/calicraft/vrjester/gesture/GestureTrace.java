@@ -40,8 +40,8 @@ public class GestureTrace {
 
     // Convert Track object to GestureComponent
     public GestureComponent toGestureComponent() {
-        return new GestureComponent(getVrDevice(), getMovement(), getElapsedTime(), -1,
-                getSpeed(), -1, getDirection(), getDevicesInProximity());
+        return new GestureComponent(getVrDevice(), getMovement(), getElapsedTime(),
+                getSpeed(), getDirection(), getDevicesInProximity());
     }
 
     public String getVoxId() {
@@ -126,10 +126,6 @@ public class GestureTrace {
 
     public void addPose(Vec3[] pose) {
         poses.add(pose);
-    }
-
-    public List<Vec3[]> getPoses() {
-        return poses;
     }
 
     // Set all final values resulting from a VRDevice moving into a new Vox

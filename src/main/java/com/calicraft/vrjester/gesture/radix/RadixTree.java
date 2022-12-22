@@ -45,7 +45,7 @@ public class RadixTree {
             System.out.println(gestureMapping.get(result.hashCode()) + ": " + result);
 
         for (Path path : current.paths.values())
-            printAllGestures(path.next, GestureComponent.concat(result, path.gestureComponent), gestureMapping);
+            printAllGestures(path.next, GestureComponent.concat(result, path.gesture), gestureMapping);
     }
 
     public void insert(List<GestureComponent> gesture) {
@@ -57,26 +57,26 @@ public class RadixTree {
             GestureComponent transitionGestureComponent = gesture.get(currIndex);
             Path currentPath = current.getTransition(transitionGestureComponent);
             //Updated version of the input gesture
-            List<GestureComponent> currGestureComponent = gesture.subList(currIndex, gesture.size());
+            List<GestureComponent> currGesture = gesture.subList(currIndex, gesture.size());
 
             //There is no associated edge with the first character of the current string
             //so simply add the rest of the string and finish
             if (currentPath == null) {
-                current.paths.put(transitionGestureComponent, new Path(currGestureComponent));
+                current.paths.put(transitionGestureComponent, new Path(currGesture));
                 break;
             }
 
-            int splitIndex = getFirstMismatchGestureComponent(currGestureComponent, currentPath.gestureComponent);
+            int splitIndex = getFirstMismatchGestureComponent(currGesture, currentPath.gesture);
             if (splitIndex == NO_MISMATCH) {
                 //The edge and leftover string are the same length
                 //so finish and update the next node as a gesture node
-                if (currGestureComponent.size() == currentPath.gestureComponent.size()) {
+                if (currGesture.size() == currentPath.gesture.size()) {
                     currentPath.next.isGesture = true;
                     break;
-                } else if (currGestureComponent.size() < currentPath.gestureComponent.size()) {
+                } else if (currGesture.size() < currentPath.gesture.size()) {
                     //The leftover gesture is a prefix to the edge string, so split
-                    List<GestureComponent> suffix = currentPath.gestureComponent.subList(currGestureComponent.size()-1, currGestureComponent.size());
-                    currentPath.gestureComponent = currGestureComponent;
+                    List<GestureComponent> suffix = currentPath.gesture.subList(currGesture.size()-1, currGesture.size());
+                    currentPath.gesture = currGesture;
                     Node newNext = new Node(true);
                     Node afterNewNext = currentPath.next;
                     currentPath.next = newNext;
@@ -84,12 +84,12 @@ public class RadixTree {
                     break;
                 } else { //currStr.length() > currentEdge.label.length()
                     //There is leftover string after a perfect match
-                    splitIndex = currentPath.gestureComponent.size();
+                    splitIndex = currentPath.gesture.size();
                 }
             } else {
                 //The leftover string and edge string differed, so split at point
-                List<GestureComponent> suffix = currentPath.gestureComponent.subList(splitIndex, currentPath.gestureComponent.size());
-                currentPath.gestureComponent = currentPath.gestureComponent.subList(0, splitIndex);
+                List<GestureComponent> suffix = currentPath.gesture.subList(splitIndex, currentPath.gesture.size());
+                currentPath.gesture = currentPath.gesture.subList(0, splitIndex);
                 Node prevNext = currentPath.next;
                 currentPath.next = new Node(false);
                 currentPath.next.addGestureComponent(suffix, prevNext);
@@ -119,10 +119,10 @@ public class RadixTree {
         GestureComponent transitionGestureComponent = gesture.get(0);
         Path path = current.getTransition(transitionGestureComponent);
         //Has no edge for the current gesture or the gesture doesn't exist
-        if (path == null || !GestureComponent.startsWith(gesture, path.gestureComponent)) {
+        if (path == null || !GestureComponent.startsWith(gesture, path.gesture)) {
             return current;
         }
-        Node deleted = delete(path.next, gesture.subList(path.gestureComponent.size(), gesture.size()));
+        Node deleted = delete(path.next, gesture.subList(path.gesture.size(), gesture.size()));
         if (deleted == null) {
             current.paths.remove(transitionGestureComponent);
             if (current.totalGestureComponent() == 0 && !current.isGesture && current != root) {
@@ -131,7 +131,7 @@ public class RadixTree {
         } else if (deleted.totalGestureComponent() == 1 && !deleted.isGesture) {
             current.paths.remove(transitionGestureComponent);
             for (Path afterDeleted : deleted.paths.values()) {
-                current.addGestureComponent(GestureComponent.concat(path.gestureComponent, afterDeleted.gestureComponent), afterDeleted.next);
+                current.addGestureComponent(GestureComponent.concat(path.gesture, afterDeleted.gesture), afterDeleted.next);
             }
         }
         return current;
@@ -143,18 +143,18 @@ public class RadixTree {
         Node current = root;
         int currIndex = 0;
         while (currIndex < gesture.size()) {
-            GestureComponent transitionGestureComponent = gesture.get(currIndex);
-            Path path = current.getTracedGestureComponent(transitionGestureComponent);
+            GestureComponent currentGestureComponent = gesture.get(currIndex);
+            Path path = current.getMatchededPath(currentGestureComponent);
             if (path == null)
                 return null;
 
-            List<GestureComponent> currSubGestureComponent = gesture.subList(currIndex, gesture.size());
-            if (!GestureComponent.startsWith(path.gestureComponent, currSubGestureComponent))
+            List<GestureComponent> currSubGesture = gesture.subList(currIndex, gesture.size());
+            if (!GestureComponent.matchesWith(currSubGesture, path.gesture))
                 return null;
 
-            currIndex += path.gestureComponent.size();
+            currIndex += path.gesture.size();
             current = path.next;
-            ret = GestureComponent.concat(ret, path.gestureComponent);
+            ret = GestureComponent.concat(ret, path.gesture);
         }
         return ret;
     }
