@@ -82,8 +82,11 @@ public record GestureComponent(String vrDevice, String movement,
     }
 
     // Check if traced gesture has the same devices within proximity of the stored gesture
-    private static boolean isWithinProximity(Map<String, Integer> otherDevices, Map<String, Integer> devices) {
-        return Objects.equals(devices.keySet(), otherDevices.keySet());
+    private static boolean isWithinProximity(Map<String, Integer> devices, Map<String, Integer> otherDevices) {
+        if (devices.isEmpty())
+            return true;
+        else
+            return Objects.equals(devices.keySet(), otherDevices.keySet());
     }
 
     // Concatenate the 2 GestureComponent lists and return the new one

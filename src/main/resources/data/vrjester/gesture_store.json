@@ -6,9 +6,7 @@
         "vrDevice": "RC",
         "movement": "forward",
         "elapsedTime": 0,
-        "maxElapsedTime": 0,
         "speed": 1000.0,
-        "maxSpeed": 0.0,
         "direction": {
           "f_82479_": 0.0,
           "f_82480_": 0.0,
@@ -23,9 +21,7 @@
         "vrDevice": "RC",
         "movement": "back",
         "elapsedTime": 0,
-        "maxElapsedTime": 0,
-        "speed": 500.0,
-        "maxSpeed": 0.0,
+        "speed": 0.0,
         "direction": {
           "f_82479_": 0.0,
           "f_82480_": 0.0,
@@ -42,9 +38,7 @@
         "vrDevice": "LC",
         "movement": "forward",
         "elapsedTime": 0,
-        "maxElapsedTime": 0,
         "speed": 1000.0,
-        "maxSpeed": 0.0,
         "direction": {
           "f_82479_": 0.0,
           "f_82480_": 0.0,
@@ -59,9 +53,7 @@
         "vrDevice": "LC",
         "movement": "back",
         "elapsedTime": 0,
-        "maxElapsedTime": 0,
-        "speed": 500.0,
-        "maxSpeed": 0.0,
+        "speed": 0.0,
         "direction": {
           "f_82479_": 0.0,
           "f_82480_": 0.0,
