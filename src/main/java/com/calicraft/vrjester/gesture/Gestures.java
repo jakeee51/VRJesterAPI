@@ -98,6 +98,7 @@ public class Gestures {
 
     // Store a new gesture encompassing all VRDevices
     public void store(Gesture gesture, String name) {
+        // TODO - Add to config.GESTURES so gestureCtx isn't null
         String id = "";
         if (!gesture.hmdGesture.isEmpty()) {
             hmdGestures.insert(gesture.hmdGesture);
