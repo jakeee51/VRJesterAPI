@@ -48,6 +48,26 @@ public class RadixTree {
             printAllGestures(path.next, GestureComponent.concat(result, path.gesture), gestureMapping);
     }
 
+    public void printAllPaths() {
+        printAllPaths(root, "");
+    }
+
+    private void printAllPaths(Node current, String indent) {
+        int lastValue = current.totalGestureComponent()-1; int i = 0;
+        for (Path path : current.paths.values()) {
+            if (i == lastValue)
+                System.out.println(indent.replace("+", "╰") + path.gesture);
+            else
+                System.out.println(indent.replace("+", "├") + path.gesture);
+            int length1 = indent.length() / 2 == 0 ? 4 : indent.length() / 2;
+            int length2 = path.gesture.toString().length() / 3;
+            String oldIndent = new String(new char[length1]).replace("\0", " ");
+            String lineIndent = new String(new char[length2]).replace("\0", "─");
+            String newIndent = oldIndent + "+" + lineIndent + "─>"; i++;
+            printAllPaths(path.next, newIndent);
+        }
+    }
+
     public void insert(List<GestureComponent> gesture) {
         Node current = root;
         int currIndex = 0;

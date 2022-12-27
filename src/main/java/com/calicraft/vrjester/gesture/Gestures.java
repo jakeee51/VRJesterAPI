@@ -79,6 +79,12 @@ public class Gestures {
         hmdGestures.printAllGestures(hmdGestureMapping);
         rcGestures.printAllGestures(rcGestureMapping);
         lcGestures.printAllGestures(lcGestureMapping);
+        System.out.println("HMD TREE:");
+        hmdGestures.printAllPaths();
+        System.out.println("RC TREE:");
+        rcGestures.printAllPaths();
+        System.out.println("LC TREE:");
+        lcGestures.printAllPaths();
     }
 
     // Store a new gesture into a specified VRDevice namespace
