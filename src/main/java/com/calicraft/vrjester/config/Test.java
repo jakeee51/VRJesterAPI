@@ -17,6 +17,8 @@ public class Test {
 
     public void trigger(String gesture, VRDataState vrDataWorldPre, Config config) {
         Config.GestureContext gestureCtx = config.GESTURES.get(gesture);
+        if (gestureCtx == null)
+            gestureCtx = config.new GestureContext(1.0, 0, 0);
         Vec3 avgDir = vrDataWorldPre.getRc()[1].add(vrDataWorldPre.getHmd()[1]).multiply((.5), (.5), (.5));
         if (gestureCtx.rcParticle > -1 && gestureCtx.rcParticle < particleTypes.length)
             moveParticles(particleTypes[gestureCtx.rcParticle],

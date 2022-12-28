@@ -1,5 +1,6 @@
 package com.calicraft.vrjester.gesture;
 
+import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.radix.Node;
 import com.calicraft.vrjester.gesture.radix.RadixTree;
@@ -34,7 +35,11 @@ public class Gestures {
     public RadixTree rcGestures = new RadixTree("RC");
     public RadixTree lcGestures = new RadixTree("LC");
 
-    public Gestures() {}
+    public Config config;
+
+    public Gestures(Config config) {
+        this.config = config;
+    }
 
     // Read in gestures from gesture store file and return GestureStore object
     public GestureStore read() {
@@ -98,7 +103,6 @@ public class Gestures {
 
     // Store a new gesture encompassing all VRDevices
     public void store(Gesture gesture, String name) {
-        // TODO - Add to config.GESTURES so gestureCtx isn't null
         String id = "";
         if (!gesture.hmdGesture.isEmpty()) {
             hmdGestures.insert(gesture.hmdGesture);

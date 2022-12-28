@@ -29,7 +29,12 @@ import static com.calicraft.vrjester.utils.tools.SpawnParticles.moveParticles;
 
 
 public class TriggerEventHandler {
-    private static Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);
+    private static VRDataWriter vrDataWriter;
+    private static boolean msgSentOnce = false;
+    private static final Test test = new Test();
+    private static Config devConfig = Config.readConfig(Constants.DEV_CONFIG_PATH);
+
+    private static final Config config = Config.readConfig(Constants.CONFIG_PATH);
     private static final VRDataAggregator preRoomDataAggregator = new VRDataAggregator(VRDataType.VRDATA_ROOM_PRE, false);
     private static final VRDataAggregator preWorldDataAggregator = new VRDataAggregator(VRDataType.VRDATA_WORLD_PRE, false);
     private static final int DELAY = 20; // 1 second
@@ -38,72 +43,26 @@ public class TriggerEventHandler {
     private static boolean listener = false;
     private long elapsedTime = 0;
     private static Gesture gesture;
-    private static final Gestures gestures = new Gestures();
+    private static final Gestures gestures = new Gestures(devConfig);
     private static final Recognition recognition = new Recognition(gestures);
     private static LocalPlayer player;
 
-    private static VRDataWriter vrDataWriter;
-    private static boolean msgSentOnce = false;
-    private static final Test test = new Test();
-
     @SubscribeEvent
     public void onJesterTrigger(InputEvent.Key event) {
-        // TODO - Apply separation of concerns and break this into methods
         if (event.getKey() == VrJesterApi.MOD_KEY.getKey().getValue()) {
-            if (player == null) {
-                player = getMCI().player; gestures.load();
-                if (player == null)
-                    return;
-                try {
-                    VIVECRAFT_LOADED = PositionTracker.vrAPI.playerInVR(player);
-                } catch (NullPointerException e) {
-                    System.out.println("Threw NullPointerException trying to call IVRAPI.playerInVR");
-                    return;
-                }
-            }
-            // Trigger the gesture listening phase
-            if (VIVECRAFT_LOADED) {
-                if (VrJesterApi.MOD_KEY.isDown() && !listener) {
-                    System.out.println("JESTER TRIGGERED");
-                    listener = true; elapsedTime = System.nanoTime();
-                    config = Config.readConfig(Constants.DEV_CONFIG_PATH);
-                    if (config.WRITE_DATA)
-                        vrDataWriter = new VRDataWriter("room", iter);
+            if (setupJesterComplete()) {
+                // Trigger the gesture listening phase
+                if (VIVECRAFT_LOADED) {
+                    handleVrJester();
                 } else {
-                    System.out.println("JESTER RELEASED");
-                    if (config.RECOGNIZE_ON.equals("RELEASE")) {
-                        String recognizedGesture = recognition.recognize(gesture);
-                        if (!recognizedGesture.isEmpty()) {
-                            sendDebugMsg("RECOGNIZED: " + recognizedGesture);
-                        }
-                    }
-                    if (config.READ_DATA) {
-                        gestures.clear();
-                        gestures.load();
-                    }
-                    if (config.RECORD_MODE)
-                        gestures.store(gesture, config.LOG.gesture);
-                    if (config.WRITE_DATA)
-                        gestures.write();
-                    listener = false; elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
-                    gesture = null; msgSentOnce = false; elapsedTime = 0;
-                    if (config.WRITE_DATA)
-                        iter++;
-                    else
-                        iter = 0;
-                }
-            } else {
-                if (VrJesterApi.MOD_KEY.isDown()) {
-                    System.out.println("NON-VR JESTER TRIGGERED");
-                } else {
-                    System.out.println("JESTER RELEASED");
+                    handleNonVrJester();
                 }
             }
         }
     }
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) throws IOException {
+    public void onClientTick(TickEvent.ClientTickEvent event) {
         if (VrJesterApi.MOD_KEY.isDown() && !VIVECRAFT_LOADED)
             moveParticles(ParticleTypes.FLAME, 0);
 
@@ -114,12 +73,12 @@ public class TriggerEventHandler {
                 gesture = new Gesture(vrDataRoomPre);
             } else {
                 gesture.track(vrDataRoomPre);
-                if (config.RECOGNIZE_ON.equals("RECOGNIZE")) {
+                if (devConfig.RECOGNIZE_ON.equals("RECOGNIZE")) {
                     String recognizedGesture = recognition.recognize(gesture);
                     if (!recognizedGesture.isEmpty()) {
                         MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                         sendDebugMsg("RECOGNIZED: " + recognizedGesture);
-                        test.trigger(recognizedGesture, vrDataWorldPre, config);
+                        test.trigger(recognizedGesture, vrDataWorldPre, devConfig);
                         listener = false; gesture = null;
                     }
                 }
@@ -137,6 +96,69 @@ public class TriggerEventHandler {
         }
     }
 
+    // Handle VR gesture listener
+    private void handleVrJester() {
+        if (VrJesterApi.MOD_KEY.isDown() && !listener) {
+            System.out.println("JESTER TRIGGERED");
+            listener = true; elapsedTime = System.nanoTime();
+            devConfig = Config.readConfig(Constants.DEV_CONFIG_PATH);
+            if (devConfig.WRITE_DATA)
+                vrDataWriter = new VRDataWriter("room", iter);
+        } else {
+            System.out.println("JESTER RELEASED");
+            if (devConfig.RECOGNIZE_ON.equals("RELEASE")) {
+                String recognizedGesture = recognition.recognize(gesture);
+                if (!recognizedGesture.isEmpty()) {
+                    sendDebugMsg("RECOGNIZED: " + recognizedGesture);
+                }
+            }
+            checkDevConfig();
+            listener = false; elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
+            gesture = null; msgSentOnce = false; elapsedTime = 0;
+        }
+    }
+
+    // Handle NON-VR gesture listener
+    private void handleNonVrJester() {
+        if (VrJesterApi.MOD_KEY.isDown()) {
+            System.out.println("NON-VR JESTER TRIGGERED");
+        } else {
+            System.out.println("JESTER RELEASED");
+        }
+    }
+
+    // Handle and update based on dev configurations
+    private void checkDevConfig() {
+        if (devConfig.READ_DATA) {
+            gestures.clear();
+            gestures.load();
+        }
+        if (devConfig.RECORD_MODE)
+            gestures.store(gesture, devConfig.LOG.gesture);
+        if (devConfig.WRITE_DATA)
+            gestures.write();
+        if (devConfig.WRITE_DATA)
+            iter++;
+        else
+            iter = 0;
+    }
+
+    // Setup and ensure player is not null and VRData is loaded
+    private boolean setupJesterComplete() {
+        if (player == null) {
+            player = getMCI().player; gestures.load();
+            if (player == null)
+                return false;
+            try {
+                VIVECRAFT_LOADED = PositionTracker.vrAPI.playerInVR(player);
+            } catch (NullPointerException e) {
+                System.out.println("Threw NullPointerException trying to call IVRAPI.playerInVR");
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void sendDebugMsg(String msg) {
         if (!msgSentOnce) {
             msgSentOnce = true;
@@ -148,7 +170,7 @@ public class TriggerEventHandler {
     }
 
     public static void dataDebugger(VRDataState vrDataState) throws IOException { // For VRData Room
-        if (config.WRITE_DATA)
+        if (devConfig.WRITE_DATA)
             vrDataWriter.write(vrDataState);
     }
 }

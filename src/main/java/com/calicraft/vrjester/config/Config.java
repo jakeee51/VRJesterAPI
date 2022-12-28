@@ -35,6 +35,18 @@ public class Config {
         public double velocity;
         public int rcParticle;
         public int lcParticle;
+
+        public GestureContext() {
+            this.velocity = 1.0;
+            this.rcParticle = -1;
+            this.lcParticle = -1;
+        }
+
+        public GestureContext(double velocity, int rcParticle, int lcParticle) {
+            this.velocity = velocity;
+            this.rcParticle = rcParticle;
+            this.lcParticle = lcParticle;
+        }
     }
 
     public static Config readConfig() {

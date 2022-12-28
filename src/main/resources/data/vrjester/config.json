@@ -19,12 +19,17 @@
 		"KAMEHAMEHA": {
 			"velocity": "1.0",
 			"rcParticle": "1",
-			"lcParticle": "1"
+			"lcParticle": "-1"
+		},
+		"BURST": {
+			"velocity": "1.0",
+			"rcParticle": "2",
+			"lcParticle": "-1"
 		}
 	},
 	"LOG": {
 		"name": "vrdata",
-		"gesture": "TEST ME",
+		"gesture": "BURST",
 		"devices": ["rc", "lc"],
 		"pose": "0"
 	}

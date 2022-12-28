@@ -1,6 +1,20 @@
 {
   "HMD": {},
   "RC": {
+    "PULL": [
+      {
+        "vrDevice": "RC",
+        "movement": "back",
+        "elapsedTime": 0,
+        "speed": 0.0,
+        "direction": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "devicesInProximity": {}
+      }
+    ],
     "KAMEHAMEHA": [
       {
         "vrDevice": "RC",
@@ -12,21 +26,33 @@
           "f_82480_": 0.0,
           "f_82481_": 0.0
         },
-        "devicesInProximity": {
-        }
+        "devicesInProximity": {}
       },
       {
         "vrDevice": "RC",
         "movement": "forward",
-        "elapsedTime": 0,
+        "elapsedTime": 2500,
         "speed": 0.0,
         "direction": {
           "f_82479_": 0.0,
           "f_82480_": 0.0,
           "f_82481_": 0.0
         },
-        "devicesInProximity": {
-        }
+        "devicesInProximity": {}
+      }
+    ],
+    "BURST": [
+      {
+        "vrDevice": "RC",
+        "movement": "forward",
+        "elapsedTime": 2500,
+        "speed": 0.0,
+        "direction": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "devicesInProximity": {}
       }
     ],
     "PUSH": [
@@ -40,42 +66,11 @@
           "f_82480_": 0.0,
           "f_82481_": 0.0
         },
-        "devicesInProximity": {
-        }
-      }
-    ],
-    "PULL": [
-      {
-        "vrDevice": "RC",
-        "movement": "back",
-        "elapsedTime": 0,
-        "speed": 0.0,
-        "direction": {
-          "f_82479_": 0.0,
-          "f_82480_": 0.0,
-          "f_82481_": 0.0
-        },
-        "devicesInProximity": {
-        }
+        "devicesInProximity": {}
       }
     ]
   },
   "LC": {
-    "PUSH": [
-      {
-        "vrDevice": "LC",
-        "movement": "forward",
-        "elapsedTime": 0,
-        "speed": 1000.0,
-        "direction": {
-          "f_82479_": 0.0,
-          "f_82480_": 0.0,
-          "f_82481_": 0.0
-        },
-        "devicesInProximity": {
-        }
-      }
-    ],
     "PULL": [
       {
         "vrDevice": "LC",
@@ -87,8 +82,21 @@
           "f_82480_": 0.0,
           "f_82481_": 0.0
         },
-        "devicesInProximity": {
-        }
+        "devicesInProximity": {}
+      }
+    ],
+    "PUSH": [
+      {
+        "vrDevice": "LC",
+        "movement": "forward",
+        "elapsedTime": 0,
+        "speed": 1000.0,
+        "direction": {
+          "f_82479_": 0.0,
+          "f_82480_": 0.0,
+          "f_82481_": 0.0
+        },
+        "devicesInProximity": {}
       }
     ]
   }

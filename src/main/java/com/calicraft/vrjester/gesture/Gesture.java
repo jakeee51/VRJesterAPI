@@ -67,4 +67,16 @@ public class Gesture {
             }
         }
     }
+
+    public List<GestureComponent> getHmdGesture() {
+        return hmdGesture;
+    }
+
+    public List<GestureComponent> getRcGesture() {
+        return rcGesture;
+    }
+
+    public List<GestureComponent> getLcGesture() {
+        return lcGesture;
+    }
 }

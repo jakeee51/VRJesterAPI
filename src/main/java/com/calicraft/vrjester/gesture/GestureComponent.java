@@ -41,7 +41,7 @@ public record GestureComponent(String vrDevice, String movement,
         } else if (!(obj instanceof GestureComponent other)) {
             return false;
         } else {
-            // TODO - Account for direction & devicesInProximity
+            // TODO - Account for direction
             return Objects.equals(vrDevice, other.vrDevice) &&
                    Objects.equals(movement, other.movement) &&
                    Objects.equals(elapsedTime, other.elapsedTime) &&
