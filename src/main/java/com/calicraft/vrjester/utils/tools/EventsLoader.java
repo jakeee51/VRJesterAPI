@@ -1,6 +1,5 @@
 package com.calicraft.vrjester.utils.tools;
 
-import com.calicraft.vrjester.api.VRPlayerEvent;
 import com.calicraft.vrjester.handlers.GestureEventHandler;
 import com.calicraft.vrjester.handlers.TriggerEventHandler;
 import net.minecraftforge.common.MinecraftForge;
