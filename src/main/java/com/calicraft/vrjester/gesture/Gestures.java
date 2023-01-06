@@ -5,10 +5,7 @@ import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.radix.Node;
 import com.calicraft.vrjester.gesture.radix.RadixTree;
 import com.calicraft.vrjester.gesture.radix.Path;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -57,7 +54,7 @@ public class Gestures {
             builder.setPrettyPrinting();
             Gson gson = builder.create();
             return gson.fromJson(sb.toString(), GestureStore.class);
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | JsonSyntaxException e) {
             System.out.println("An error occurred reading gesture store json!");
             e.printStackTrace();
         }
@@ -68,15 +65,11 @@ public class Gestures {
     public void load() {
         GestureStore gestureStore = read(); clear();
         if (gestureStore != null) {
-            Set<String> gestureNames = new HashSet<>();
-            gestureNames.addAll(gestureStore.HMD.keySet());
-            gestureNames.addAll(gestureStore.RC.keySet());
-            gestureNames.addAll(gestureStore.LC.keySet());
+            Set<String> gestureNames = gestureStore.GESTURES.keySet();
             for (String gestureName: gestureNames) { // Iterate through & store each gesture
-                Gesture gesture = new Gesture(gestureStore.HMD.get(gestureName),
-                                              gestureStore.RC.get(gestureName),
-                                              gestureStore.LC.get(gestureName));
+                Gesture gesture = new Gesture(gestureStore.GESTURES.get(gestureName));
                 store(gesture, gestureName);
+                System.out.println("GESTURE NAMESPACE: " + gestureNameSpace);
             }
         }
 
@@ -92,33 +85,54 @@ public class Gestures {
         lcGestures.printAllPaths();
     }
 
+    // Store a new gesture encompassing all VRDevices
+    public void store(Gesture gesture, String name) {
+        // TODO - Modularize method
+        String id = "";
+        if (!gesture.validDevices.isEmpty()) { // OR
+            if (!gesture.hmdGesture.isEmpty()) {
+                hmdGestures.insert(gesture.hmdGesture);
+                hmdGestureMapping.put(gesture.hmdGesture.hashCode(), name);
+                id += gesture.hmdGesture.hashCode();
+            }
+            if (!gesture.rcGesture.isEmpty()) {
+                rcGestures.insert(gesture.rcGesture);
+                rcGestureMapping.put(gesture.rcGesture.hashCode(), name);
+                if (!id.contains(gesture.rcGesture.hashCode() + ""))
+                    id += gesture.rcGesture.hashCode();
+            }
+            if (!gesture.lcGesture.isEmpty()) {
+                lcGestures.insert(gesture.lcGesture);
+                lcGestureMapping.put(gesture.lcGesture.hashCode(), name);
+                if (!id.contains(gesture.lcGesture.hashCode() + ""))
+                    id += gesture.rcGesture.hashCode();
+            }
+        } else { // AND
+            if (!gesture.hmdGesture.isEmpty()) {
+                hmdGestures.insert(gesture.hmdGesture);
+                hmdGestureMapping.put(gesture.hmdGesture.hashCode(), name);
+                id += gesture.hmdGesture.hashCode();
+            }
+            if (!gesture.rcGesture.isEmpty()) {
+                rcGestures.insert(gesture.rcGesture);
+                rcGestureMapping.put(gesture.rcGesture.hashCode(), name);
+                id += gesture.rcGesture.hashCode();
+            }
+            if (!gesture.lcGesture.isEmpty()) {
+                lcGestures.insert(gesture.lcGesture);
+                lcGestureMapping.put(gesture.lcGesture.hashCode(), name);
+                id += gesture.lcGesture.hashCode();
+            }
+        }
+        gestureNameSpace.put(id, name);
+    }
+
     // Store a new gesture into a specified VRDevice namespace
     public void store(RadixTree gestureTree, HashMap<Integer, String> gestureMapping,
                       List<GestureComponent> gesture, String name) {
         gestureTree.insert(gesture);
         gestureMapping.put(gesture.hashCode(), name);
         String id = "" + gesture.hashCode();
-        gestureNameSpace.put(id, name);
-    }
-
-    // Store a new gesture encompassing all VRDevices
-    public void store(Gesture gesture, String name) {
-        String id = "";
-        if (!gesture.hmdGesture.isEmpty()) {
-            hmdGestures.insert(gesture.hmdGesture);
-            hmdGestureMapping.put(gesture.hmdGesture.hashCode(), name);
-            id += gesture.hmdGesture.hashCode();
-        }
-        if (!gesture.rcGesture.isEmpty()) {
-            rcGestures.insert(gesture.rcGesture);
-            rcGestureMapping.put(gesture.rcGesture.hashCode(), name);
-            id += gesture.rcGesture.hashCode();
-        }
-        if (!gesture.lcGesture.isEmpty()) {
-            lcGestures.insert(gesture.lcGesture);
-            lcGestureMapping.put(gesture.lcGesture.hashCode(), name);
-            id += gesture.lcGesture.hashCode();
-        }
         gestureNameSpace.put(id, name);
     }
 

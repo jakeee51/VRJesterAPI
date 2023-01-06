@@ -6,19 +6,17 @@ import java.util.HashMap;
 
 public class GestureStore {
     // Class for formatting the Gestures to be stored using Gson into a JSON file
+    // TODO - Reformat to allow gestures to be recognized based on the specified VRDevices.
+    //  Devs should be able to recognize gestures dependent AND independent from other VRDevices.
 
-    public HashMap<String, List<GestureComponent>> HMD = new HashMap<>();
-    public HashMap<String, List<GestureComponent>> RC = new HashMap<>();
-    public HashMap<String, List<GestureComponent>> LC = new HashMap<>();
+    public HashMap<String, HashMap<String, List<GestureComponent>>> GESTURES = new HashMap<>();
 
     public GestureStore() {}
 
     // Add gesture to GestureStore based on VRDevice
     public void addGesture(String vrDevice, String gestureName, List<GestureComponent> gesture) {
-        switch(vrDevice) {
-            case "HMD" -> HMD.put(gestureName, gesture);
-            case "RC"  -> RC.put(gestureName, gesture);
-            case "LC"  -> LC.put(gestureName, gesture);
-        }
+        HashMap<String, List<GestureComponent>> deviceGesture = new HashMap<>();
+        deviceGesture.put(vrDevice, gesture);
+        GESTURES.put(gestureName, deviceGesture);
     }
 }

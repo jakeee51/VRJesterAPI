@@ -35,6 +35,7 @@ public class Recognition {
             id += foundRcGesture.hashCode();
         if (foundLcGesture != null)
             id += foundLcGesture.hashCode();
+//        FOR DEBUGGING:
 //        System.out.println(gesture);
 //        System.out.println("foundHmdGesture: " + foundHmdGesture);
 //        System.out.println("foundRcGesture: " + foundRcGesture);

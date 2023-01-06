@@ -6,6 +6,7 @@ import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.config.Test;
 import com.calicraft.vrjester.gesture.Gesture;
+import com.calicraft.vrjester.gesture.GestureComponent;
 import com.calicraft.vrjester.gesture.Gestures;
 import com.calicraft.vrjester.gesture.Recognition;
 import com.calicraft.vrjester.tracker.PositionTracker;
@@ -16,12 +17,16 @@ import com.calicraft.vrjester.utils.vrdata.VRDataWriter;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static com.calicraft.vrjester.VrJesterApi.VIVECRAFT_LOADED;
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
@@ -124,6 +129,22 @@ public class TriggerEventHandler {
             System.out.println("NON-VR JESTER TRIGGERED");
         } else {
             System.out.println("JESTER RELEASED");
+            checkDevConfig();
+            List<GestureComponent> hmdGesture = new ArrayList<>();
+            List<GestureComponent> rcGesture = new ArrayList<>();
+            List<GestureComponent> lcGesture = new ArrayList<>();
+            Vec3 dir = new Vec3((0),(0),(0));
+            HashMap<String, Integer> devices = new HashMap<>();
+            GestureComponent gestureComponent1 = new GestureComponent("RC", "forward",
+                    0, 0.0, dir, devices);
+            GestureComponent gestureComponent2 = new GestureComponent("LC", "forward",
+                    0, 0.0, dir, devices);
+            rcGesture.add(gestureComponent1);
+            Gesture strikeGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
+            System.out.println("RECOGNIZED: " + recognition.recognize(strikeGesture));
+            lcGesture.add(gestureComponent2);
+            Gesture pushGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
+            System.out.println("RECOGNIZED: " + recognition.recognize(pushGesture));
         }
     }
 

@@ -2,10 +2,7 @@ package com.calicraft.vrjester.gesture;
 
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -30,7 +27,7 @@ public record GestureComponent(String vrDevice, String movement,
 
     @Override
     public int hashCode() {
-        return Objects.hash(vrDevice, movement, elapsedTime, speed, direction, devicesInProximity);
+        return Objects.hash(movement, elapsedTime, speed, direction, devicesInProximity);
     }
 
     // Check if the traced gesture is equal to a stored gesture
@@ -81,6 +78,12 @@ public record GestureComponent(String vrDevice, String movement,
         }
     }
 
+    private static boolean isValidDevice(String vrDevice, String otherDevice) {
+        List<String> devices = Arrays.asList(vrDevice.split("\\|"));
+        System.out.println("devices: " + devices + " -> otherDevice: " + otherDevice);
+        return devices.contains(otherDevice);
+    }
+
     // Check if traced gesture has the same devices within proximity of the stored gesture
     private static boolean isWithinProximity(Map<String, Integer> devices, Map<String, Integer> otherDevices) {
         if (devices.isEmpty())
@@ -96,5 +99,24 @@ public record GestureComponent(String vrDevice, String movement,
         if(gestureComponent2 == null)
             gestureComponent2 = new ArrayList<>();
         return Stream.concat(gestureComponent1.stream(), gestureComponent2.stream()).toList();
+    }
+
+    public static List<GestureComponent> copy(List<GestureComponent> gesture, Map<String, String> newValues) {
+        List<GestureComponent> newGesture = new ArrayList<>();
+        for (GestureComponent gestureComponent: gesture) {
+            String vrDevice = newValues.get("vrDevice") == null ? gestureComponent.vrDevice() : newValues.get("vrDevice");
+            String movement = gestureComponent.movement();
+            long elapsedTime = gestureComponent.elapsedTime();
+            double speed = gestureComponent.speed();
+            Vec3 direction = gestureComponent.direction();
+            Map<String, Integer> devicesInProximity = gestureComponent.devicesInProximity();
+
+            GestureComponent newComponent = new GestureComponent(
+                    vrDevice, movement,
+                    elapsedTime, speed,
+                    direction, devicesInProximity);
+            newGesture.add(newComponent);
+        }
+        return newGesture;
     }
 }

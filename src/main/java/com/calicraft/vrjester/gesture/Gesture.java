@@ -5,9 +5,7 @@ import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.vox.Vox;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Gesture {
     // Class that handles compiling the GestureComponent list for each VRDevice
@@ -17,6 +15,7 @@ public class Gesture {
     public List<GestureComponent> hmdGesture = new ArrayList<>();
     public List<GestureComponent> rcGesture = new ArrayList<>();
     public List<GestureComponent> lcGesture = new ArrayList<>();
+    public List<String> validDevices = new ArrayList<>();
 
     // Initialize the first gesture trace and continue tracking until completion of gesture
     public Gesture(VRDataState vrDataState) {
@@ -37,6 +36,34 @@ public class Gesture {
         if (lcGesture != null)
             this.lcGesture = lcGesture;
 
+    }
+
+    // Initialize Gesture with already set gestures for each VRDevice
+    public Gesture(HashMap<String, List<GestureComponent>> gesture) {
+        for (String vrDevice: gesture.keySet()) {
+            List<String> devices = Arrays.asList(vrDevice.split("\\|"));
+            if (devices.contains("HMD")) {
+                Map<String, String> newValues = new HashMap<>();
+                newValues.put("vrDevice", "HMD");
+                if (devices.size() > 1)
+                    validDevices.add("HMD");
+                hmdGesture = GestureComponent.copy(gesture.get(vrDevice), newValues);
+            }
+            if (devices.contains("RC")) {
+                Map<String, String> newValues = new HashMap<>();
+                newValues.put("vrDevice", "RC");
+                if (devices.size() > 1)
+                    validDevices.add("RC");
+                rcGesture = GestureComponent.copy(gesture.get(vrDevice), newValues);
+            }
+            if (devices.contains("LC")) {
+                Map<String, String> newValues = new HashMap<>();
+                newValues.put("vrDevice", "LC");
+                if (devices.size() > 1)
+                    validDevices.add("LC");
+                lcGesture = GestureComponent.copy(gesture.get(vrDevice), newValues);
+            }
+        }
     }
 
     @Override
