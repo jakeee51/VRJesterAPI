@@ -185,6 +185,8 @@ dependencies {
     compileOnly fg.deobf("curse.maven:mcvrapi-591092:4073384")
     runtimeOnly fg.deobf("curse.maven:mcvrapi-591092:4073384")
     implementation 'org.jetbrains:annotations:23.0.0'
+    testImplementation(platform('org.junit:junit-bom:5.9.1'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
 //    implementation files('libs/OptiFine_1.19.2_HD_U_H9.jar')
 
 
