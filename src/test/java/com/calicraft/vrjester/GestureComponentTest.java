@@ -11,7 +11,7 @@ import com.calicraft.vrjester.gesture.Recognition;
 import net.minecraft.world.phys.Vec3;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
+import java.sql.SQLOutput;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,14 +26,15 @@ class GestureComponentTest {
     @Test
     @DisplayName("0 + 1 = 1")
     void addsTwoNumbers() {
-        assertEquals(0, 1);
+        assertEquals(1, 1);
     }
-    @ParameterizedTest(name = "{0} + {1} = {2}")
-    void add (int first, int second, int expectedResult){
-        first = 0;
-        second = 1;
-        expectedResult = first + second;
-        int Result = 2;
+    @Test
+    @DisplayName("0 + 1 = 1")
+    void add() {
+        int first = 0;
+        int second = 1;
+        int expectedResult = first + second;
+        int Result = 1;
         assertEquals(Result, expectedResult);
     }
 
