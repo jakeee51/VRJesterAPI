@@ -221,7 +221,7 @@ jar {
 // Move generated jar file to Minecraft mods folder
 task copyJarToMods(type: Copy) {
         from jar
-        into "C:\\Users\\jakem\\AppData\\Roaming\\.minecraft\\mods"
+        into "C:\\Users\\mosta\\AppData\\Roaming\\.minecraft\\mods"
 }
 build.finalizedBy copyJarToMods
 
