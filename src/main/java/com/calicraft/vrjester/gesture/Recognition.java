@@ -1,5 +1,8 @@
 package com.calicraft.vrjester.gesture;
 
+import com.calicraft.vrjester.config.Constants;
+
+import java.util.HashMap;
 import java.util.List;
 
 public class Recognition {
@@ -24,26 +27,32 @@ public class Recognition {
     }
 
     // Recognize the gesture & return its name
-    public String recognize(Gesture gesture) {
+    public HashMap<String, String> recognize(Gesture gesture) {
+        HashMap<String, String> ctx = new HashMap<>();
         String gestureName, id = "";
         List<GestureComponent> foundHmdGesture = gestures.hmdGestures.search(gesture.hmdGesture);
         List<GestureComponent> foundRcGesture = gestures.rcGestures.search(gesture.rcGesture);
         List<GestureComponent> foundLcGesture = gestures.lcGestures.search(gesture.lcGesture);
-        if (foundHmdGesture != null)
+        if (foundHmdGesture != null) {
             id += foundHmdGesture.hashCode();
-        if (foundRcGesture != null)
+            ctx.put(Constants.HMD, gestures.hmdGestureMapping.get(foundHmdGesture.hashCode()));
+        }
+        if (foundRcGesture != null) {
             id += foundRcGesture.hashCode();
-        if (foundLcGesture != null)
+            ctx.put(Constants.RC, gestures.rcGestureMapping.get(foundRcGesture.hashCode()));
+        }
+        if (foundLcGesture != null) {
             id += foundLcGesture.hashCode();
+            ctx.put(Constants.LC, gestures.lcGestureMapping.get(foundLcGesture.hashCode()));
+        }
 //        FOR DEBUGGING:
 //        System.out.println(gesture);
 //        System.out.println("foundHmdGesture: " + foundHmdGesture);
 //        System.out.println("foundRcGesture: " + foundRcGesture);
 //        System.out.println("foundLcGesture: " + foundLcGesture);
 //        System.out.println("RECOGNIZE ID:" + id);
-//        System.out.println("GESTURE NAMESPACE: " + gestures.gestureNameSpace);
         gestureName = gestures.gestureNameSpace.get(id);
-        return gestureName != null ? gestureName : "";
+        ctx.put("gestureName", gestureName);
+        return gestureName != null ? ctx : new HashMap<>();
     }
-
 }

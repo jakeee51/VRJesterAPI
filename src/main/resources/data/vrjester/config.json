@@ -25,6 +25,11 @@
 			"velocity": "1.0",
 			"rcParticle": "2",
 			"lcParticle": "-1"
+		},
+		"STRIKE": {
+			"velocity": "1.0",
+			"rcParticle": "0",
+			"lcParticle": "0"
 		}
 	},
 	"LOG": {

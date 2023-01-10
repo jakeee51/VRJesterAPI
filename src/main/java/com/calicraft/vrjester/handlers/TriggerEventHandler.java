@@ -79,10 +79,10 @@ public class TriggerEventHandler {
             } else {
                 gesture.track(vrDataRoomPre);
                 if (devConfig.RECOGNIZE_ON.equals("RECOGNIZE")) {
-                    String recognizedGesture = recognition.recognize(gesture);
+                    HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
                     if (!recognizedGesture.isEmpty()) {
                         MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
-                        sendDebugMsg("RECOGNIZED: " + recognizedGesture);
+                        sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
                         test.trigger(recognizedGesture, vrDataWorldPre, devConfig);
                         listener = false; gesture = null;
                     }
@@ -112,9 +112,9 @@ public class TriggerEventHandler {
         } else {
             System.out.println("JESTER RELEASED");
             if (devConfig.RECOGNIZE_ON.equals("RELEASE")) {
-                String recognizedGesture = recognition.recognize(gesture);
+                HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
                 if (!recognizedGesture.isEmpty()) {
-                    sendDebugMsg("RECOGNIZED: " + recognizedGesture);
+                    sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
                 }
             }
             checkDevConfig();

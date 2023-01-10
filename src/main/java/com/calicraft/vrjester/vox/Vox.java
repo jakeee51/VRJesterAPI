@@ -97,10 +97,10 @@ public class Vox {
     // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns the Trace data
     public Vec3[] generateVox(VRDataState vrDataRoomPre) {
         Vec3[] pose = new Vec3[2];
-        for (int i = 0; i < VRDevice.values().length-1; i++) {
-            if (this.getVrDevice().equals(VRDevice.values()[i]))
+        for (int i = 0; i < VRDevice.values().length-1; i++) { // Check which VRDevice this Vox identifies with
+            if (this.getVrDevice().equals(VRDevice.values()[i])) // Assign the current position of the identified VRDevice
                 pose = VRDataState.getVRDevicePose(vrDataRoomPre, this.getVrDevice());
-            else
+            else // Update the devicesInProximity for the other VRDevices (if they're within proximity)
                 updateProximity(vrDataRoomPre, VRDevice.values()[i]);
         }
         if (!this.hasPoint(pose[0])) { // Check if point is outside of current Vox

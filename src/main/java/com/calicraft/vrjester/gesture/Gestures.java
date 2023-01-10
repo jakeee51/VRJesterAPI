@@ -5,6 +5,7 @@ import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.radix.Node;
 import com.calicraft.vrjester.gesture.radix.RadixTree;
 import com.calicraft.vrjester.gesture.radix.Path;
+import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -69,61 +70,36 @@ public class Gestures {
             for (String gestureName: gestureNames) { // Iterate through & store each gesture
                 Gesture gesture = new Gesture(gestureStore.GESTURES.get(gestureName));
                 store(gesture, gestureName);
-                System.out.println("GESTURE NAMESPACE: " + gestureNameSpace);
             }
         }
 
-        System.out.println("LOADED GESTURES:");
-        hmdGestures.printAllGestures(hmdGestureMapping);
-        rcGestures.printAllGestures(rcGestureMapping);
-        lcGestures.printAllGestures(lcGestureMapping);
-        System.out.println("HMD TREE:");
-        hmdGestures.printAllPaths();
-        System.out.println("RC TREE:");
-        rcGestures.printAllPaths();
-        System.out.println("LC TREE:");
-        lcGestures.printAllPaths();
+//        System.out.println("GESTURE NAMESPACE: " + gestureNameSpace);
+//        System.out.println("LOADED GESTURES:");
+//        hmdGestures.printAllGestures(hmdGestureMapping);
+//        rcGestures.printAllGestures(rcGestureMapping);
+//        lcGestures.printAllGestures(lcGestureMapping);
+//        System.out.println("HMD TREE:");
+//        hmdGestures.printAllPaths();
+//        System.out.println("RC TREE:");
+//        rcGestures.printAllPaths();
+//        System.out.println("LC TREE:");
+//        lcGestures.printAllPaths();
     }
 
     // Store a new gesture encompassing all VRDevices
     public void store(Gesture gesture, String name) {
-        // TODO - Modularize method
-        String id = "";
-        if (!gesture.validDevices.isEmpty()) { // OR
-            if (!gesture.hmdGesture.isEmpty()) {
-                hmdGestures.insert(gesture.hmdGesture);
-                hmdGestureMapping.put(gesture.hmdGesture.hashCode(), name);
-                id += gesture.hmdGesture.hashCode();
-            }
-            if (!gesture.rcGesture.isEmpty()) {
-                rcGestures.insert(gesture.rcGesture);
-                rcGestureMapping.put(gesture.rcGesture.hashCode(), name);
-                if (!id.contains(gesture.rcGesture.hashCode() + ""))
-                    id += gesture.rcGesture.hashCode();
-            }
-            if (!gesture.lcGesture.isEmpty()) {
-                lcGestures.insert(gesture.lcGesture);
-                lcGestureMapping.put(gesture.lcGesture.hashCode(), name);
-                if (!id.contains(gesture.lcGesture.hashCode() + ""))
-                    id += gesture.rcGesture.hashCode();
-            }
-        } else { // AND
-            if (!gesture.hmdGesture.isEmpty()) {
-                hmdGestures.insert(gesture.hmdGesture);
-                hmdGestureMapping.put(gesture.hmdGesture.hashCode(), name);
-                id += gesture.hmdGesture.hashCode();
-            }
-            if (!gesture.rcGesture.isEmpty()) {
-                rcGestures.insert(gesture.rcGesture);
-                rcGestureMapping.put(gesture.rcGesture.hashCode(), name);
-                id += gesture.rcGesture.hashCode();
-            }
-            if (!gesture.lcGesture.isEmpty()) {
-                lcGestures.insert(gesture.lcGesture);
-                lcGestureMapping.put(gesture.lcGesture.hashCode(), name);
-                id += gesture.lcGesture.hashCode();
+        String id;
+        StringBuilder sb = new StringBuilder();
+        for (String vrDevice: Constants.DEVICES) {
+            if (!gesture.validDevices.isEmpty()) { // OR
+                String newId = storeToMapping(gesture, name, vrDevice);
+                if (!sb.toString().contains(newId))
+                    sb.append(newId);
+            } else {
+                sb.append(storeToMapping(gesture, name, vrDevice));
             }
         }
+        id = sb.toString();
         gestureNameSpace.put(id, name);
     }
 
@@ -136,11 +112,25 @@ public class Gestures {
         gestureNameSpace.put(id, name);
     }
 
+    public String storeToMapping(Gesture gesture, String name, String vrDevice) {
+        String id = "";
+        RadixTree gestureTree = getRadixTree(vrDevice);
+        List<GestureComponent> deviceGesture = gesture.getGesture(vrDevice);
+        HashMap<Integer, String> gestureMapping = getGestureMapping(vrDevice);
+        if (!deviceGesture.isEmpty()) {
+            gestureTree.insert(deviceGesture);
+            if (!gestureMapping.containsKey(deviceGesture.hashCode()))
+                gestureMapping.put(deviceGesture.hashCode(), name);
+            id += deviceGesture.hashCode();
+        }
+        return id;
+    }
+
     // Write all stored gestures to gesture store file
     public void write() {
-        writeGestures("HMD", hmdGestures.root, new ArrayList<>());
-        writeGestures("RC", rcGestures.root, new ArrayList<>());
-        writeGestures("LC", lcGestures.root, new ArrayList<>());
+        writeGestures(Constants.HMD, hmdGestures.root, new ArrayList<>());
+        writeGestures(Constants.RC, rcGestures.root, new ArrayList<>());
+        writeGestures(Constants.LC, lcGestures.root, new ArrayList<>());
         try (FileWriter writer = new FileWriter(gestureStoreFile.getPath())) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(gestureStore, writer);
@@ -176,11 +166,21 @@ public class Gestures {
     private HashMap<Integer, String> getGestureMapping(String vrDevice) {
         HashMap<Integer, String> gestureMapping = new HashMap<>();
         switch(vrDevice) {
-            case "HMD" -> gestureMapping = hmdGestureMapping;
-            case "RC"  -> gestureMapping = rcGestureMapping;
-            case "LC"  -> gestureMapping = lcGestureMapping;
+            case Constants.HMD -> gestureMapping = hmdGestureMapping;
+            case Constants.RC  -> gestureMapping = rcGestureMapping;
+            case Constants.LC  -> gestureMapping = lcGestureMapping;
         }
         return gestureMapping;
+    }
+
+    private RadixTree getRadixTree(String vrDevice) {
+        RadixTree gestureTree = null;
+        switch(vrDevice) {
+            case Constants.HMD -> gestureTree = hmdGestures;
+            case Constants.RC  -> gestureTree = rcGestures;
+            case Constants.LC  -> gestureTree = lcGestures;
+        }
+        return gestureTree;
     }
 
     // Gson 2.8.9 workaround for Java records
