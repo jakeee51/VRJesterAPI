@@ -1,5 +1,155 @@
 {
   "GESTURES": {
+    "LOWER": {
+      "RC": [
+        {
+          "vrDevice": "RC",
+          "movement": "down",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ],
+      "LC": [
+        {
+          "vrDevice": "LC",
+          "movement": "down",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ]
+    },
+    "RAISE": {
+      "RC": [
+        {
+          "vrDevice": "RC",
+          "movement": "up",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ],
+      "LC": [
+        {
+          "vrDevice": "LC",
+          "movement": "up",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ]
+    },
+    "GROW": {
+      "RC": [
+        {
+          "vrDevice": "RC",
+          "movement": "right",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ],
+      "LC": [
+        {
+          "vrDevice": "LC",
+          "movement": "left",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ]
+    },
+    "SHRINK": {
+      "RC": [
+        {
+          "vrDevice": "RC",
+          "movement": "left",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ],
+      "LC": [
+        {
+          "vrDevice": "LC",
+          "movement": "right",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ]
+    },
+    "BURST": {
+      "RC": [
+        {
+          "vrDevice": "RC",
+          "movement": "forward",
+          "elapsedTime": 2000,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ],
+      "LC": [
+        {
+          "vrDevice": "LC",
+          "movement": "forward",
+          "elapsedTime": 2000,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ]
+    },
     "PUSH": {
       "RC": [
         {
@@ -19,6 +169,36 @@
         {
           "vrDevice": "LC",
           "movement": "forward",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ]
+    },
+    "PULL": {
+      "RC": [
+        {
+          "vrDevice": "RC",
+          "movement": "back",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "f_82479_": 0.0,
+            "f_82480_": 0.0,
+            "f_82481_": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ],
+      "LC": [
+        {
+          "vrDevice": "LC",
+          "movement": "back",
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {

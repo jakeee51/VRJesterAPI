@@ -89,7 +89,7 @@ public class TriggerEventHandler {
                 }
 //                dataDebugger(vrDataRoomPre);
             }
-
+            // TODO - Setup delay before triggering/sending GestureEvent
 //            if (sleep % 20 == 0) // Print every 1 second
 //                System.out.println("JESTER LISTENING");
 //            if (sleep == 0) { // Reset trigger when done

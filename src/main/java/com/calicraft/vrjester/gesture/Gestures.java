@@ -73,7 +73,7 @@ public class Gestures {
             }
         }
 
-//        System.out.println("GESTURE NAMESPACE: " + gestureNameSpace);
+        System.out.println("GESTURE NAMESPACE: " + gestureNameSpace);
 //        System.out.println("LOADED GESTURES:");
 //        hmdGestures.printAllGestures(hmdGestureMapping);
 //        rcGestures.printAllGestures(rcGestureMapping);
