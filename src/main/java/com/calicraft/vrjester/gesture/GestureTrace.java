@@ -153,9 +153,9 @@ public class GestureTrace {
         back = new Vec3(-faceDirection.x, faceDirection.y, -faceDirection.z);
         right = new Vec3(-faceDirection.z, faceDirection.y, faceDirection.x);
         left = new Vec3(faceDirection.z, faceDirection.y, -faceDirection.x);
-        frontRight = (Vec3) front.yRot(Constants.DEGREE_SPAN);
-        frontLeft = (Vec3) front.yRot(-Constants.DEGREE_SPAN);
-        backRight = (Vec3) back.yRot(Constants.DEGREE_SPAN);
-        backLeft = (Vec3) back.yRot(-Constants.DEGREE_SPAN);
+        frontRight = front.yRot(Constants.DEGREE_SPAN);
+        frontLeft = front.yRot(-Constants.DEGREE_SPAN);
+        backRight = back.yRot(Constants.DEGREE_SPAN);
+        backLeft = back.yRot(-Constants.DEGREE_SPAN);
     }
 }
