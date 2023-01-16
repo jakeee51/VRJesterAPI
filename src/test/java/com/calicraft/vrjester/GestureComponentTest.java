@@ -1,25 +1,82 @@
 package com.calicraft.vrjester;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.calicraft.vrjester.config.Config;
+import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.gesture.GestureComponent;
-import net.minecraft.gametest.framework.GameTest;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraftforge.gametest.GameTestHolder;
-import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import com.calicraft.vrjester.gesture.Gestures;
+import com.calicraft.vrjester.gesture.Recognition;
+import com.calicraft.vrjester.handlers.TriggerEventHandler;
+import net.minecraft.world.phys.Vec3;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import java.sql.SQLOutput;
 
-import static com.calicraft.vrjester.VrJesterApi.MOD_ID;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-@GameTestHolder(MOD_ID)
-public class GestureComponentTest {
-    @GameTest
-    public static void exampleTest(GameTestHelper helper) {
-        System.out.println("MADE IT");
-        GestureComponent gestureComponent = null;
-        helper.succeed();
+
+
+class GestureComponentTest {
+    private static final Config devConfig = Config.readConfig(Constants.DEV_CONFIG_PATH);
+    private static final Gestures gestures = new Gestures(devConfig);
+    private static final Recognition recognition = new Recognition(gestures);
+
+    private void checkDevConfig() {
+        if (devConfig.READ_DATA) {
+            gestures.clear();
+            gestures.load();
+        }
+        if (devConfig.WRITE_DATA)
+            gestures.write();
+    }
+    @Test
+    @DisplayName("0 + 1 = 1")
+    void addsTwoNumbers() {
+        assertEquals(1, 1);
+    }
+    @Test
+    @DisplayName("0 + 1 = 1")
+    void add() {
+        int first = 0;
+        int second = 1;
+        int expectedResult = first + second;
+        int Result = 1;
+        assertEquals(Result, expectedResult);
     }
 
-    // Class name is not prepended, template name is not specified
-    // Template Location at 'modid:exampletest2'
-    @PrefixGameTestTemplate(false)
-    @GameTest
-    public static void exampleTest2(GameTestHelper helper) { /*...*/ }
+    @Test
+    void testStrikeGesture() {
+        checkDevConfig();
+        List<GestureComponent> hmdGesture = new ArrayList<>();
+        List<GestureComponent> rcGesture = new ArrayList<>();
+        List<GestureComponent> lcGesture = new ArrayList<>();
+        Vec3 dir = new Vec3((0),(0),(0));
+        HashMap<String, Integer> devices = new HashMap<>();
+        GestureComponent gestureComponent1 = new GestureComponent("RC", "forward",
+                0, 0.0, dir, devices);
+        rcGesture.add(gestureComponent1);
+        Gesture strikeGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
+        assertEquals("STRIKE", recognition.recognize(strikeGesture));
+    }
+    @Test
+    void testPushGesture() {
+        checkDevConfig();
+        List<GestureComponent> hmdGesture = new ArrayList<>();
+        List<GestureComponent> rcGesture = new ArrayList<>();
+        List<GestureComponent> lcGesture = new ArrayList<>();
+        Vec3 dir = new Vec3((0),(0),(0));
+        HashMap<String, Integer> devices = new HashMap<>();
+        GestureComponent gestureComponent1 = new GestureComponent("LC", "forward",
+                0, 0.0, dir, devices);
+        GestureComponent gestureComponent2 = new GestureComponent("RC", "forward",
+                0, 0.0, dir, devices);
+        rcGesture.add(gestureComponent2);
+        lcGesture.add(gestureComponent1);
+        Gesture PushGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
+        assertEquals("PUSH", recognition.recognize(PushGesture));
+    }
 }
