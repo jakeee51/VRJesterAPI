@@ -6,8 +6,6 @@ import java.util.HashMap;
 
 public class GestureStore {
     // Class for formatting the Gestures to be stored using Gson into a JSON file
-    // TODO - Reformat to allow gestures to be recognized based on the specified VRDevices.
-    //  Devs should be able to recognize gestures dependent AND independent from other VRDevices.
 
     public HashMap<String, HashMap<String, List<GestureComponent>>> GESTURES = new HashMap<>();
 

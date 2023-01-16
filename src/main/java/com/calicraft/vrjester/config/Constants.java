@@ -1,5 +1,8 @@
 package com.calicraft.vrjester.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Constants {
     public static final String CONFIG_PATH = "config/VRJesterAPI.cfg";
     public static final String GESTURE_STORE_PATH = "config/gesture_store.json";
@@ -26,4 +29,5 @@ public abstract class Constants {
     public static final String RC = "right_controller";
     public static final String LC = "left_controller";
     public static final String C2 = "extra_tracker";
+    public static final List<String> DEVICES = List.of(HMD, RC, LC);
 }

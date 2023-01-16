@@ -6,6 +6,26 @@
 	"DISPLAY_VOX": "false",
 	"VOX_LENGTH": "0.4",
 	"GESTURES": {
+		"LOWER": {
+			"velocity": "1.0",
+			"rcParticle": "5",
+			"lcParticle": "5"
+		},
+		"RAISE": {
+			"velocity": "1.0",
+			"rcParticle": "4",
+			"lcParticle": "4"
+		},
+		"GROW": {
+			"velocity": "0.5",
+			"rcParticle": "1",
+			"lcParticle": "1"
+		},
+		"SHRINK": {
+			"velocity": "0.0",
+			"rcParticle": "2",
+			"lcParticle": "2"
+		},
 		"PUSH": {
 			"velocity": "1.0",
 			"rcParticle": "0",
@@ -23,13 +43,18 @@
 		},
 		"BURST": {
 			"velocity": "1.0",
-			"rcParticle": "2",
-			"lcParticle": "-1"
+			"rcParticle": "3",
+			"lcParticle": "3"
+		},
+		"STRIKE": {
+			"velocity": "1.0",
+			"rcParticle": "0",
+			"lcParticle": "0"
 		}
 	},
 	"LOG": {
 		"name": "vrdata",
-		"gesture": "BURST",
+		"gesture": "GESTURE 1",
 		"devices": ["rc", "lc"],
 		"pose": "0"
 	}

@@ -78,12 +78,6 @@ public record GestureComponent(String vrDevice, String movement,
         }
     }
 
-    private static boolean isValidDevice(String vrDevice, String otherDevice) {
-        List<String> devices = Arrays.asList(vrDevice.split("\\|"));
-        System.out.println("devices: " + devices + " -> otherDevice: " + otherDevice);
-        return devices.contains(otherDevice);
-    }
-
     // Check if traced gesture has the same devices within proximity of the stored gesture
     private static boolean isWithinProximity(Map<String, Integer> devices, Map<String, Integer> otherDevices) {
         if (devices.isEmpty())

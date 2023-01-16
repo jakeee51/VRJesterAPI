@@ -1,5 +1,7 @@
 package com.calicraft.vrjester.gesture;
 
+import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.gesture.radix.RadixTree;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.vox.Vox;
@@ -105,5 +107,15 @@ public class Gesture {
 
     public List<GestureComponent> getLcGesture() {
         return lcGesture;
+    }
+
+    public List<GestureComponent> getGesture(String vrDevice) {
+        List<GestureComponent> gesture = new ArrayList<>();
+        switch(vrDevice) {
+            case Constants.HMD -> gesture = hmdGesture;
+            case Constants.RC  -> gesture = rcGesture;
+            case Constants.LC  -> gesture = lcGesture;
+        }
+        return gesture;
     }
 }
