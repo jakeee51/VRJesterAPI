@@ -21,8 +21,8 @@ public record GestureComponent(String vrDevice, String movement,
 
     @Override
     public String toString() {
-        return String.format("Path[ %s | movement=%s | time=%d | speed=%.2f | direction=%s]",
-                vrDevice, movement, elapsedTime, speed, direction);
+        return String.format("Path[ %s | movement=%s | time=%d | speed=%.2f | direction=(%.2f, %.2f, %.2f)]",
+                vrDevice, movement, elapsedTime, speed, direction.x, direction.y, direction.z);
     }
 
     @Override
