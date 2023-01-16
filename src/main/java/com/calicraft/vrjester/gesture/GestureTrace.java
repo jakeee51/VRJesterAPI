@@ -41,7 +41,7 @@ public class GestureTrace {
     // Convert Track object to GestureComponent
     public GestureComponent toGestureComponent() {
         return new GestureComponent(getVrDevice(), getMovement(), getElapsedTime(),
-                getSpeed(), getDirection(), getDevicesInProximity());
+                getSpeed(), new com.calicraft.vrjester.utils.tools.Vec3(getDirection()), getDevicesInProximity());
     }
 
     public String getVoxId() {
@@ -139,15 +139,23 @@ public class GestureTrace {
         setDirection(end[1]);
     }
 
+    // Set all final values resulting from a VRDevice moving into a new Vox
+    public void completeIdleTrace(Vec3[] end) {
+        // Note: After this executes, it is ready to be converted into a GestureComponent
+        setElapsedTime(System.nanoTime());
+        setSpeed(end[0]);
+        setDirection(end[1]);
+    }
+
     // Set all movement directional buckets used to determine movement
     private void setMovementBuckets(Vec3 faceDirection) {
         front = faceDirection;
         back = new Vec3(-faceDirection.x, faceDirection.y, -faceDirection.z);
         right = new Vec3(-faceDirection.z, faceDirection.y, faceDirection.x);
         left = new Vec3(faceDirection.z, faceDirection.y, -faceDirection.x);
-        frontRight = front.yRot(Constants.DEGREE_SPAN);
-        frontLeft = front.yRot(-Constants.DEGREE_SPAN);
-        backRight = back.yRot(Constants.DEGREE_SPAN);
-        backLeft = back.yRot(-Constants.DEGREE_SPAN);
+        frontRight = (Vec3) front.yRot(Constants.DEGREE_SPAN);
+        frontLeft = (Vec3) front.yRot(-Constants.DEGREE_SPAN);
+        backRight = (Vec3) back.yRot(Constants.DEGREE_SPAN);
+        backLeft = (Vec3) back.yRot(-Constants.DEGREE_SPAN);
     }
 }

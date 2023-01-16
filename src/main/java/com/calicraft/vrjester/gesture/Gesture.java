@@ -1,7 +1,6 @@
 package com.calicraft.vrjester.gesture;
 
 import com.calicraft.vrjester.config.Constants;
-import com.calicraft.vrjester.gesture.radix.RadixTree;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.vox.Vox;
@@ -78,17 +77,18 @@ public class Gesture {
 
     // Record the Vox trace of each VRDevice and return the resulting data
     public void track(VRDataState vrDataRoomPre) {
+        // TODO - Implement way to store idle gesture trace if VRDevice never exited Vox
         for (Vox vox: voxList) { // Loop through each VRDevice's Vox
             Vec3[] currentPoint = vox.generateVox(vrDataRoomPre);
             int[] currentId = vox.getId();
-            if (!Arrays.equals(vox.getPreviousId(), currentId)) { // Append Vox's new GestureComponent object to VRDevice
+            if (!Arrays.equals(vox.getPreviousId(), currentId)) {
                 vox.setPreviousId(currentId.clone());
                 GestureTrace gestureTrace = vox.getTrace();
                 gestureTrace.completeTrace(currentPoint);
 //                System.out.println("BEFORE: " + vox.getName() + ": " + trace.toString());
                 vox.beginTrace(currentPoint);
 //                System.out.println("AFTER: " + vox.getName() + ": " + vox.getTrace().toString());
-                switch (vox.getVrDevice()) {
+                switch (vox.getVrDevice()) {  // Append a Vox trace's new GestureComponent object per VRDevice
                     case HMD -> hmdGesture.add(gestureTrace.toGestureComponent());
                     case RC  -> rcGesture.add(gestureTrace.toGestureComponent());
                     case LC  -> lcGesture.add(gestureTrace.toGestureComponent());

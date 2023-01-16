@@ -68,8 +68,13 @@ public class Gestures {
         if (gestureStore != null) {
             Set<String> gestureNames = gestureStore.GESTURES.keySet();
             for (String gestureName: gestureNames) { // Iterate through & store each gesture
-                Gesture gesture = new Gesture(gestureStore.GESTURES.get(gestureName));
-                store(gesture, gestureName);
+                try {
+                    Gesture gesture = new Gesture(gestureStore.GESTURES.get(gestureName));
+                    store(gesture, gestureName);
+                } catch (NullPointerException e) {
+                    System.err.println(e);
+                    System.out.println("SKIPPING LOADING GESTURE: " + gestureName);
+                }
             }
         }
 

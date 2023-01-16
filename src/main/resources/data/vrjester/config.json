@@ -12,7 +12,7 @@
 			"lcParticle": "5"
 		},
 		"RAISE": {
-			"velocity": "1.0",
+			"velocity": "0.5",
 			"rcParticle": "4",
 			"lcParticle": "4"
 		},
@@ -50,6 +50,11 @@
 			"velocity": "1.0",
 			"rcParticle": "0",
 			"lcParticle": "0"
+		},
+		"UPPERCUT": {
+			"velocity": "0.25",
+			"rcParticle": "3",
+			"lcParticle": "3"
 		}
 	},
 	"LOG": {

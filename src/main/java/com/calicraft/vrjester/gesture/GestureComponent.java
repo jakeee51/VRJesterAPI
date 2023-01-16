@@ -1,6 +1,6 @@
 package com.calicraft.vrjester.gesture;
 
-import net.minecraft.world.phys.Vec3;
+import com.calicraft.vrjester.utils.tools.Vec3;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -21,8 +21,8 @@ public record GestureComponent(String vrDevice, String movement,
 
     @Override
     public String toString() {
-        return String.format("Path[ %s | movement=%s | time=%d | speed=%.2f ]",
-                vrDevice, movement, elapsedTime, speed);
+        return String.format("Path[ %s | movement=%s | time=%d | speed=%.2f | direction=%s]",
+                vrDevice, movement, elapsedTime, speed, direction);
     }
 
     @Override
@@ -38,11 +38,11 @@ public record GestureComponent(String vrDevice, String movement,
         } else if (!(obj instanceof GestureComponent other)) {
             return false;
         } else {
-            // TODO - Account for direction
             return Objects.equals(vrDevice, other.vrDevice) &&
                    Objects.equals(movement, other.movement) &&
                    Objects.equals(elapsedTime, other.elapsedTime) &&
                    Objects.equals(speed, other.speed) &&
+                   Objects.equals(direction, other.direction) &&
                    Objects.equals(devicesInProximity.keySet(), other.devicesInProximity.keySet());
         }
     }

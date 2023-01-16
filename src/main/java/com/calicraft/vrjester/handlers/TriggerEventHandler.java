@@ -17,7 +17,7 @@ import com.calicraft.vrjester.utils.vrdata.VRDataWriter;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.phys.Vec3;
+import com.calicraft.vrjester.utils.tools.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -42,11 +42,12 @@ public class TriggerEventHandler {
     private static final Config config = Config.readConfig(Constants.CONFIG_PATH);
     private static final VRDataAggregator preRoomDataAggregator = new VRDataAggregator(VRDataType.VRDATA_ROOM_PRE, false);
     private static final VRDataAggregator preWorldDataAggregator = new VRDataAggregator(VRDataType.VRDATA_WORLD_PRE, false);
-    private static final int DELAY = 20; // 1 second
-    private static int sleep = 2 * DELAY; // 2 seconds
+    private static final int DELAY = 15; // 0.75 second (15 ticks)
+    private static int sleep = DELAY; // 0.75 seconds
     private static int iter = 0;
     private static boolean listener = false;
     private long elapsedTime = 0;
+    private static String previousGesture = "";
     private static Gesture gesture;
     private static final Gestures gestures = new Gestures(devConfig);
     private static final Recognition recognition = new Recognition(gestures);
@@ -80,24 +81,37 @@ public class TriggerEventHandler {
                 gesture.track(vrDataRoomPre);
                 if (devConfig.RECOGNIZE_ON.equals("RECOGNIZE")) {
                     HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
-                    if (!recognizedGesture.isEmpty()) {
+                    if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
+                        previousGesture = recognizedGesture.get("gestureName");
                         MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
-                        sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
-                        test.trigger(recognizedGesture, vrDataWorldPre, devConfig);
-                        listener = false; gesture = null;
+//                        sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
+//                        test.trigger(recognizedGesture, vrDataWorldPre, devConfig);
+//                        listener = false; gesture = null;
                     }
                 }
 //                dataDebugger(vrDataRoomPre);
             }
-            // TODO - Setup delay before triggering/sending GestureEvent
-//            if (sleep % 20 == 0) // Print every 1 second
-//                System.out.println("JESTER LISTENING");
-//            if (sleep == 0) { // Reset trigger when done
-//                System.out.println("JESTER DONE LISTENING");
-//                sleep = 2 * DELAY;
-//                data.clear(); listener = false;
-//            }
-//            sleep--;
+            // TODO - Only make gesture stop listening after like 10 seconds
+            if (devConfig.RECOGNIZE_ON.equals("RECOGNIZE")) {
+                HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
+                if (sleep != 0) { // Execute every tick
+                    if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) { // Reset ticker to extend listening time
+                        previousGesture = recognizedGesture.get("gestureName");
+                        MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
+                        sleep = DELAY;
+                    }
+                } else { // Reset trigger when done
+                    System.out.println("JESTER DONE LISTENING");
+                    sleep = DELAY;
+                    if (!recognizedGesture.isEmpty()) {
+                        MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
+                        sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
+                        test.trigger(recognizedGesture, vrDataWorldPre, devConfig);
+                        listener = false; gesture = null; previousGesture = "";
+                    }
+                }
+                sleep--;
+            }
         }
     }
 
@@ -137,14 +151,23 @@ public class TriggerEventHandler {
             HashMap<String, Integer> devices = new HashMap<>();
             GestureComponent gestureComponent1 = new GestureComponent("RC", "forward",
                     0, 0.0, dir, devices);
-            GestureComponent gestureComponent2 = new GestureComponent("LC", "forward",
+            GestureComponent gestureComponent2 = new GestureComponent("RC", "up",
+                    0, 0.0, dir, devices);
+            GestureComponent gestureComponent3 = new GestureComponent("RC", "idle",
+                    0, 0.0, dir, devices);
+            GestureComponent gestureComponent4 = new GestureComponent("LC", "idle",
                     0, 0.0, dir, devices);
             rcGesture.add(gestureComponent1);
             Gesture strikeGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
             System.out.println("RECOGNIZED: " + recognition.recognize(strikeGesture));
-            lcGesture.add(gestureComponent2);
-            Gesture pushGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
-            System.out.println("RECOGNIZED: " + recognition.recognize(pushGesture));
+            rcGesture.add(gestureComponent2);
+            Gesture uppercutGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
+            System.out.println("RECOGNIZED: " + recognition.recognize(uppercutGesture));
+            rcGesture.clear(); lcGesture.clear();
+            rcGesture.add(gestureComponent3);
+            lcGesture.add(gestureComponent4);
+            Gesture blockGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
+            System.out.println("RECOGNIZED: " + recognition.recognize(blockGesture));
         }
     }
 

@@ -8,9 +8,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -22,9 +22,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -38,9 +38,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -52,9 +52,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -68,9 +68,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -82,9 +82,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -98,9 +98,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -112,9 +112,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -128,9 +128,9 @@
           "elapsedTime": 2000,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -142,9 +142,9 @@
           "elapsedTime": 2000,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -158,9 +158,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -172,9 +172,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -188,9 +188,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -202,9 +202,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -218,9 +218,37 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "devicesInProximity": {}
+        }
+      ]
+    },
+    "UPPERCUT": {
+      "RC|LC": [
+        {
+          "vrDevice": "RC|LC",
+          "movement": "forward",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "devicesInProximity": {}
+        },
+        {
+          "vrDevice": "RC|LC",
+          "movement": "up",
+          "elapsedTime": 0,
+          "speed": 0.0,
+          "direction": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }
@@ -234,9 +262,9 @@
           "elapsedTime": 0,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         },
@@ -246,9 +274,9 @@
           "elapsedTime": 2500,
           "speed": 0.0,
           "direction": {
-            "f_82479_": 0.0,
-            "f_82480_": 0.0,
-            "f_82481_": 0.0
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "devicesInProximity": {}
         }

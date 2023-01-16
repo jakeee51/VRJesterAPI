@@ -1,23 +1,20 @@
 package com.calicraft.vrjester;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.gesture.GestureComponent;
 import com.calicraft.vrjester.gesture.Gestures;
 import com.calicraft.vrjester.gesture.Recognition;
-import com.calicraft.vrjester.handlers.TriggerEventHandler;
-import net.minecraft.world.phys.Vec3;
+import com.calicraft.vrjester.utils.tools.Vec3;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.sql.SQLOutput;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class GestureComponentTest {
@@ -33,20 +30,6 @@ class GestureComponentTest {
         if (devConfig.WRITE_DATA)
             gestures.write();
     }
-    @Test
-    @DisplayName("0 + 1 = 1")
-    void addsTwoNumbers() {
-        assertEquals(1, 1);
-    }
-    @Test
-    @DisplayName("0 + 1 = 1")
-    void add() {
-        int first = 0;
-        int second = 1;
-        int expectedResult = first + second;
-        int Result = 1;
-        assertEquals(Result, expectedResult);
-    }
 
     @Test
     void testStrikeGesture() {
@@ -60,8 +43,9 @@ class GestureComponentTest {
                 0, 0.0, dir, devices);
         rcGesture.add(gestureComponent1);
         Gesture strikeGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
-        assertEquals("STRIKE", recognition.recognize(strikeGesture));
+        assertEquals("STRIKE", recognition.recognize(strikeGesture).get("gestureName"));
     }
+
     @Test
     void testPushGesture() {
         checkDevConfig();
@@ -77,6 +61,6 @@ class GestureComponentTest {
         rcGesture.add(gestureComponent2);
         lcGesture.add(gestureComponent1);
         Gesture PushGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
-        assertEquals("PUSH", recognition.recognize(PushGesture));
+        assertEquals("PUSH", recognition.recognize(PushGesture).get("gestureName"));
     }
 }
