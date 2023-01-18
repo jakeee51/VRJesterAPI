@@ -1,6 +1,5 @@
 package com.calicraft.vrjester.config;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Constants {
@@ -23,7 +22,8 @@ public abstract class Constants {
 
     public static final float MAX_LISTENING_TIME = 6.0F;
 
-    public static final float DEGREE_SPAN = 45.0F;
+    public static final float MOVEMENT_DEGREE_SPAN = 45.0F;
+    public static final float DIRECTION_DEGREE_SPAN = 30.0F;
 
     public static final String HMD = "head_mounted_display";
     public static final String RC = "right_controller";

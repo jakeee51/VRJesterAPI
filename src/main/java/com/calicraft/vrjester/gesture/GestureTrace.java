@@ -65,21 +65,21 @@ public class GestureTrace {
         // TODO - Divide Constants.DEGREE_SPAN by 2 after adding diagonals handler
         if (!movement.equals("idle")) {
             // TODO - Possibly handle diagonal ups and downs using concatenation
-        } else if (getAngle2D(front, gestureDirection) <= Constants.DEGREE_SPAN) {
+        } else if (getAngle2D(front, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
             movement = "forward";
-        } else if (getAngle2D(back, gestureDirection) <= Constants.DEGREE_SPAN) {
+        } else if (getAngle2D(back, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
             movement = "back";
-        } else if (getAngle2D(right, gestureDirection) <= Constants.DEGREE_SPAN) {
+        } else if (getAngle2D(right, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
             movement = "right";
-        } else if (getAngle2D(left, gestureDirection) <= Constants.DEGREE_SPAN) {
+        } else if (getAngle2D(left, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
             movement = "left";
-        } else if (getAngle2D(frontRight, gestureDirection) <= Constants.DEGREE_SPAN) {
+        } else if (getAngle2D(frontRight, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
             movement = "forward_right";
-        } else if (getAngle2D(frontLeft, gestureDirection) <= Constants.DEGREE_SPAN) {
+        } else if (getAngle2D(frontLeft, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
             movement = "forward_left";
-        } else if (getAngle2D(backRight, gestureDirection) <= Constants.DEGREE_SPAN) {
+        } else if (getAngle2D(backRight, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
             movement = "back_right";
-        } else if (getAngle2D(backLeft, gestureDirection) <= Constants.DEGREE_SPAN) {
+        } else if (getAngle2D(backLeft, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
             movement = "back_left";
         } else {
             System.out.println("NO MOVEMENT RECOGNIZED!");
@@ -153,9 +153,9 @@ public class GestureTrace {
         back = new Vec3(-faceDirection.x, faceDirection.y, -faceDirection.z);
         right = new Vec3(-faceDirection.z, faceDirection.y, faceDirection.x);
         left = new Vec3(faceDirection.z, faceDirection.y, -faceDirection.x);
-        frontRight = (Vec3) front.yRot(Constants.DEGREE_SPAN);
-        frontLeft = (Vec3) front.yRot(-Constants.DEGREE_SPAN);
-        backRight = (Vec3) back.yRot(Constants.DEGREE_SPAN);
-        backLeft = (Vec3) back.yRot(-Constants.DEGREE_SPAN);
+        frontRight = (Vec3) front.yRot(Constants.MOVEMENT_DEGREE_SPAN);
+        frontLeft = (Vec3) front.yRot(-Constants.MOVEMENT_DEGREE_SPAN);
+        backRight = (Vec3) back.yRot(Constants.MOVEMENT_DEGREE_SPAN);
+        backLeft = (Vec3) back.yRot(-Constants.MOVEMENT_DEGREE_SPAN);
     }
 }

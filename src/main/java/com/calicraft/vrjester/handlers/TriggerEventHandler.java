@@ -107,7 +107,7 @@ public class TriggerEventHandler {
                         MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                         sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
                         test.trigger(recognizedGesture, vrDataWorldPre, devConfig);
-                        listener = false; gesture = null; previousGesture = "";
+                        listener = false; previousGesture = "";
                     }
                 }
                 sleep--;

@@ -16,14 +16,14 @@ public class Calcs {
         return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2) + Math.pow(v.z, 2));
     }
 
-    // Get angle between two 2D vectors
+    // Get angle between two 2D vectors and return in ° (degrees)
     public static double getAngle2D(Vec3 v1, Vec3 v2) {
         double dotProduct = v1.multiply((1), (0), (1)).dot(v2.multiply((1), (0), (1)));
         double radians = dotProduct / (getMagnitude2D(v1) * getMagnitude2D(v2));
         return Math.toDegrees(Math.acos(radians));
     }
 
-    // Get angle between two 3D vectors
+    // Get angle between two 3D vectors and return in ° (degrees)
     public static double getAngle3D(Vec3 v1, Vec3 v2) {
         double dotProduct = v1.dot(v2);
         double radians = dotProduct / (getMagnitude3D(v1) * getMagnitude3D(v2));
