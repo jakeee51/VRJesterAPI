@@ -1,6 +1,5 @@
 package com.calicraft.vrjester.gesture.radix;
 
-import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.GestureComponent;
 import com.calicraft.vrjester.utils.tools.Calcs;
 import com.calicraft.vrjester.utils.tools.Vec3;
@@ -31,20 +30,28 @@ public class Node {
         return paths.size();
     }
 
-    public Path getMatchededPath(GestureComponent transitionPath) {
+    public Path getMatchedPath(GestureComponent transitionPath) {
         Path newTransition = null;
         long maxTime = 0; double maxSpeed = 0.0;
-        double minDegree = 180.0D;
+        double minDegree = 180.0D; Vec3 anyDirection = new Vec3(0,0,0);
         for (GestureComponent gestureComponent : paths.keySet()) {
+//            System.out.println("MATCHES: " + gestureComponent.matches(transitionPath));
+//            System.out.println("gestureComponent: " + gestureComponent);
+//            System.out.println("transitionPath: " + transitionPath);
             if (gestureComponent.matches(transitionPath)) {
                 MetaData gestureMetaData = new MetaData(
                         gestureComponent.elapsedTime(), gestureComponent.speed(),
                         gestureComponent.direction(), gestureComponent.devicesInProximity());
+//                System.out.println("HERE: " + gestureMetaData.isClosestFit(maxTime, maxSpeed, minDegree, transitionPath.direction()));
+//                System.out.println("minDegree: " + minDegree);
                 if (gestureMetaData.isClosestFit(maxTime, maxSpeed, minDegree, transitionPath.direction())) {
                     maxTime = gestureComponent.elapsedTime();
                     maxSpeed = gestureComponent.speed();
-                    minDegree = Calcs.getAngle3D(gestureComponent.direction(), transitionPath.direction());
+                    if (!gestureComponent.direction().equals(anyDirection)) {
+                        minDegree = Calcs.getAngle3D(gestureComponent.direction(), transitionPath.direction());
+                    }
                     newTransition = paths.get(gestureComponent);
+//                    System.out.println("NEW minDegree: " + minDegree);
                 }
             }
         }

@@ -35,7 +35,7 @@ public class RadixTree {
         return NO_MISMATCH;
     }
 
-    //Helpful method to debug and to see all the gestures
+    // Helpful method to debug and to see all the gestures
     public void printAllGestures(HashMap<Integer, String> gestureMapping) {
         printAllGestures(root, new ArrayList<>(), gestureMapping);
     }
@@ -48,6 +48,7 @@ public class RadixTree {
             printAllGestures(path.next, GestureComponent.concat(result, path.gesture), gestureMapping);
     }
 
+    // Helpful method to debug and to see all the gestures' paths in tree format
     public void printAllPaths() {
         printAllPaths(root, "");
     }
@@ -164,7 +165,7 @@ public class RadixTree {
         int currIndex = 0;
         while (currIndex < gesture.size()) {
             GestureComponent currentGestureComponent = gesture.get(currIndex);
-            Path path = current.getMatchededPath(currentGestureComponent);
+            Path path = current.getMatchedPath(currentGestureComponent);
             if (path == null)
                 return null;
 

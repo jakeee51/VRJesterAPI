@@ -1,6 +1,9 @@
-package com.calicraft.vrjester.gesture;
+package com.calicraft.vrjester.gesture.recognition;
 
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.gesture.Gesture;
+import com.calicraft.vrjester.gesture.GestureComponent;
+import com.calicraft.vrjester.gesture.Gestures;
 
 import java.util.HashMap;
 import java.util.List;

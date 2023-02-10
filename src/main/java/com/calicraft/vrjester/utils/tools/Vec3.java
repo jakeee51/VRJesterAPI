@@ -1,7 +1,6 @@
 package com.calicraft.vrjester.utils.tools;
 
 import com.mojang.math.Vector3f;
-import net.minecraft.core.Position;
 import org.jetbrains.annotations.NotNull;
 
 public class Vec3 extends net.minecraft.world.phys.Vec3 {

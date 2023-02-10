@@ -51,6 +51,11 @@
 			"rcParticle": "0",
 			"lcParticle": "0"
 		},
+		"BLOCK": {
+			"velocity": "0.5",
+			"rcParticle": "3",
+			"lcParticle": "3"
+		},
 		"UPPERCUT": {
 			"velocity": "0.25",
 			"rcParticle": "3",

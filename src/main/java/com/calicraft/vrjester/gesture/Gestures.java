@@ -3,9 +3,9 @@ package com.calicraft.vrjester.gesture;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.radix.Node;
-import com.calicraft.vrjester.gesture.radix.RadixTree;
 import com.calicraft.vrjester.gesture.radix.Path;
-import com.calicraft.vrjester.utils.vrdata.VRDevice;
+import com.calicraft.vrjester.gesture.radix.RadixTree;
+import com.calicraft.vrjester.utils.tools.GestureComponentDeserializer;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -51,7 +51,8 @@ public class Gestures {
             }
             myReader.close();
             GsonBuilder builder = new GsonBuilder();
-            builder.registerTypeAdapterFactory(new RecordTypeAdapterFactory());
+//            builder.registerTypeAdapterFactory(new RecordTypeAdapterFactory());
+            builder.registerTypeAdapter(GestureComponent.class, new GestureComponentDeserializer());
             builder.setPrettyPrinting();
             Gson gson = builder.create();
             return gson.fromJson(sb.toString(), GestureStore.class);
@@ -69,6 +70,8 @@ public class Gestures {
             Set<String> gestureNames = gestureStore.GESTURES.keySet();
             for (String gestureName: gestureNames) { // Iterate through & store each gesture
                 try {
+                    if (gestureName.equals("BLOCK"))
+                        System.out.println("RC BLOCK GESTURE:" + gestureStore.GESTURES.get(gestureName).get("RC"));
                     Gesture gesture = new Gesture(gestureStore.GESTURES.get(gestureName));
                     store(gesture, gestureName);
                 } catch (NullPointerException e) {
@@ -215,16 +218,18 @@ public class Gestures {
                         var recordComponents = clazz.getRecordComponents();
                         var typeMap = new HashMap<String,TypeToken<?>>();
                         for (int i = 0; i < recordComponents.length; i++) {
+//                            System.out.println("HERE-> Name:" + recordComponents[i].getName() + " | Type: " + TypeToken.get(recordComponents[i].getGenericType()));
                             typeMap.put(recordComponents[i].getName(), TypeToken.get(recordComponents[i].getGenericType()));
                         }
                         var argsMap = new HashMap<String,Object>();
                         reader.beginObject();
                         while (reader.hasNext()) {
                             String name = reader.nextName();
-                            argsMap.put(name, gson.getAdapter(typeMap.get(name)).read(reader));
+                            TypeAdapter<?> a = gson.getAdapter(typeMap.get(name));
+                            argsMap.put(name, a.read(reader));
                         }
+                        System.out.println("argsMap: " + argsMap);
                         reader.endObject();
-
                         var argTypes = new Class<?>[recordComponents.length];
                         var args = new Object[recordComponents.length];
                         for (int i = 0; i < recordComponents.length; i++) {

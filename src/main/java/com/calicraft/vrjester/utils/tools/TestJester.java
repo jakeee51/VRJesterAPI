@@ -1,5 +1,7 @@
-package com.calicraft.vrjester.config;
+package com.calicraft.vrjester.utils.tools;
 
+import com.calicraft.vrjester.config.Config;
+import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -9,13 +11,13 @@ import java.util.HashMap;
 
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.moveParticles;
 
-public class Test {
+public class TestJester {
 
     private static final SimpleParticleType[] particleTypes = new SimpleParticleType[]{ParticleTypes.FLAME,
             ParticleTypes.SOUL_FIRE_FLAME, ParticleTypes.DRAGON_BREATH, ParticleTypes.CLOUD, ParticleTypes.BUBBLE_POP,
             ParticleTypes.FALLING_WATER};
 
-    public Test() {}
+    public TestJester() {}
 
     public void trigger(HashMap<String, String> gesture, VRDataState vrDataWorldPre, Config config) {
         Config.GestureContext gestureCtx = config.GESTURES.get(gesture.get("gestureName"));
