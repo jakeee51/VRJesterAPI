@@ -77,7 +77,8 @@ public class Gesture {
 
     // Record the Vox trace of each VRDevice and return the resulting data
     public void track(VRDataState vrDataRoomPre) {
-        // TODO - Implement way to store idle gesture trace if VRDevice never exited Vox
+        // TODO - Implement way to store idle gesture trace if VRDevice never exited Vox.
+        //  Also make way to specify starter GestureTrace
         for (Vox vox: voxList) { // Loop through each VRDevice's Vox
             Vec3[] currentPoint = vox.generateVox(vrDataRoomPre);
             int[] currentId = vox.getId();

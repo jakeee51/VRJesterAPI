@@ -1,4 +1,4 @@
-package com.calicraft.vrjester.gesture;
+package com.calicraft.vrjester.gesture.recognition;
 
 public record RecognizedGesture(
         String gestureName,

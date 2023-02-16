@@ -4,11 +4,11 @@ import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.api.GestureEvent;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
-import com.calicraft.vrjester.config.Test;
+import com.calicraft.vrjester.utils.tools.TestJester;
 import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.gesture.GestureComponent;
 import com.calicraft.vrjester.gesture.Gestures;
-import com.calicraft.vrjester.gesture.Recognition;
+import com.calicraft.vrjester.gesture.recognition.Recognition;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
@@ -36,7 +36,7 @@ import static com.calicraft.vrjester.utils.tools.SpawnParticles.moveParticles;
 public class TriggerEventHandler {
     private static VRDataWriter vrDataWriter;
     private static boolean msgSentOnce = false;
-    private static final Test test = new Test();
+    private static final TestJester test = new TestJester();
     private static Config devConfig = Config.readConfig(Constants.DEV_CONFIG_PATH);
 
     private static final Config config = Config.readConfig(Constants.CONFIG_PATH);
@@ -107,7 +107,7 @@ public class TriggerEventHandler {
                         MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                         sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
                         test.trigger(recognizedGesture, vrDataWorldPre, devConfig);
-                        listener = false; gesture = null; previousGesture = "";
+                        listener = false; previousGesture = "";
                     }
                 }
                 sleep--;
@@ -148,15 +148,16 @@ public class TriggerEventHandler {
             List<GestureComponent> rcGesture = new ArrayList<>();
             List<GestureComponent> lcGesture = new ArrayList<>();
             Vec3 dir = new Vec3((0),(0),(0));
+            Vec3 dir2 = new Vec3((0),(1),(0));
             HashMap<String, Integer> devices = new HashMap<>();
             GestureComponent gestureComponent1 = new GestureComponent("RC", "forward",
                     0, 0.0, dir, devices);
             GestureComponent gestureComponent2 = new GestureComponent("RC", "up",
                     0, 0.0, dir, devices);
-            GestureComponent gestureComponent3 = new GestureComponent("RC", "idle",
-                    0, 0.0, dir, devices);
-            GestureComponent gestureComponent4 = new GestureComponent("LC", "idle",
-                    0, 0.0, dir, devices);
+            GestureComponent gestureComponent3 = new GestureComponent("RC", "up",
+                    0, 0.0, dir2, devices);
+            GestureComponent gestureComponent4 = new GestureComponent("LC", "up",
+                    0, 0.0, dir2, devices);
             rcGesture.add(gestureComponent1);
             Gesture strikeGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
             System.out.println("RECOGNIZED: " + recognition.recognize(strikeGesture));
@@ -174,7 +175,6 @@ public class TriggerEventHandler {
     // Handle and update based on dev configurations
     private void checkDevConfig() {
         if (devConfig.READ_DATA) {
-            gestures.clear();
             gestures.load();
         }
         if (devConfig.RECORD_MODE)

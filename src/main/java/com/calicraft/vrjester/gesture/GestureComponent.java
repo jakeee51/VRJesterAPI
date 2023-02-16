@@ -1,5 +1,7 @@
 package com.calicraft.vrjester.gesture;
 
+import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.utils.tools.Calcs;
 import com.calicraft.vrjester.utils.tools.Vec3;
 
 import java.util.*;
@@ -53,6 +55,7 @@ public record GestureComponent(String vrDevice, String movement,
                movement.equals(gesturePath.movement) &&
                elapsedTime <= gesturePath.elapsedTime &&
                speed <= gesturePath.speed &&
+               isWithinDirection(direction, gesturePath.direction) &&
                isWithinProximity(devicesInProximity, gesturePath.devicesInProximity);
     }
 
@@ -76,6 +79,14 @@ public record GestureComponent(String vrDevice, String movement,
         } catch (IndexOutOfBoundsException e) {
             return false;
         }
+    }
+
+    // Check if traced gesture has a direction within angle of the stored gesture (represented as a cone shape)
+    private static boolean isWithinDirection(Vec3 direction, Vec3 otherDirection) {
+        if (direction.equals(new Vec3(0,0,0)))
+            return true;
+        else
+            return Calcs.getAngle3D(direction, otherDirection) <= Constants.DIRECTION_DEGREE_SPAN;
     }
 
     // Check if traced gesture has the same devices within proximity of the stored gesture

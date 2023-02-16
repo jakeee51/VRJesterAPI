@@ -1,6 +1,9 @@
-package com.calicraft.vrjester.gesture;
+package com.calicraft.vrjester.gesture.recognition;
 
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.gesture.Gesture;
+import com.calicraft.vrjester.gesture.GestureComponent;
+import com.calicraft.vrjester.gesture.Gestures;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +13,7 @@ public class Recognition {
 
     // TODO - Either Check constantly, everytime Path gets appended or check at end of gesture listening.
     //      - Note, I must determine how to know when to start & stop listening to a gesture.
-    // TODO - There will be 2 modes of triggering & 3 modes of terminating the recognition listener
+    //      - There will be 2 modes of triggering & 3 modes of terminating the recognition listener
     //      - listenOnKey | listenOnPosition
     //      - recognizeOnTime | recognizeOnRecognize | recognizeOnRelease
     //      - Upon terminating the listener, a GestureRecognition Event
