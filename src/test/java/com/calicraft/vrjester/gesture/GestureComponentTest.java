@@ -1,5 +1,5 @@
 package com.calicraft.vrjester.gesture;
-import com.calicraft.vrjester.utils.Vec3;
+import com.calicraft.vrjester.utils.tools.Vec3;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

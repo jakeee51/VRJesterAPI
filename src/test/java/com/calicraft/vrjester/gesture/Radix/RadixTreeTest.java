@@ -2,7 +2,7 @@ package com.calicraft.vrjester.gesture.Radix;
 
 import com.calicraft.vrjester.gesture.GestureComponent;
 import com.calicraft.vrjester.gesture.radix.RadixTree;
-import com.calicraft.vrjester.utils.Vec3;
+import com.calicraft.vrjester.utils.tools.Vec3;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
