@@ -2,11 +2,7 @@ package com.calicraft.vrjester.gesture;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
-import com.calicraft.vrjester.gesture.Gesture;
-import com.calicraft.vrjester.gesture.GestureComponent;
-import com.calicraft.vrjester.gesture.Gestures;
-import com.calicraft.vrjester.gesture.Recognition;
-import com.calicraft.vrjester.utils.tools.Vec3;
+import com.calicraft.vrjester.utils.Vec3;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
