@@ -2,6 +2,7 @@ package com.calicraft.vrjester.gesture;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.gesture.recognition.Recognition;
 import com.calicraft.vrjester.utils.tools.Vec3;
 import org.junit.jupiter.api.Test;
 

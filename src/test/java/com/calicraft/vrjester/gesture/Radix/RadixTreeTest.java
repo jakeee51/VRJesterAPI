@@ -30,11 +30,11 @@ public class RadixTreeTest {
     public void insertTest(){
         List<GestureComponent> array = new ArrayList<>();
         Map<String, Integer> HM = new HashMap<>();
-        Vec3 v = new Vec3(1,2,1);
+        Vec3 v = new Vec3(0,1,0);
         GestureComponent punch = new GestureComponent("LC", "up", 2, 2.5,v, HM );
         array.add(punch);
         TreeTest.insert(array);
-        assertEquals(array,TreeTest.search(array));
+        assertEquals(array, TreeTest.search(array));
     }
 
     @Test

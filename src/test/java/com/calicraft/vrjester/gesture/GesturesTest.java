@@ -2,6 +2,7 @@ package com.calicraft.vrjester.gesture;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.gesture.recognition.Recognition;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ public class GesturesTest {
     void loadTest(){
         HashMap<String, String> gestureNamespace = new HashMap<>();
         gestureNamespace.put("-409853157" ,"KAMEHAMEHA");
+        gestureNamespace.put("-747232807-747232807", "BLOCK");
         gestureNamespace.put( "21469640052146964005", "PULL");
         gestureNamespace.put("-295780073" , "UPPERCUT");
         gestureNamespace.put( "1679261955", "STRIKE");
