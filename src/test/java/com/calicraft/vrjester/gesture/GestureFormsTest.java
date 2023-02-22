@@ -1,13 +1,9 @@
-package com.calicraft.vrjester;
+package com.calicraft.vrjester.gesture;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
-import com.calicraft.vrjester.gesture.Gesture;
-import com.calicraft.vrjester.gesture.GestureComponent;
-import com.calicraft.vrjester.gesture.Gestures;
-import com.calicraft.vrjester.gesture.Recognition;
+import com.calicraft.vrjester.gesture.recognition.Recognition;
 import com.calicraft.vrjester.utils.tools.Vec3;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-class GestureComponentTest {
+class GestureFormsTest {
     private static final Config devConfig = Config.readConfig(Constants.DEV_CONFIG_PATH);
     private static final Gestures gestures = new Gestures(devConfig);
     private static final Recognition recognition = new Recognition(gestures);
