@@ -1,11 +1,22 @@
 package com.calicraft.vrjester.utils.tools;
 
 import com.mojang.math.Vector3f;
+import com.mojang.serialization.Codec;
+import net.minecraft.Util;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class Vec3 extends net.minecraft.world.phys.Vec3 {
     // This class is to de-obfuscate the Minecraft Vec3 class
-
+    public static final Codec<Vec3> CODEC = Codec.DOUBLE.listOf().comapFlatMap((p_231079_) -> {
+        return Util.fixedSize(p_231079_, 3).map((p_231081_) -> {
+            return new Vec3(p_231081_.get(0), p_231081_.get(1), p_231081_.get(2));
+        });
+    }, (p_231083_) -> {
+        return List.of(p_231083_.x(), p_231083_.y(), p_231083_.z());
+    });
+    public static final Vec3 ZERO = new Vec3(0.0D, 0.0D, 0.0D);
     public Vec3(double x, double y, double z) {
         super(x, y, z);
     }
@@ -20,7 +31,7 @@ public class Vec3 extends net.minecraft.world.phys.Vec3 {
 
     public @NotNull Vec3 normalize() {
         double d0 = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-        return d0 < 1.0E-4D ? (Vec3) ZERO : new Vec3(this.x / d0, this.y / d0, this.z / d0);
+        return d0 < 1.0E-4D ? (Vec3) ZERO : (Vec3) new Vec3(this.x / d0, this.y / d0, this.z / d0);
     }
 
     public double dot(Vec3 vec3) {

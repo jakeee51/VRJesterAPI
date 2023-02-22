@@ -73,15 +73,17 @@ public class GestureTrace {
             movement = "right";
         } else if (getAngle2D(left, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
             movement = "left";
-        } else if (getAngle2D(frontRight, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-            movement = "forward_right";
-        } else if (getAngle2D(frontLeft, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-            movement = "forward_left";
-        } else if (getAngle2D(backRight, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-            movement = "back_right";
-        } else if (getAngle2D(backLeft, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-            movement = "back_left";
-        } else {
+        }
+//        else if (getAngle2D(frontRight, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
+//            movement = "forward_right";
+//        } else if (getAngle2D(frontLeft, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
+//            movement = "forward_left";
+//        } else if (getAngle2D(backRight, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
+//            movement = "back_right";
+//        } else if (getAngle2D(backLeft, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
+//            movement = "back_left";
+//        }
+        else {
             System.out.println("NO MOVEMENT RECOGNIZED!");
             System.out.println("ANGLE BETWEEN FACING DIRECTION AND GESTURE: " + getAngle2D(front, gestureDirection));
         }
@@ -153,9 +155,9 @@ public class GestureTrace {
         back = new Vec3(-faceDirection.x, faceDirection.y, -faceDirection.z);
         right = new Vec3(-faceDirection.z, faceDirection.y, faceDirection.x);
         left = new Vec3(faceDirection.z, faceDirection.y, -faceDirection.x);
-        frontRight = front.yRot(Constants.MOVEMENT_DEGREE_SPAN);
-        frontLeft = front.yRot(-Constants.MOVEMENT_DEGREE_SPAN);
-        backRight = back.yRot(Constants.MOVEMENT_DEGREE_SPAN);
-        backLeft = back.yRot(-Constants.MOVEMENT_DEGREE_SPAN);
+//        frontRight = front.yRot(45.0f); //yRot method causes following error Unable to retrieve inform for type dumb-color
+//        frontLeft = front.yRot(-Constants.MOVEMENT_DEGREE_SPAN);
+//        backRight = back.yRot(Constants.MOVEMENT_DEGREE_SPAN);
+//        backLeft = back.yRot(-Constants.MOVEMENT_DEGREE_SPAN);
     }
 }

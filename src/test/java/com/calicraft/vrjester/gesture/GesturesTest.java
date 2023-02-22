@@ -14,7 +14,7 @@ public class GesturesTest {
     private static final Gestures gestures = new Gestures(devConfig);
     private static final Recognition recognition = new Recognition(gestures);
     @Test
-    void loadTest(){
+    void gloadTest(){
         HashMap<String, String> gestureNamespace = new HashMap<>();
         gestureNamespace.put("-409853157" ,"KAMEHAMEHA");
         gestureNamespace.put("-747232807-747232807", "BLOCK");
