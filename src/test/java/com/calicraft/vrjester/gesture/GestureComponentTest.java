@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GestureComponentTest {
+
     @Test
     public void equalsTest(){
         Vec3 dir = new Vec3((0),(0),(0));
@@ -19,6 +20,7 @@ public class GestureComponentTest {
         assertEquals(storedGesture, userGesture);
 
     }
+
     @Test
     public void matchesTest(){
         Vec3 dir = new Vec3((0),(0),(0));

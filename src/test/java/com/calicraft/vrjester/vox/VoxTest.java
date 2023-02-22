@@ -1,4 +1,5 @@
 package com.calicraft.vrjester.vox;
+
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import com.calicraft.vrjester.vox.Vox;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VoxTest {
+
     @Test
     public void hasPointTest(){
         Vec3[] centroidPose = new Vec3[2];

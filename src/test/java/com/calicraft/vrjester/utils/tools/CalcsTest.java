@@ -1,10 +1,12 @@
 package com.calicraft.vrjester.utils.tools;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CalcsTest {
+
     @Test
     public void getMagnitude2DTest(){
         Vec3 v = new Vec3(1, 2, 3);

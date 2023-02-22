@@ -9,8 +9,8 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 public class GestureTraceTest {
+
     @Test
     void completeTraceTest() {
         Vec3[] centroidPose = new Vec3[2]; //initialized array of 2 vectors

@@ -10,9 +10,11 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GesturesTest {
+
     private static final Config devConfig = Config.readConfig(Constants.DEV_CONFIG_PATH);
     private static final Gestures gestures = new Gestures(devConfig);
     private static final Recognition recognition = new Recognition(gestures);
+
     @Test
     void gloadTest(){
         HashMap<String, String> gestureNamespace = new HashMap<>();
