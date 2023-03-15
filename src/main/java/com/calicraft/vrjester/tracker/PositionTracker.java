@@ -1,8 +1,8 @@
 package com.calicraft.vrjester.tracker;
 
+import net.blf02.forge.VRAPIPlugin;
+import net.blf02.forge.VRAPIPluginProvider;
 import net.blf02.vrapi.api.IVRAPI;
-import net.blf02.vrapi.api.VRAPIPlugin;
-import net.blf02.vrapi.api.VRAPIPluginProvider;
 import net.blf02.vrapi.api.data.IVRPlayer;
 
 @VRAPIPlugin
