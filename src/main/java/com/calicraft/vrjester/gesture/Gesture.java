@@ -75,14 +75,12 @@ public class Gesture {
                 "\r\n \t lcGesture: " + lcGesture;
     }
 
-    // Record the Vox trace of each VRDevice and return the resulting data
+    // Record the Vox trace of each VRDevice and store the resulting data
     public void track(VRDataState vrDataRoomPre) {
-        // TODO - Implement way to store idle gesture trace if VRDevice never exited Vox.
-        //  Also make way to specify starter GestureTrace
         for (Vox vox: voxList) { // Loop through each VRDevice's Vox
             Vec3[] currentPoint = vox.generateVox(vrDataRoomPre);
             int[] currentId = vox.getId();
-            if (!Arrays.equals(vox.getPreviousId(), currentId)) {
+            if (!Arrays.equals(vox.getPreviousId(), currentId)) { // Check if a VRDevice exited Vox
                 vox.setPreviousId(currentId.clone());
                 GestureTrace gestureTrace = vox.getTrace();
                 gestureTrace.completeTrace(currentPoint);
@@ -93,6 +91,26 @@ public class Gesture {
                     case HMD -> hmdGesture.add(gestureTrace.toGestureComponent());
                     case RC  -> rcGesture.add(gestureTrace.toGestureComponent());
                     case LC  -> lcGesture.add(gestureTrace.toGestureComponent());
+                }
+            }
+        }
+    }
+
+    // Store the current data of each Vox for each VRDevice
+    public void trackComplete(VRDataState vrDataRoomPre) {
+        // TODO - Implement way to store idle gesture trace if VRDevice never exited Vox.
+        //  Also make way to specify starter GestureTrace.
+        //  Call separate Gesture method to signal gesture listening termination.
+        for (Vox vox: voxList) { // Loop through each VRDevice's Vox
+            GestureTrace gestureTrace = vox.getTrace();
+            if (gestureTrace.getMovement().equals("idle")) {
+                Vec3[] currentPoint = vox.generateVox(vrDataRoomPre);
+                gestureTrace.completeIdleTrace(currentPoint);
+                vox.beginTrace(currentPoint);
+                switch (vox.getVrDevice()) {  // Append a Vox trace's new GestureComponent object per VRDevice
+                    case HMD -> hmdGesture.add(gestureTrace.toGestureComponent());
+                    case RC -> rcGesture.add(gestureTrace.toGestureComponent());
+                    case LC -> lcGesture.add(gestureTrace.toGestureComponent());
                 }
             }
         }

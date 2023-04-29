@@ -141,7 +141,7 @@ public class GestureTrace {
         setDirection(end[1]);
     }
 
-    // Set all final values resulting from a VRDevice moving into a new Vox
+    // Set all final values resulting from a VRDevice completing its trace while idle
     public void completeIdleTrace(Vec3[] end) {
         // Note: After this executes, it is ready to be converted into a GestureComponent
         setElapsedTime(System.nanoTime());
