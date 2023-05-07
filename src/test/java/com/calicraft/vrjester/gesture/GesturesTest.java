@@ -16,16 +16,17 @@ public class GesturesTest {
     private static final Recognition recognition = new Recognition(gestures);
 
     @Test
-    void gloadTest(){
+    void gestureLoadTest(){
         HashMap<String, String> gestureNamespace = new HashMap<>();
         gestureNamespace.put("-409853157" ,"KAMEHAMEHA");
         gestureNamespace.put("-747232807-747232807", "BLOCK");
         gestureNamespace.put( "21469640052146964005", "PULL");
         gestureNamespace.put("-295780073" , "UPPERCUT");
-        gestureNamespace.put( "1679261955", "STRIKE");
+        gestureNamespace.put("1679261955", "STRIKE");
         gestureNamespace.put("1744444741-1543099174" , "SHRINK");
         gestureNamespace.put("16792619551679261955" , "PUSH");
         gestureNamespace.put("17388439551738843955", "BURST");
+        gestureNamespace.put("156397030156397030", "IDLE UP");
         gestureNamespace.put("-813293095-813293095" , "RAISE");
         gestureNamespace.put("14531206081453120608" , "LOWER");
         gestureNamespace.put("-15430991741744444741" , "GROW");
