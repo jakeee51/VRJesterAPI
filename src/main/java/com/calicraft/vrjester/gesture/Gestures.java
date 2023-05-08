@@ -70,8 +70,8 @@ public class Gestures {
             Set<String> gestureNames = gestureStore.GESTURES.keySet();
             for (String gestureName: gestureNames) { // Iterate through & store each gesture
                 try {
-                    if (gestureName.equals("BLOCK"))
-                        System.out.println("RC BLOCK GESTURE:" + gestureStore.GESTURES.get(gestureName).get("RC"));
+//                    if (gestureName.equals("BLOCK"))
+//                        System.out.println("RC BLOCK GESTURE:" + gestureStore.GESTURES.get(gestureName).get("RC"));
                     Gesture gesture = new Gesture(gestureStore.GESTURES.get(gestureName));
                     store(gesture, gestureName);
                 } catch (NullPointerException e) {

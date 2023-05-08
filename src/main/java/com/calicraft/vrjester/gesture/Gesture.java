@@ -12,6 +12,7 @@ public class Gesture {
     // Class that handles compiling the GestureComponent list for each VRDevice
     // Note: A list of GestureComponent's represents a gesture for an individual VRDevice
 
+    private boolean completeGesture = true;
     private final List<Vox> voxList = new ArrayList<>();
     public List<GestureComponent> hmdGesture = new ArrayList<>();
     public List<GestureComponent> rcGesture = new ArrayList<>();
@@ -98,9 +99,9 @@ public class Gesture {
 
     // Store the current data of each Vox for each VRDevice
     public void trackComplete(VRDataState vrDataRoomPre) {
-        // TODO - Implement way to store idle gesture trace if VRDevice never exited Vox.
+        // TODO - Implement way to store idle Gesture trace if VRDevice never exited Vox.
+        //  And only add it once & complete the trace once it's done.
         //  Also make way to specify starter GestureTrace.
-        //  Call separate Gesture method to signal gesture listening termination.
         for (Vox vox: voxList) { // Loop through each VRDevice's Vox
             GestureTrace gestureTrace = vox.getTrace();
             if (gestureTrace.getMovement().equals("idle")) {
@@ -114,6 +115,14 @@ public class Gesture {
                 }
             }
         }
+    }
+
+    public void setComplete(boolean completedGesture) {
+        completeGesture = completedGesture;
+    }
+
+    public boolean isComplete() {
+        return completeGesture;
     }
 
     public List<GestureComponent> getHmdGesture() {

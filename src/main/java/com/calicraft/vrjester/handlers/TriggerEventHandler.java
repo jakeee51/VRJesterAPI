@@ -75,8 +75,20 @@ public class TriggerEventHandler {
         if (listener) { // Capture VR data in real time after trigger
             VRDataState vrDataRoomPre = preRoomDataAggregator.listen();
             VRDataState vrDataWorldPre = preWorldDataAggregator.listen();
-            if (gesture == null) {
+            if (gesture == null) { // For first trigger
                 gesture = new Gesture(vrDataRoomPre);
+                gesture.setComplete(false);
+            } else if (gesture.isComplete()) {
+                gesture.trackComplete(vrDataRoomPre);
+                if (devConfig.RECOGNIZE_ON.equals("RECOGNIZE")) {
+                    HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
+                    if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
+                        previousGesture = recognizedGesture.get("gestureName");
+                        MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
+                    }
+                }
+                gesture = new Gesture(vrDataRoomPre);
+                gesture.setComplete(false);
             } else {
                 gesture.track(vrDataRoomPre);
                 if (devConfig.RECOGNIZE_ON.equals("RECOGNIZE")) {
@@ -107,7 +119,7 @@ public class TriggerEventHandler {
                         MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                         sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
                         test.trigger(recognizedGesture, vrDataWorldPre, devConfig);
-                        listener = false; previousGesture = "";
+                        gesture.setComplete(true); listener = false; previousGesture = "";
                     }
                 }
                 sleep--;
@@ -133,7 +145,7 @@ public class TriggerEventHandler {
             }
             checkDevConfig();
             listener = false; elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
-            gesture = null; msgSentOnce = false; elapsedTime = 0;
+            gesture.setComplete(true); msgSentOnce = false; elapsedTime = 0;
         }
     }
 
