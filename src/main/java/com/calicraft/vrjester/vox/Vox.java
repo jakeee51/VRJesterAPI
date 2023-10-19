@@ -15,6 +15,8 @@ import java.util.Map;
 import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
 
 public class Vox {
+    // Class that represents a virtual box
+
     private final VRDevice vrDevice;
     private final Map<String, Vec3> vertices = new HashMap<>();
     public final Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);

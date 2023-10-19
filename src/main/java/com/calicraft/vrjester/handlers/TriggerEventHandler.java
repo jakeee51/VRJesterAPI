@@ -4,12 +4,13 @@ import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.api.GestureEvent;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
-import com.calicraft.vrjester.utils.tools.TestJester;
 import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.gesture.GestureComponent;
 import com.calicraft.vrjester.gesture.Gestures;
 import com.calicraft.vrjester.gesture.recognition.Recognition;
 import com.calicraft.vrjester.tracker.PositionTracker;
+import com.calicraft.vrjester.utils.tools.TestJester;
+import com.calicraft.vrjester.utils.tools.Vec3;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDataType;
@@ -17,7 +18,6 @@ import com.calicraft.vrjester.utils.vrdata.VRDataWriter;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import com.calicraft.vrjester.utils.tools.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -78,20 +78,9 @@ public class TriggerEventHandler {
             if (gesture == null) { // For first trigger
                 gesture = new Gesture(vrDataRoomPre);
                 gesture.setComplete(false);
-            } else if (gesture.isComplete()) {
-                gesture.trackComplete(vrDataRoomPre);
-                if (devConfig.RECOGNIZE_ON.equals("RECOGNIZE")) {
-                    HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
-                    if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
-                        previousGesture = recognizedGesture.get("gestureName");
-                        MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
-                    }
-                }
-                gesture = new Gesture(vrDataRoomPre);
-                gesture.setComplete(false);
             } else {
                 gesture.track(vrDataRoomPre);
-                if (devConfig.RECOGNIZE_ON.equals("RECOGNIZE")) {
+                if (devConfig.RECOGNIZE_ON.equals("RECOGNIZE")) { // Recognize gesture right away
                     HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
                     if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
                         previousGesture = recognizedGesture.get("gestureName");
@@ -101,25 +90,26 @@ public class TriggerEventHandler {
 //                        listener = false; gesture = null;
                     }
                 }
-//                dataDebugger(vrDataRoomPre);
             }
             // TODO - Only make gesture stop listening after like 10 seconds
-            if (devConfig.RECOGNIZE_ON.equals("RECOGNIZE")) {
+            if (devConfig.RECOGNIZE_ON.equals("RECOGNIZE")) { // Recognize gesture within delay interval.
+                // If a gesture is recognized, wait for the next interval. If another gesture is recognized
                 HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
                 if (sleep != 0) { // Execute every tick
-                    if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) { // Reset ticker to extend listening time
+                    if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
                         previousGesture = recognizedGesture.get("gestureName");
                         MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
-                        sleep = DELAY;
+                        sleep = DELAY; // Reset ticker to extend listening time
                     }
-                } else { // Reset trigger when done
-                    System.out.println("JESTER DONE LISTENING");
+                } else { // Reset trigger every delay interval
+//                    System.out.println("JESTER DONE LISTENING");
                     sleep = DELAY;
                     if (!recognizedGesture.isEmpty()) {
                         MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                         sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
                         test.trigger(recognizedGesture, vrDataWorldPre, devConfig);
-                        gesture.setComplete(true); listener = false; previousGesture = "";
+                        gesture = null; listener = false; previousGesture = "";
+//                        gesture.clear(); gesture.setComplete(true);
                     }
                 }
                 sleep--;
@@ -137,15 +127,16 @@ public class TriggerEventHandler {
                 vrDataWriter = new VRDataWriter("room", iter);
         } else {
             System.out.println("JESTER RELEASED");
-            if (devConfig.RECOGNIZE_ON.equals("RELEASE")) {
+            if (devConfig.RECOGNIZE_ON.equals("RELEASE")) { // Recognize gesture upon releasing
                 HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
                 if (!recognizedGesture.isEmpty()) {
                     sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
                 }
             }
             checkDevConfig();
-            listener = false; elapsedTime = (System.nanoTime() - elapsedTime) / 1000000;
-            gesture.setComplete(true); msgSentOnce = false; elapsedTime = 0;
+            gesture = null; listener = false;
+//            elapsedTime = (System.nanoTime() - elapsedTime) / 1000000; // Total time to listen & recognize gesture
+            msgSentOnce = false; elapsedTime = 0;
         }
     }
 
@@ -170,17 +161,30 @@ public class TriggerEventHandler {
                     0, 0.0, dir2, devices);
             GestureComponent gestureComponent4 = new GestureComponent("LC", "up",
                     0, 0.0, dir2, devices);
+            GestureComponent gestureComponent5 = new GestureComponent("RC", "idle",
+                    301, 0.0, dir2, devices);
+            GestureComponent gestureComponent6 = new GestureComponent("LC", "idle",
+                    301, 0.0, dir2, devices);
+
             rcGesture.add(gestureComponent1);
             Gesture strikeGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
             System.out.println("RECOGNIZED: " + recognition.recognize(strikeGesture));
+
             rcGesture.add(gestureComponent2);
             Gesture uppercutGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
             System.out.println("RECOGNIZED: " + recognition.recognize(uppercutGesture));
             rcGesture.clear(); lcGesture.clear();
+
             rcGesture.add(gestureComponent3);
             lcGesture.add(gestureComponent4);
             Gesture blockGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
             System.out.println("RECOGNIZED: " + recognition.recognize(blockGesture));
+            rcGesture.clear(); lcGesture.clear();
+
+            rcGesture.add(gestureComponent5);
+            lcGesture.add(gestureComponent6);
+            Gesture idleGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
+            System.out.println("RECOGNIZED: " + recognition.recognize(idleGesture));
         }
     }
 
@@ -223,10 +227,5 @@ public class TriggerEventHandler {
             assert player != null;
             player.sendSystemMessage(text);
         }
-    }
-
-    public static void dataDebugger(VRDataState vrDataState) throws IOException { // For VRData Room
-        if (devConfig.WRITE_DATA)
-            vrDataWriter.write(vrDataState);
     }
 }

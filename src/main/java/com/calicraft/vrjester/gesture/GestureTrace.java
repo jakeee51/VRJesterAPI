@@ -21,8 +21,7 @@ public class GestureTrace {
     public long elapsedTime = 0; // Time spent within Vox in ms (added on the fly while idle)
     public double speed; // Average speed within Vox (calculated on the fly while idle)
     public final Map<String, Integer> devicesInProximity = new HashMap<>(); // Other VRDevices within this Vox
-    private Vec3 direction, front, back, right, left,
-                     frontRight, frontLeft, backRight, backLeft;
+    private Vec3 direction, front, back, right, left;
     private final List<Vec3[]> poses = new ArrayList<>(); // Poses captured within Vox
 
     public GestureTrace(String voxId, VRDevice vrDevice, Vec3[] pose, Vec3 faceDirection) {
@@ -62,9 +61,10 @@ public class GestureTrace {
 
     // Set the movement the VRDevice took to arrive at this current Trace
     public void setMovement(Vec3 gestureDirection) {
-        // TODO - Divide Constants.DEGREE_SPAN by 2 after adding diagonals handler
-        if (!movement.equals("idle")) {
-            // TODO - Possibly handle diagonal ups and downs using concatenation
+        if (gestureDirection.y > 0.85D) {
+            movement = "up";
+        } else if (gestureDirection.y < -0.85D) {
+            movement = "down";
         } else if (getAngle2D(front, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
             movement = "forward";
         } else if (getAngle2D(back, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
@@ -73,17 +73,7 @@ public class GestureTrace {
             movement = "right";
         } else if (getAngle2D(left, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
             movement = "left";
-        }
-//        else if (getAngle2D(frontRight, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-//            movement = "forward_right";
-//        } else if (getAngle2D(frontLeft, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-//            movement = "forward_left";
-//        } else if (getAngle2D(backRight, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-//            movement = "back_right";
-//        } else if (getAngle2D(backLeft, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-//            movement = "back_left";
-//        }
-        else {
+        } else {
             System.out.println("NO MOVEMENT RECOGNIZED!");
             System.out.println("ANGLE BETWEEN FACING DIRECTION AND GESTURE: " + getAngle2D(front, gestureDirection));
         }
@@ -155,9 +145,6 @@ public class GestureTrace {
         back = new Vec3(-faceDirection.x, faceDirection.y, -faceDirection.z);
         right = new Vec3(-faceDirection.z, faceDirection.y, faceDirection.x);
         left = new Vec3(faceDirection.z, faceDirection.y, -faceDirection.x);
-//        frontRight = front.yRot(45.0f); //yRot method causes following error Unable to retrieve inform for type dumb-color
-//        frontLeft = front.yRot(-Constants.MOVEMENT_DEGREE_SPAN);
-//        backRight = back.yRot(Constants.MOVEMENT_DEGREE_SPAN);
-//        backLeft = back.yRot(-Constants.MOVEMENT_DEGREE_SPAN);
+        // yRot method causes following error: Unable to retrieve inform for type dumb-color
     }
 }

@@ -15,11 +15,8 @@ public abstract class Constants {
     public static final boolean RECORD_MODE = false;
     public static final boolean READ_DATA = false;
     public static final boolean WRITE_DATA = false;
-    public static final boolean DISPLAY_VOX = false;
     public static final float VOX_LENGTH = 0.6F;
-    public static final int VOX_GRID_LENGTH = 6;
-    public static final int VOX_GRID_WIDTH = 6;
-    public static final int VOX_GRID_HEIGHT = 6;
+    public static final float VIRTUAL_SPHERE_RADIUS = 0.3F;
 
     public static final float MAX_LISTENING_TIME = 6.0F;
 

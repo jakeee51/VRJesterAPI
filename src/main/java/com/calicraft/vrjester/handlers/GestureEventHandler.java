@@ -10,13 +10,13 @@ public class GestureEventHandler {
     @SubscribeEvent
     public void onGestureEvent(GestureEvent event) {
         System.out.println("GESTURE EVENT POSTED & RECEIVED!");
-        System.out.println(event.getGestureName());
+//        System.out.println(event.getGestureName());
     }
 
     @SubscribeEvent
     public void onVRPlayerEvent(VRPlayerEvent event) {
         System.out.println("VRPlayer EVENT POSTED & RECEIVED!");
-        System.out.println(event.getVrDataRoomPre());
-        System.out.println(event.getVrDataWorldPre());
+//        System.out.println(event.getVrDataRoomPre());
+//        System.out.println(event.getVrDataWorldPre());
     }
 }

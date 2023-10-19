@@ -13,11 +13,8 @@ public class Config {
     public boolean RECORD_MODE = Constants.RECORD_MODE;
     public boolean READ_DATA = Constants.READ_DATA;
     public boolean WRITE_DATA = Constants.WRITE_DATA;
-    public boolean DISPLAY_VOX = Constants.DISPLAY_VOX;
     public float VOX_LENGTH = Constants.VOX_LENGTH;
-    public int VOX_GRID_LENGTH = Constants.VOX_GRID_LENGTH;
-    public int VOX_GRID_WIDTH = Constants.VOX_GRID_WIDTH;
-    public int VOX_GRID_HEIGHT = Constants.VOX_GRID_HEIGHT;
+    public float VIRTUAL_SPHERE_RADIUS = Constants.VIRTUAL_SPHERE_RADIUS;
     public float MAX_LISTENING_TIME = Constants.MAX_LISTENING_TIME;
     public HashMap<String, GestureContext> GESTURES = new HashMap<>();
     public Log LOG = new Log();
