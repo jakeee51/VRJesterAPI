@@ -197,4 +197,22 @@ class GestureFormsTest {
         assertEquals("BLOCK", recognition.recognize(blockGesture).get("gestureName"));
     }
 
+    @Test
+    void testIdleUpGesture() {
+        List<GestureComponent> hmdGesture = new ArrayList<>();
+        List<GestureComponent> rcGesture = new ArrayList<>();
+        List<GestureComponent> lcGesture = new ArrayList<>();
+        Vec3 userGestureDirection = new Vec3((-.02), (1), (-.06)).normalize();
+        Vec3 userGestureDirection2 = new Vec3((.03), (1), (.07)).normalize();
+        HashMap<String, Integer> devices = new HashMap<>();
+        GestureComponent gestureComponent1 = new GestureComponent("RC", "idle",
+                501, 200.0, userGestureDirection, devices);
+        GestureComponent gestureComponent2 = new GestureComponent("LC", "idle",
+                501, 200.0, userGestureDirection2, devices);
+        rcGesture.add(gestureComponent1);
+        lcGesture.add(gestureComponent2);
+        Gesture idleGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
+        assertEquals("IDLE UP", recognition.recognize(idleGesture).get("gestureName"));
+    }
+
 }

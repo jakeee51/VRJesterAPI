@@ -3,16 +3,17 @@ package com.calicraft.vrjester.gesture;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
-import com.calicraft.vrjester.vox.Vox;
+import com.calicraft.vrjester.vox.Vhere;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
 public class Gesture {
     // Class that handles compiling the GestureComponent list for each VRDevice
-    // Note: A list of GestureComponent's represents a gesture for an individual VRDevice
+    // Note: A list of GestureComponent's represents a gesture of an individual VRDevice
 
-    private final List<Vox> voxList = new ArrayList<>();
+    private boolean completeGesture = true;
+    private final List<Vhere> vhereList = new ArrayList<>();
     public List<GestureComponent> hmdGesture = new ArrayList<>();
     public List<GestureComponent> rcGesture = new ArrayList<>();
     public List<GestureComponent> lcGesture = new ArrayList<>();
@@ -22,10 +23,10 @@ public class Gesture {
     public Gesture(VRDataState vrDataState) {
         // Note: Facing direction is set here, meaning all movements after tracing this Gesture object are relative to that
         Vec3[] hmdOrigin = vrDataState.getHmd(), rcOrigin = vrDataState.getRc(), lcOrigin = vrDataState.getLc();
-        Vox hmdVox = new Vox(VRDevice.HMD, hmdOrigin, hmdOrigin[1], false);
-        Vox rcVox = new Vox(VRDevice.RC, rcOrigin, hmdOrigin[1], true);
-        Vox lcVox = new Vox(VRDevice.LC, lcOrigin, hmdOrigin[1], true);
-        voxList.add(hmdVox); voxList.add(rcVox); voxList.add(lcVox);
+        Vhere hmdVhere = new Vhere(VRDevice.HMD, hmdOrigin);
+        Vhere rcVhere = new Vhere(VRDevice.RC, rcOrigin);
+        Vhere lcVhere = new Vhere(VRDevice.LC, lcOrigin);
+        vhereList.add(hmdVhere); vhereList.add(rcVhere); vhereList.add(lcVhere);
     }
 
     // Initialize Gesture with already set gestures for each VRDevice
@@ -75,27 +76,62 @@ public class Gesture {
                 "\r\n \t lcGesture: " + lcGesture;
     }
 
-    // Record the Vox trace of each VRDevice and return the resulting data
+    // Record the Vox trace of each VRDevice and store the resulting data
     public void track(VRDataState vrDataRoomPre) {
-        // TODO - Implement way to store idle gesture trace if VRDevice never exited Vox.
-        //  Also make way to specify starter GestureTrace
-        for (Vox vox: voxList) { // Loop through each VRDevice's Vox
-            Vec3[] currentPoint = vox.generateVox(vrDataRoomPre);
-            int[] currentId = vox.getId();
-            if (!Arrays.equals(vox.getPreviousId(), currentId)) {
-                vox.setPreviousId(currentId.clone());
-                GestureTrace gestureTrace = vox.getTrace();
+        for (Vhere vhere: vhereList) { // Loop through each VRDevice's Vox
+            Vec3[] currentPoint = vhere.generateVhere(vrDataRoomPre);
+            int currentId = vhere.getId();
+            if (vhere.getPreviousId() != currentId) { // Check if a VRDevice exited Vox
+                vhere.setPreviousId(currentId);
+                GestureTrace gestureTrace = vhere.getTrace();
                 gestureTrace.completeTrace(currentPoint);
-//                System.out.println("BEFORE: " + vox.getName() + ": " + trace.toString());
-                vox.beginTrace(currentPoint);
-//                System.out.println("AFTER: " + vox.getName() + ": " + vox.getTrace().toString());
-                switch (vox.getVrDevice()) {  // Append a Vox trace's new GestureComponent object per VRDevice
+//                System.out.println("COMPLETE TRACK: " + vhere.getId() + ": " + gestureTrace);
+                vhere.beginTrace(currentPoint);
+                switch (vhere.getVrDevice()) {  // Append a Vox trace's new GestureComponent object per VRDevice
                     case HMD -> hmdGesture.add(gestureTrace.toGestureComponent());
                     case RC  -> rcGesture.add(gestureTrace.toGestureComponent());
                     case LC  -> lcGesture.add(gestureTrace.toGestureComponent());
                 }
             }
         }
+    }
+
+    // Store the current data of each Vox for each VRDevice
+    public void trackComplete(VRDataState vrDataRoomPre) {
+        // TODO - Implement way to store idle Gesture trace if VRDevice never exited Vox.
+        //  And only add it once & complete the trace once it's done.
+        //  Also make way to specify starter GestureTrace.
+        for (Vhere vhere: vhereList) { // Loop through each VRDevice's Vox
+            GestureTrace gestureTrace = vhere.getTrace();
+//            System.out.println("GESTURE TRACE: " + gestureTrace);
+            if (gestureTrace.getMovement().equals("idle")) {
+                Vec3[] currentPoint = vhere.generateVhere(vrDataRoomPre);
+                gestureTrace.completeIdleTrace(currentPoint);
+                vhere.beginTrace(currentPoint);
+                switch (vhere.getVrDevice()) {  // Append a Vox trace's new GestureComponent object per VRDevice
+                    case HMD -> hmdGesture.add(gestureTrace.toGestureComponent());
+                    case RC -> rcGesture.add(gestureTrace.toGestureComponent());
+                    case LC -> lcGesture.add(gestureTrace.toGestureComponent());
+                }
+            }
+        }
+    }
+
+    public void setComplete(boolean completedGesture) {
+        completeGesture = completedGesture;
+    }
+
+    public boolean isComplete() {
+        return completeGesture;
+    }
+
+    public void clear() {
+        completeGesture = true;
+        vhereList.clear();
+        hmdGesture.clear();
+        rcGesture.clear();
+        lcGesture.clear();
+        validDevices.clear();
     }
 
     public List<GestureComponent> getHmdGesture() {

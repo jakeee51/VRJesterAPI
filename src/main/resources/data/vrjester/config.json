@@ -5,6 +5,7 @@
 	"WRITE_DATA": "false",
 	"DISPLAY_VOX": "false",
 	"VOX_LENGTH": "0.4",
+	"VIRTUAL_SPHERE_RADIUS": "0.3",
 	"GESTURES": {
 		"LOWER": {
 			"velocity": "1.0",
@@ -52,6 +53,11 @@
 			"lcParticle": "0"
 		},
 		"BLOCK": {
+			"velocity": "0.5",
+			"rcParticle": "3",
+			"lcParticle": "3"
+		},
+		"IDLE UP": {
 			"velocity": "0.5",
 			"rcParticle": "3",
 			"lcParticle": "3"

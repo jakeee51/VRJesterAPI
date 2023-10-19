@@ -49,11 +49,11 @@ public class Recognition {
             ctx.put(Constants.LC, gestures.lcGestureMapping.get(foundLcGesture.hashCode()));
         }
 //        FOR DEBUGGING:
-        System.out.println(gesture);
+//        System.out.println(gesture);
 //        System.out.println("foundHmdGesture: " + foundHmdGesture);
 //        System.out.println("foundRcGesture: " + foundRcGesture);
 //        System.out.println("foundLcGesture: " + foundLcGesture);
-        System.out.println("RECOGNIZE ID:" + id);
+//        System.out.println("RECOGNIZE ID:" + id);
         gestureName = gestures.gestureNameSpace.get(id);
         ctx.put("gestureName", gestureName);
         return gestureName != null ? ctx : new HashMap<>();
