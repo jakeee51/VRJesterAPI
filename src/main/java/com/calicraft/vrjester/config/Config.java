@@ -15,7 +15,7 @@ public class Config {
     public boolean WRITE_DATA = Constants.WRITE_DATA;
     public float VOX_LENGTH = Constants.VOX_LENGTH;
     public float VIRTUAL_SPHERE_RADIUS = Constants.VIRTUAL_SPHERE_RADIUS;
-    public float MAX_LISTENING_TIME = Constants.MAX_LISTENING_TIME;
+    public int MAX_LISTENING_TIME = Constants.MAX_LISTENING_TIME;
     public HashMap<String, GestureContext> GESTURES = new HashMap<>();
     public Log LOG = new Log();
 

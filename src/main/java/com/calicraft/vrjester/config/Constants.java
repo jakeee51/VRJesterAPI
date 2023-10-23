@@ -6,8 +6,8 @@ public abstract class Constants {
     public static final String ROOT_PATH = "C:/Users/jakem/Documents/GitHub";
     public static final String CONFIG_PATH = "config/VRJesterAPI.cfg";
     public static final String GESTURE_STORE_PATH = "config/gesture_store.json";
-    public static final String DEV_GESTURE_STORE_PATH = ROOT_PATH + "/VRJesterAPI/src/main/resources/data/vrjester/gesture_store.json";
     public static final String DEV_CONFIG_PATH = ROOT_PATH + "/VRJesterAPI/src/main/resources/data/vrjester/config.json";
+    public static final String DEV_GESTURE_STORE_PATH = ROOT_PATH + "/VRJesterAPI/src/main/resources/data/vrjester/gesture_store.json";
     public static final String DEV_ARCHIVE_PATH = ROOT_PATH + "/VRJesterAPI/dev/archive";
 
     // RECOGNIZE -> fire event right when recognized | RELEASE -> fire event when key is released
@@ -18,7 +18,7 @@ public abstract class Constants {
     public static final float VOX_LENGTH = 0.6F;
     public static final float VIRTUAL_SPHERE_RADIUS = 0.3F;
 
-    public static final float MAX_LISTENING_TIME = 6.0F;
+    public static final int MAX_LISTENING_TIME = 200;
 
     public static final float MOVEMENT_DEGREE_SPAN = 45.0F;
     public static final float DIRECTION_DEGREE_SPAN = 30.0F;
