@@ -19,7 +19,7 @@ public class Vox {
 
     private final VRDevice vrDevice;
     private final Map<String, Vec3> vertices = new HashMap<>();
-    public final Config config = Config.readConfig(Constants.DEV_CONFIG_PATH);
+    public final Config config = Config.readConfig();
     private final boolean isDiamond;
     private int[] id, previousId;
     private String movementDirection = "idle";

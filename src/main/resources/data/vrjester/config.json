@@ -3,7 +3,6 @@
 	"RECORD_MODE": "false",
 	"READ_DATA": "true",
 	"WRITE_DATA": "false",
-	"DISPLAY_VOX": "false",
 	"VOX_LENGTH": "0.4",
 	"VIRTUAL_SPHERE_RADIUS": "0.3",
 	"GESTURES": {

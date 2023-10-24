@@ -18,7 +18,7 @@ public class VRDataWriter {
 
     // Setup file objects to create & write VRDevice data
     public VRDataWriter(String mode, int iteration) {
-        config = Config.readConfig(Constants.DEV_CONFIG_PATH);
+        config = Config.readConfig();
         String[] devices;
         File path = new File(Constants.DEV_ARCHIVE_PATH + String.format("/iteration_%s", iteration));
         path.mkdir();
