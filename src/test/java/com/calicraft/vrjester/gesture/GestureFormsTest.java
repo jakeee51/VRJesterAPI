@@ -31,7 +31,7 @@ class GestureFormsTest {
         List<GestureComponent> lcGesture = new ArrayList<>();
         Vec3 dir = new Vec3((0), (0), (0));
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent gestureComponent1 = new GestureComponent("RC", "forward",
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "forward",
                 0, 0.0, dir, devices);
         rcGesture.add(gestureComponent1);
         Gesture strikeGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
@@ -45,9 +45,9 @@ class GestureFormsTest {
         List<GestureComponent> lcGesture = new ArrayList<>();
         Vec3 dir = new Vec3((0), (0), (0));
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent gestureComponent1 = new GestureComponent("RC", "forward",
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "forward",
                 0, 0.0, dir, devices);
-        GestureComponent gestureComponent2 = new GestureComponent("LC", "forward",
+        GestureComponent gestureComponent2 = new GestureComponent(Constants.LC, "forward",
                 0, 0.0, dir, devices);
         rcGesture.add(gestureComponent1);
         lcGesture.add(gestureComponent2);
@@ -62,9 +62,9 @@ class GestureFormsTest {
         List<GestureComponent> lcGesture = new ArrayList<>();
         Vec3 dir = new Vec3((0), (0), (0));
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent gestureComponent1 = new GestureComponent("RC", "back",
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "back",
                 0, 0.0, dir, devices);
-        GestureComponent gestureComponent2 = new GestureComponent("LC", "back",
+        GestureComponent gestureComponent2 = new GestureComponent(Constants.LC, "back",
                 0, 0.0, dir, devices);
         rcGesture.add(gestureComponent1);
         lcGesture.add(gestureComponent2);
@@ -79,9 +79,9 @@ class GestureFormsTest {
         List<GestureComponent> lcGesture = new ArrayList<>();
         Vec3 dir = new Vec3((0), (0), (0));
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent gestureComponent1 = new GestureComponent("RC", "down",
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "down",
                 0, 0.0, dir, devices);
-        GestureComponent gestureComponent2 = new GestureComponent("LC", "down",
+        GestureComponent gestureComponent2 = new GestureComponent(Constants.LC, "down",
                 0, 0.0, dir, devices);
         rcGesture.add(gestureComponent1);
         lcGesture.add(gestureComponent2);
@@ -96,9 +96,9 @@ class GestureFormsTest {
         List<GestureComponent> lcGesture = new ArrayList<>();
         Vec3 dir = new Vec3((0), (0), (0));
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent gestureComponent1 = new GestureComponent("RC", "up",
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "up",
                 0, 0.0, dir, devices);
-        GestureComponent gestureComponent2 = new GestureComponent("LC", "up",
+        GestureComponent gestureComponent2 = new GestureComponent(Constants.LC, "up",
                 0, 0.0, dir, devices);
         rcGesture.add(gestureComponent1);
         lcGesture.add(gestureComponent2);
@@ -113,9 +113,9 @@ class GestureFormsTest {
         List<GestureComponent> lcGesture = new ArrayList<>();
         Vec3 dir = new Vec3((0), (0), (0));
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent gestureComponent1 = new GestureComponent("RC", "right",
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "right",
                 0, 0.0, dir, devices);
-        GestureComponent gestureComponent2 = new GestureComponent("LC", "left",
+        GestureComponent gestureComponent2 = new GestureComponent(Constants.LC, "left",
                 0, 0.0, dir, devices);
         rcGesture.add(gestureComponent1);
         lcGesture.add(gestureComponent2);
@@ -130,9 +130,9 @@ class GestureFormsTest {
         List<GestureComponent> lcGesture = new ArrayList<>();
         Vec3 dir = new Vec3((0), (0), (0));
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent gestureComponent1 = new GestureComponent("RC", "left",
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "left",
                 0, 0.0, dir, devices);
-        GestureComponent gestureComponent2 = new GestureComponent("LC", "right",
+        GestureComponent gestureComponent2 = new GestureComponent(Constants.LC, "right",
                 0, 0.0, dir, devices);
         rcGesture.add(gestureComponent1);
         lcGesture.add(gestureComponent2);
@@ -147,9 +147,9 @@ class GestureFormsTest {
         List<GestureComponent> lcGesture = new ArrayList<>();
         Vec3 dir = new Vec3((0), (0), (0));
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent gestureComponent1 = new GestureComponent("RC", "forward",
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "forward",
                 2000, 0.0, dir, devices);
-        GestureComponent gestureComponent2 = new GestureComponent("LC", "forward",
+        GestureComponent gestureComponent2 = new GestureComponent(Constants.LC, "forward",
                 2000, 0.0, dir, devices);
         rcGesture.add(gestureComponent1);
         lcGesture.add(gestureComponent2);
@@ -164,9 +164,9 @@ class GestureFormsTest {
         List<GestureComponent> lcGesture = new ArrayList<>();
         Vec3 dir = new Vec3((0), (0), (0));
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent gestureComponent1 = new GestureComponent("RC", "forward",
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "forward",
                 0, 0.0, dir, devices);
-        GestureComponent gestureComponent2 = new GestureComponent("RC", "up",
+        GestureComponent gestureComponent2 = new GestureComponent(Constants.RC, "up",
                 0, 0.0, dir, devices);
         rcGesture.add(gestureComponent1);
         rcGesture.add(gestureComponent2);
@@ -185,9 +185,9 @@ class GestureFormsTest {
         Vec3 userGestureDirection2 = new Vec3((.03), (1), (.07)).normalize();
         Vec3 storedGestureDirection = new Vec3((0), (1), (0)).normalize();
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent gestureComponent1 = new GestureComponent("RC", "up",
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "up",
                 301, 900.0, userGestureDirection, devices);
-        GestureComponent gestureComponent2 = new GestureComponent("LC", "up",
+        GestureComponent gestureComponent2 = new GestureComponent(Constants.LC, "up",
                 301, 900.0, userGestureDirection2, devices);
         rcGesture.add(gestureComponent1);
         lcGesture.add(gestureComponent2);
@@ -205,9 +205,9 @@ class GestureFormsTest {
         Vec3 userGestureDirection = new Vec3((-.02), (1), (-.06)).normalize();
         Vec3 userGestureDirection2 = new Vec3((.03), (1), (.07)).normalize();
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent gestureComponent1 = new GestureComponent("RC", "idle",
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "idle",
                 501, 200.0, userGestureDirection, devices);
-        GestureComponent gestureComponent2 = new GestureComponent("LC", "idle",
+        GestureComponent gestureComponent2 = new GestureComponent(Constants.LC, "idle",
                 501, 200.0, userGestureDirection2, devices);
         rcGesture.add(gestureComponent1);
         lcGesture.add(gestureComponent2);

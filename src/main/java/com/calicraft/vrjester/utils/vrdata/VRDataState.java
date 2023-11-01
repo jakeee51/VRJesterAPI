@@ -50,10 +50,10 @@ public class VRDataState {
     public static Vec3 getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice, int pose) {
         Vec3 ret;
         switch (vrDevice) {
-            case HMD -> ret = vrDataState.getHmd()[pose];
-            case RC -> ret = vrDataState.getRc()[pose];
-            case LC -> ret = vrDataState.getLc()[pose];
-            case C2 -> ret = vrDataState.getC2()[pose];
+            case HEAD_MOUNTED_DISPLAY -> ret = vrDataState.getHmd()[pose];
+            case RIGHT_CONTROLLER -> ret = vrDataState.getRc()[pose];
+            case LEFT_CONTROLLER -> ret = vrDataState.getLc()[pose];
+            case EXTRA_TRACKER -> ret = vrDataState.getC2()[pose];
             default -> {
                 System.err.println("VRDevice not yet supported!");
                 ret = new Vec3((0), (0), (0));
@@ -66,10 +66,10 @@ public class VRDataState {
     public static Vec3[] getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice) {
         Vec3[] ret;
         switch (vrDevice) {
-            case HMD -> ret = vrDataState.getHmd();
-            case RC -> ret = vrDataState.getRc();
-            case LC -> ret = vrDataState.getLc();
-            case C2 -> ret = vrDataState.getC2();
+            case HEAD_MOUNTED_DISPLAY -> ret = vrDataState.getHmd();
+            case RIGHT_CONTROLLER -> ret = vrDataState.getRc();
+            case LEFT_CONTROLLER -> ret = vrDataState.getLc();
+            case EXTRA_TRACKER -> ret = vrDataState.getC2();
             default -> {
                 System.err.println("VRDevice not yet supported!");
                 ret = new Vec3[]{new Vec3((0), (0), (0)), new Vec3((0), (0), (0))};

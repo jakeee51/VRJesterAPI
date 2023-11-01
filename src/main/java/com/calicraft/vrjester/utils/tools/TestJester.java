@@ -20,7 +20,7 @@ public class TestJester {
     public TestJester() {}
 
     public void trigger(HashMap<String, String> gesture, VRDataState vrDataWorldPre, Config config) {
-        Config.GestureContext gestureCtx = config.GESTURES.get(gesture.get("gestureName"));
+        Config.GestureContext gestureCtx = config.TESTING_GESTURES.get(gesture.get("gestureName"));
         if (gestureCtx == null)
             gestureCtx = config.new GestureContext(1.0, 0, 0);
 

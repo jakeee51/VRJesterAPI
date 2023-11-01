@@ -1,5 +1,6 @@
 package com.calicraft.vrjester.gesture;
 
+import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.tools.Vec3;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
 import org.junit.jupiter.api.Test;
@@ -21,9 +22,9 @@ public class GestureTraceTest {
         endPose[1] = new Vec3(0,0,1).normalize();
         HashMap<String, Integer> gesturesTraced = new HashMap<>();
         Vec3 facingDirection = new Vec3(1,0,2);
-        GestureTrace ges = new GestureTrace("000", VRDevice.RC, centroidPose, facingDirection);
+        GestureTrace ges = new GestureTrace("000", VRDevice.RIGHT_CONTROLLER, centroidPose, facingDirection);
         ges.completeTrace(endPose);
-        GestureComponent val1 = new GestureComponent("RC", "forward",
+        GestureComponent val1 = new GestureComponent(Constants.RC, "forward",
                 0, 0.0, centroidPose[1], gesturesTraced);
         GestureComponent val2 = ges.toGestureComponent();
         assertEquals(val1.movement(), val2.movement());

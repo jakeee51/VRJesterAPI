@@ -1,4 +1,5 @@
 package com.calicraft.vrjester.gesture;
+import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.tools.Vec3;
 import org.junit.jupiter.api.Test;
 
@@ -13,9 +14,9 @@ public class GestureComponentTest {
     public void equalsTest(){
         Vec3 dir = new Vec3((0),(0),(0));
         HashMap<String, Integer> devices = new HashMap<>();
-        GestureComponent storedGesture = new GestureComponent("RC", "forward",
+        GestureComponent storedGesture = new GestureComponent(Constants.RC, "forward",
                 0, 0.0, dir, devices);
-        GestureComponent userGesture = new GestureComponent("RC", "forward",
+        GestureComponent userGesture = new GestureComponent(Constants.RC, "forward",
                 0, 0.0, dir, devices);
         assertEquals(storedGesture, userGesture);
 
@@ -24,10 +25,10 @@ public class GestureComponentTest {
     @Test
     public void matchesTest(){
         Vec3 dir = new Vec3((0),(0),(0));
-        HashMap<String, Integer> devicesInProximity = new HashMap<>(); devicesInProximity.put("LC", 0);
-        GestureComponent storedGesture = new GestureComponent("RC", "forward",
+        HashMap<String, Integer> devicesInProximity = new HashMap<>(); devicesInProximity.put(Constants.LC, 0);
+        GestureComponent storedGesture = new GestureComponent(Constants.RC, "forward",
                 0, 0.0, dir, devicesInProximity);
-        GestureComponent userGesture = new GestureComponent("RC", "forward",
+        GestureComponent userGesture = new GestureComponent(Constants.RC, "forward",
                 5, 5.0, dir, devicesInProximity);
         assertTrue(storedGesture.matches(userGesture));
     }

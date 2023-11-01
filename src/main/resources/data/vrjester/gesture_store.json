@@ -1,9 +1,9 @@
 {
   "GESTURES": {
     "LOWER": {
-      "RC": [
+      "RIGHT_CONTROLLER": [
         {
-          "vrDevice": "RC",
+          "vrDevice": "RIGHT_CONTROLLER",
           "movement": "down",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -15,9 +15,9 @@
           "devicesInProximity": {}
         }
       ],
-      "LC": [
+      "LEFT_CONTROLLER": [
         {
-          "vrDevice": "LC",
+          "vrDevice": "LEFT_CONTROLLER",
           "movement": "down",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -31,9 +31,9 @@
       ]
     },
     "RAISE": {
-      "RC": [
+      "RIGHT_CONTROLLER": [
         {
-          "vrDevice": "RC",
+          "vrDevice": "RIGHT_CONTROLLER",
           "movement": "up",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -45,9 +45,9 @@
           "devicesInProximity": {}
         }
       ],
-      "LC": [
+      "LEFT_CONTROLLER": [
         {
-          "vrDevice": "LC",
+          "vrDevice": "LEFT_CONTROLLER",
           "movement": "up",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -61,9 +61,9 @@
       ]
     },
     "GROW": {
-      "RC": [
+      "RIGHT_CONTROLLER": [
         {
-          "vrDevice": "RC",
+          "vrDevice": "RIGHT_CONTROLLER",
           "movement": "right",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -75,9 +75,9 @@
           "devicesInProximity": {}
         }
       ],
-      "LC": [
+      "LEFT_CONTROLLER": [
         {
-          "vrDevice": "LC",
+          "vrDevice": "LEFT_CONTROLLER",
           "movement": "left",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -91,9 +91,9 @@
       ]
     },
     "SHRINK": {
-      "RC": [
+      "RIGHT_CONTROLLER": [
         {
-          "vrDevice": "RC",
+          "vrDevice": "RIGHT_CONTROLLER",
           "movement": "left",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -105,9 +105,9 @@
           "devicesInProximity": {}
         }
       ],
-      "LC": [
+      "LEFT_CONTROLLER": [
         {
-          "vrDevice": "LC",
+          "vrDevice": "LEFT_CONTROLLER",
           "movement": "right",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -121,9 +121,9 @@
       ]
     },
     "BURST": {
-      "RC": [
+      "RIGHT_CONTROLLER": [
         {
-          "vrDevice": "RC",
+          "vrDevice": "RIGHT_CONTROLLER",
           "movement": "forward",
           "elapsedTime": 2000,
           "speed": 0.0,
@@ -135,9 +135,9 @@
           "devicesInProximity": {}
         }
       ],
-      "LC": [
+      "LEFT_CONTROLLER": [
         {
-          "vrDevice": "LC",
+          "vrDevice": "LEFT_CONTROLLER",
           "movement": "forward",
           "elapsedTime": 2000,
           "speed": 0.0,
@@ -151,9 +151,9 @@
       ]
     },
     "PUSH": {
-      "RC": [
+      "RIGHT_CONTROLLER": [
         {
-          "vrDevice": "RC",
+          "vrDevice": "RIGHT_CONTROLLER",
           "movement": "forward",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -165,9 +165,9 @@
           "devicesInProximity": {}
         }
       ],
-      "LC": [
+      "LEFT_CONTROLLER": [
         {
-          "vrDevice": "LC",
+          "vrDevice": "LEFT_CONTROLLER",
           "movement": "forward",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -181,9 +181,9 @@
       ]
     },
     "PULL": {
-      "RC": [
+      "RIGHT_CONTROLLER": [
         {
-          "vrDevice": "RC",
+          "vrDevice": "RIGHT_CONTROLLER",
           "movement": "back",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -195,9 +195,9 @@
           "devicesInProximity": {}
         }
       ],
-      "LC": [
+      "LEFT_CONTROLLER": [
         {
-          "vrDevice": "LC",
+          "vrDevice": "LEFT_CONTROLLER",
           "movement": "back",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -211,9 +211,9 @@
       ]
     },
     "STRIKE": {
-      "RC|LC": [
+      "RIGHT_CONTROLLER|LEFT_CONTROLLER": [
         {
-          "vrDevice": "RC|LC",
+          "vrDevice": "RIGHT_CONTROLLER|LEFT_CONTROLLER",
           "movement": "forward",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -227,9 +227,9 @@
       ]
     },
     "UPPERCUT": {
-      "RC|LC": [
+      "RIGHT_CONTROLLER|LEFT_CONTROLLER": [
         {
-          "vrDevice": "RC|LC",
+          "vrDevice": "RIGHT_CONTROLLER|LEFT_CONTROLLER",
           "movement": "forward",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -241,7 +241,7 @@
           "devicesInProximity": {}
         },
         {
-          "vrDevice": "RC|LC",
+          "vrDevice": "RIGHT_CONTROLLER|LEFT_CONTROLLER",
           "movement": "up",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -255,9 +255,9 @@
       ]
     },
     "BLOCK": {
-      "RC": [
+      "RIGHT_CONTROLLER": [
         {
-          "vrDevice": "RC",
+          "vrDevice": "RIGHT_CONTROLLER",
           "movement": "up",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -269,9 +269,9 @@
           "devicesInProximity": {}
         }
       ],
-      "LC": [
+      "LEFT_CONTROLLER": [
         {
-          "vrDevice": "LC",
+          "vrDevice": "LEFT_CONTROLLER",
           "movement": "up",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -285,9 +285,9 @@
       ]
     },
     "IDLE UP": {
-      "RC": [
+      "RIGHT_CONTROLLER": [
         {
-          "vrDevice": "RC",
+          "vrDevice": "RIGHT_CONTROLLER",
           "movement": "idle",
           "elapsedTime": 300,
           "speed": 0.0,
@@ -299,9 +299,9 @@
           "devicesInProximity": {}
         }
       ],
-      "LC": [
+      "LEFT_CONTROLLER": [
         {
-          "vrDevice": "LC",
+          "vrDevice": "LEFT_CONTROLLER",
           "movement": "idle",
           "elapsedTime": 300,
           "speed": 0.0,
@@ -315,9 +315,9 @@
       ]
     },
     "KAMEHAMEHA": {
-      "RC": [
+      "RIGHT_CONTROLLER": [
           {
-          "vrDevice": "RC",
+          "vrDevice": "RIGHT_CONTROLLER",
           "movement": "back",
           "elapsedTime": 0,
           "speed": 0.0,
@@ -329,7 +329,7 @@
           "devicesInProximity": {}
         },
         {
-          "vrDevice": "RC",
+          "vrDevice": "RIGHT_CONTROLLER",
           "movement": "forward",
           "elapsedTime": 2500,
           "speed": 0.0,

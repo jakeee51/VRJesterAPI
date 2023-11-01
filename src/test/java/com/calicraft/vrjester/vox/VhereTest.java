@@ -14,7 +14,7 @@ public class VhereTest {
         Vec3[] centroidPose = new Vec3[2];
         centroidPose[0] = new Vec3(0,0,0);
         centroidPose[1] = new Vec3(0,0,0);
-        Vhere testVhere = new Vhere(VRDevice.RC, centroidPose);
+        Vhere testVhere = new Vhere(VRDevice.RIGHT_CONTROLLER, centroidPose);
         Vec3 point = new Vec3(Constants.VIRTUAL_SPHERE_RADIUS, 0, 0);
         assertTrue(testVhere.hasPoint(point));
     }
