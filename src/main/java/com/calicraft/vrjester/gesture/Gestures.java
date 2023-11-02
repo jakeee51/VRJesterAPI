@@ -6,6 +6,7 @@ import com.calicraft.vrjester.gesture.radix.Node;
 import com.calicraft.vrjester.gesture.radix.Path;
 import com.calicraft.vrjester.gesture.radix.RadixTree;
 import com.calicraft.vrjester.utils.tools.GestureComponentDeserializer;
+import com.calicraft.vrjester.utils.tools.GestureComponentSerializer;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -142,7 +143,10 @@ public class Gestures {
         writeGestures(Constants.RC, rcGestures.root, new ArrayList<>());
         writeGestures(Constants.LC, lcGestures.root, new ArrayList<>());
         try (FileWriter writer = new FileWriter(gestureStoreFile.getPath())) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(GestureComponent.class, new GestureComponentSerializer());
+            builder.setPrettyPrinting();
+            Gson gson = builder.create();
             gson.toJson(gestureStore, writer);
             writer.flush();
         } catch (IOException e) {

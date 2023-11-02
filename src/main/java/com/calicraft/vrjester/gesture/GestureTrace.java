@@ -20,7 +20,7 @@ public class GestureTrace {
     public String movement = "idle"; // Movement taken to get to Vox
     public long elapsedTime = 0; // Time spent within Vox in ms (added on the fly while idle)
     public double speed; // Average speed within Vox (calculated on the fly while idle)
-    public final Map<String, Integer> devicesInProximity = new HashMap<>(); // Other VRDevices within this Vox
+    public final Map<String, Integer> devicesInProximity = new HashMap<>(); // Time other VRDevices spent within this Vox
     private Vec3 direction, front, back, right, left;
     private final List<Vec3[]> poses = new ArrayList<>(); // Poses captured within Vox
 
