@@ -37,10 +37,10 @@ public class GestureTrace {
         return String.format("VRDEVICE: %s | MOVED: %s | Time Elapsed: %dl", vrDevice, movement, elapsedTime);
     }
 
-    // Convert Track object to GestureComponent
+    // Convert Trace object to GestureComponent
     public GestureComponent toGestureComponent() {
         return new GestureComponent(getVrDevice(), getMovement(), getElapsedTime(),
-                getSpeed(), new com.calicraft.vrjester.utils.tools.Vec3(getDirection()), getDevicesInProximity());
+                getSpeed(), (com.calicraft.vrjester.utils.tools.Vec3) getDirection(), getDevicesInProximity());
     }
 
     public String getVoxId() {
