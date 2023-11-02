@@ -1,5 +1,7 @@
 package com.calicraft.vrjester;
 
+import com.calicraft.vrjester.config.Config;
+import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.tools.EventsLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -18,6 +20,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -50,8 +53,10 @@ public class VrJesterApi {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
+        File gestureStoreFile = new File(Constants.GESTURE_STORE_PATH);
+        if (!gestureStoreFile.exists())
+            Config.writeGestureStore();
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {

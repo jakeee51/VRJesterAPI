@@ -157,7 +157,6 @@ public class Gestures {
     // Add each gesture to GestureStore object for writing to gesture store file
     private void writeGestures(String vrDevice, Node current, List<GestureComponent> result) {
         if (current.isGesture) {
-            System.out.println(result);
             gestureStore.addGesture(vrDevice, getGestureMapping(vrDevice).get(result.hashCode()), result);
         }
         for (Path path : current.paths.values()) {

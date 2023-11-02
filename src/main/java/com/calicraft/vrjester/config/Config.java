@@ -126,7 +126,7 @@ public class Config {
         List<GestureComponent> hmdGesture = new ArrayList<>();
         List<GestureComponent> rcGesture = new ArrayList<>();
         List<GestureComponent> rcGesture2 = new ArrayList<>(); // To reproduce null error, use same rcGesture object
-        List<GestureComponent> rcGesture3 = new ArrayList<>(); // To reproduce null error, use same rcGesture object
+        List<GestureComponent> rcGesture3 = new ArrayList<>();
         List<GestureComponent> lcGesture = new ArrayList<>();
         Vec3 dir = new Vec3((0),(0),(0));
         HashMap<String, Integer> devices = new HashMap<>();

@@ -13,7 +13,7 @@ public class GestureStore {
 
     // Add gesture to GestureStore based on VRDevice
     public void addGesture(String vrDevice, String gestureName, List<GestureComponent> gesture) {
-        HashMap<String, List<GestureComponent>> deviceGesture = new HashMap<>();
+        HashMap<String, List<GestureComponent>> deviceGesture = GESTURES.getOrDefault(gestureName, new HashMap<>());
         deviceGesture.put(vrDevice, gesture);
         GESTURES.put(gestureName, deviceGesture);
     }
