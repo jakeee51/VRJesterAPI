@@ -23,9 +23,9 @@ public class Gesture {
     public Gesture(VRDataState vrDataState) {
         // Note: Facing direction is set here, meaning all movements after tracing this Gesture object are relative to that
         Vec3[] hmdOrigin = vrDataState.getHmd(), rcOrigin = vrDataState.getRc(), lcOrigin = vrDataState.getLc();
-        Vhere hmdVhere = new Vhere(VRDevice.HMD, hmdOrigin);
-        Vhere rcVhere = new Vhere(VRDevice.RC, rcOrigin);
-        Vhere lcVhere = new Vhere(VRDevice.LC, lcOrigin);
+        Vhere hmdVhere = new Vhere(VRDevice.HEAD_MOUNTED_DISPLAY, hmdOrigin);
+        Vhere rcVhere = new Vhere(VRDevice.RIGHT_CONTROLLER, rcOrigin);
+        Vhere lcVhere = new Vhere(VRDevice.LEFT_CONTROLLER, lcOrigin);
         vhereList.add(hmdVhere); vhereList.add(rcVhere); vhereList.add(lcVhere);
     }
 
@@ -44,25 +44,25 @@ public class Gesture {
     public Gesture(HashMap<String, List<GestureComponent>> gesture) {
         for (String vrDevice: gesture.keySet()) {
             List<String> devices = Arrays.asList(vrDevice.split("\\|"));
-            if (devices.contains("HMD")) {
+            if (devices.contains(Constants.HMD)) {
                 Map<String, String> newValues = new HashMap<>();
-                newValues.put("vrDevice", "HMD");
+                newValues.put("vrDevice", Constants.HMD);
                 if (devices.size() > 1)
-                    validDevices.add("HMD");
+                    validDevices.add(Constants.HMD);
                 hmdGesture = GestureComponent.copy(gesture.get(vrDevice), newValues);
             }
-            if (devices.contains("RC")) {
+            if (devices.contains(Constants.RC)) {
                 Map<String, String> newValues = new HashMap<>();
-                newValues.put("vrDevice", "RC");
+                newValues.put("vrDevice", Constants.RC);
                 if (devices.size() > 1)
-                    validDevices.add("RC");
+                    validDevices.add(Constants.RC);
                 rcGesture = GestureComponent.copy(gesture.get(vrDevice), newValues);
             }
-            if (devices.contains("LC")) {
+            if (devices.contains(Constants.LC)) {
                 Map<String, String> newValues = new HashMap<>();
-                newValues.put("vrDevice", "LC");
+                newValues.put("vrDevice", Constants.LC);
                 if (devices.size() > 1)
-                    validDevices.add("LC");
+                    validDevices.add(Constants.LC);
                 lcGesture = GestureComponent.copy(gesture.get(vrDevice), newValues);
             }
         }
@@ -88,9 +88,9 @@ public class Gesture {
 //                System.out.println("COMPLETE TRACK: " + vhere.getId() + ": " + gestureTrace);
                 vhere.beginTrace(currentPoint);
                 switch (vhere.getVrDevice()) {  // Append a Vox trace's new GestureComponent object per VRDevice
-                    case HMD -> hmdGesture.add(gestureTrace.toGestureComponent());
-                    case RC  -> rcGesture.add(gestureTrace.toGestureComponent());
-                    case LC  -> lcGesture.add(gestureTrace.toGestureComponent());
+                    case HEAD_MOUNTED_DISPLAY -> hmdGesture.add(gestureTrace.toGestureComponent());
+                    case RIGHT_CONTROLLER -> rcGesture.add(gestureTrace.toGestureComponent());
+                    case LEFT_CONTROLLER -> lcGesture.add(gestureTrace.toGestureComponent());
                 }
             }
         }
@@ -109,9 +109,9 @@ public class Gesture {
                 gestureTrace.completeIdleTrace(currentPoint);
                 vhere.beginTrace(currentPoint);
                 switch (vhere.getVrDevice()) {  // Append a Vox trace's new GestureComponent object per VRDevice
-                    case HMD -> hmdGesture.add(gestureTrace.toGestureComponent());
-                    case RC -> rcGesture.add(gestureTrace.toGestureComponent());
-                    case LC -> lcGesture.add(gestureTrace.toGestureComponent());
+                    case HEAD_MOUNTED_DISPLAY -> hmdGesture.add(gestureTrace.toGestureComponent());
+                    case RIGHT_CONTROLLER -> rcGesture.add(gestureTrace.toGestureComponent());
+                    case LEFT_CONTROLLER -> lcGesture.add(gestureTrace.toGestureComponent());
                 }
             }
         }

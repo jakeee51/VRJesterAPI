@@ -1,23 +1,31 @@
 package com.calicraft.vrjester.config;
 
+import com.calicraft.vrjester.gesture.Gesture;
+import com.calicraft.vrjester.gesture.GestureComponent;
+import com.calicraft.vrjester.handlers.TriggerEventHandler;
+import com.calicraft.vrjester.utils.tools.Vec3;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 public class Config {
     public String RECOGNIZE_ON = Constants.RECOGNIZE_ON;
+    public String GESTURE_NAME = Constants.SAMPLE_GESTURE_NAME;
     public boolean RECORD_MODE = Constants.RECORD_MODE;
     public boolean READ_DATA = Constants.READ_DATA;
     public boolean WRITE_DATA = Constants.WRITE_DATA;
-    public float VOX_LENGTH = Constants.VOX_LENGTH;
     public float VIRTUAL_SPHERE_RADIUS = Constants.VIRTUAL_SPHERE_RADIUS;
     public int MAX_LISTENING_TIME = Constants.MAX_LISTENING_TIME;
-    public HashMap<String, GestureContext> GESTURES = new HashMap<>();
-    public Log LOG = new Log();
+    public HashMap<String, GestureContext> TESTING_GESTURES = new HashMap<>();
+//    public Log LOG = new Log();
 
     public class Log {
         // Class that represents log configuration
@@ -49,7 +57,11 @@ public class Config {
     public static Config readConfig() {
         try {
             StringBuilder sb = new StringBuilder();
-            File configFile = new File(Constants.CONFIG_PATH);
+            File configFile;
+            if (System.getenv("dev") != null)
+                configFile = new File(Constants.DEV_CONFIG_PATH);
+            else
+                configFile = new File(Constants.CONFIG_PATH);
             Scanner myReader = new Scanner(configFile);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -62,8 +74,8 @@ public class Config {
             Gson gson = builder.create();
             return gson.fromJson(sb.toString(), Config.class);
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred reading config json!");
-            e.printStackTrace();
+            System.out.println("An error occurred reading config json! Attempting to generate new config...");
+            writeConfig();
         }
         return new Config();
     }
@@ -88,5 +100,58 @@ public class Config {
             e.printStackTrace();
         }
         return readConfig(); // Use default Minecraft config path
+    }
+
+    public static void writeConfig() {
+        try {
+            Config config = new Config();
+            File configFile = new File(Constants.CONFIG_PATH);
+            GestureContext strikeContext = config.new GestureContext(1.0, 0, 0);
+            GestureContext burstContext = config.new GestureContext(1.0, 3, 3);
+            GestureContext uppercutContext = config.new GestureContext(0.25, 3, 3);
+            config.TESTING_GESTURES.put("STRIKE", strikeContext);
+            config.TESTING_GESTURES.put("BURST", burstContext);
+            config.TESTING_GESTURES.put("UPPERCUT", uppercutContext);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            FileWriter writer = new FileWriter(configFile);
+            gson.toJson(config, writer);
+            writer.flush();
+        } catch (IOException e) {
+            System.out.println("An error occurred writing config json!");
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeGestureStore() {
+        List<GestureComponent> hmdGesture = new ArrayList<>();
+        List<GestureComponent> rcGesture = new ArrayList<>();
+        List<GestureComponent> rcGesture2 = new ArrayList<>(); // To reproduce null error, use same rcGesture object
+        List<GestureComponent> rcGesture3 = new ArrayList<>(); // To reproduce null error, use same rcGesture object
+        List<GestureComponent> lcGesture = new ArrayList<>();
+        Vec3 dir = new Vec3((0),(0),(0));
+        HashMap<String, Integer> devices = new HashMap<>();
+
+        GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "forward",
+                0, 0.0, dir, devices);
+        GestureComponent gestureComponent2 = new GestureComponent(Constants.RC, "up",
+                0, 0.0, dir, devices);
+        GestureComponent gestureComponent3 = new GestureComponent(Constants.RC, "forward",
+                2000, 0.0, dir, devices);
+        GestureComponent gestureComponent4 = new GestureComponent(Constants.LC, "forward",
+                2000, 0.0, dir, devices);
+
+        rcGesture.add(gestureComponent1);
+        Gesture strikeGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
+        TriggerEventHandler.gestures.store(strikeGesture, "STRIKE");
+        rcGesture2.add(gestureComponent1);
+        rcGesture2.add(gestureComponent2);
+        Gesture uppercutGesture = new Gesture(hmdGesture, rcGesture2, lcGesture);
+        TriggerEventHandler.gestures.store(uppercutGesture, "UPPERCUT");
+        rcGesture3.add(gestureComponent3);
+        lcGesture.add(gestureComponent4);
+        Gesture burstGesture = new Gesture(hmdGesture, rcGesture3, lcGesture);
+        TriggerEventHandler.gestures.store(burstGesture, "BURST");
+
+        TriggerEventHandler.gestures.write();
     }
 }

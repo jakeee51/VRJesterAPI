@@ -23,20 +23,24 @@ import java.util.*;
 public class Gestures {
     // Class for storing the gestures in a namespace for each VRDevice
 
-    private final File gestureStoreFile = new File(Constants.DEV_GESTURE_STORE_PATH);
+    private final File gestureStoreFile;
     public final GestureStore gestureStore = new GestureStore();
     public HashMap<String, String> gestureNameSpace = new HashMap<>();
     public HashMap<Integer, String> hmdGestureMapping = new HashMap<>();
     public HashMap<Integer, String> rcGestureMapping = new HashMap<>();
     public HashMap<Integer, String> lcGestureMapping = new HashMap<>();
-    public RadixTree hmdGestures = new RadixTree("HMD");
-    public RadixTree rcGestures = new RadixTree("RC");
-    public RadixTree lcGestures = new RadixTree("LC");
+    public RadixTree hmdGestures = new RadixTree(Constants.HMD);
+    public RadixTree rcGestures = new RadixTree(Constants.RC);
+    public RadixTree lcGestures = new RadixTree(Constants.LC);
 
     public Config config;
 
     public Gestures(Config config) {
         this.config = config;
+        if (System.getenv("dev") != null)
+            gestureStoreFile = new File(Constants.DEV_GESTURE_STORE_PATH);
+        else
+            gestureStoreFile = new File(Constants.GESTURE_STORE_PATH);
     }
 
     // Read in gestures from gesture store file and return GestureStore object
@@ -97,7 +101,7 @@ public class Gestures {
         String id;
         StringBuilder sb = new StringBuilder();
         for (String vrDevice: Constants.DEVICES) {
-            if (!gesture.validDevices.isEmpty()) { // OR
+            if (!gesture.validDevices.isEmpty()) { // Gestures for either OR, VRDevice storage instance handler
                 String newId = storeToMapping(gesture, name, vrDevice);
                 if (!sb.toString().contains(newId))
                     sb.append(newId);
@@ -160,9 +164,9 @@ public class Gestures {
     // Reset the gestures namespace
     public void clear() {
         gestureNameSpace = new HashMap<>();
-        hmdGestures = new RadixTree("HMD");
-        rcGestures = new RadixTree("RC");
-        lcGestures = new RadixTree("LC");
+        hmdGestures = new RadixTree(Constants.HMD);
+        rcGestures = new RadixTree(Constants.RC);
+        lcGestures = new RadixTree(Constants.LC);
         hmdGestureMapping = new HashMap<>();
         rcGestureMapping = new HashMap<>();
         lcGestureMapping = new HashMap<>();
