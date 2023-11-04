@@ -4,6 +4,7 @@
 	"RECORD_MODE": false,
 	"READ_DATA": false,
 	"WRITE_DATA": false,
+	"DEMO_MODE": true,
 	"VIRTUAL_SPHERE_RADIUS": 0.3,
 	"MAX_LISTENING_TIME": 200,
 	"TESTING_GESTURES": {

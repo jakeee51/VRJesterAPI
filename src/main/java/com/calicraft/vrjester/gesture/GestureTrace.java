@@ -40,7 +40,7 @@ public class GestureTrace {
     // Convert Trace object to GestureComponent
     public GestureComponent toGestureComponent() {
         return new GestureComponent(getVrDevice(), getMovement(), getElapsedTime(),
-                getSpeed(), (com.calicraft.vrjester.utils.tools.Vec3) getDirection(), getDevicesInProximity());
+                getSpeed(), new com.calicraft.vrjester.utils.tools.Vec3(getDirection()), getDevicesInProximity());
     }
 
     public String getVoxId() {

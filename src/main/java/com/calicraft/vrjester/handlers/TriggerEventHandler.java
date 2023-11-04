@@ -40,7 +40,7 @@ public class TriggerEventHandler {
     private static final VRDataAggregator preWorldDataAggregator = new VRDataAggregator(VRDataType.VRDATA_WORLD_PRE, false);
     private static final int DELAY = 15; // 0.75 second (15 ticks)
     private static int sleep = DELAY;
-    private static int limiter = config.MAX_LISTENING_TIME; // 10 seconds (200 ticks)
+    private static int limiter = config.MAX_LISTENING_TIME; // 10 seconds (400 ticks)
     private static boolean listener = false;
     private long elapsedTime = 0;
     private static String previousGesture = "";
@@ -86,10 +86,11 @@ public class TriggerEventHandler {
                     }
                 }
             }
-            // TODO - Only make gesture stop listening after like 10 seconds
             if (config.RECOGNIZE_ON.equals("RECOGNIZE")) { // Recognize gesture within delay interval.
                 // If a gesture is recognized, wait for the next interval to see if another gesture is recognized
                 HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
+                System.out.println("GESTURE: " + gesture);
+                System.out.println("recognizedGesture: " + recognizedGesture);
                 if (sleep != 0) { // Execute every tick
                     if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
                         previousGesture = recognizedGesture.get("gestureName");
@@ -99,19 +100,19 @@ public class TriggerEventHandler {
                     }
                 } else { // Reset trigger every delay interval
 //                    System.out.println("JESTER DONE LISTENING");
+                    System.out.println("LIMITER: " + limiter);
                     sleep = DELAY;
                     if (!recognizedGesture.isEmpty()) {
                         MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                         sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
-//                        test.trigger(recognizedGesture, vrDataWorldPre, config);
+                        if (config.DEMO_MODE)
+                            test.trigger(recognizedGesture, vrDataWorldPre, config);
                         limiter = config.MAX_LISTENING_TIME;
-                        stopJesterListener(); previousGesture = "";
+                        stopJesterListener();
                     }
                 }
-                if (limiter == 0) {
-                    limiter = config.MAX_LISTENING_TIME;
-                    stopJesterListener(); previousGesture = "";
-                }
+                if (limiter == 0)
+                    stopJesterListener();
                 sleep--;
             }
             limiter--;
@@ -190,6 +191,8 @@ public class TriggerEventHandler {
     // Clear and reset gesture listener
     private void stopJesterListener() {
         gesture = null; listener = false;
+        previousGesture = "";
+        limiter = config.MAX_LISTENING_TIME;
     }
 
     // Handle and update based on dev configurations
