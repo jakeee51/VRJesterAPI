@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GesturesTest {
 
     private static final Config devConfig = Config.readConfig(Constants.DEV_CONFIG_PATH);
-    private static final Gestures gestures = new Gestures(devConfig);
+    private static final Gestures gestures = new Gestures(devConfig, Constants.DEV_GESTURE_STORE_PATH);
 
     @Test
     void gestureLoadTest(){

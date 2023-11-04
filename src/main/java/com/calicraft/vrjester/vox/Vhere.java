@@ -17,16 +17,16 @@ public class Vhere {
 
     private final VRDevice vrDevice;
     private final Map<String, Vec3> vertices = new HashMap<>();
-    public final Config config = Config.readConfig();
+    public final Config config;
     private int id, previousId;
     private String movementDirection = "idle";
     private GestureTrace gestureTrace;
     public Vec3 centroid, faceDirection;
     public float sphereRadius = Constants.VIRTUAL_SPHERE_RADIUS;
 
-    public Vhere(VRDevice vrDevice, Vec3[] centroidPose) {
-        // Override defaults
-        if (config.VIRTUAL_SPHERE_RADIUS != sphereRadius)
+    public Vhere(VRDevice vrDevice, Vec3[] centroidPose, String configPath) {
+        config = Config.readConfig(configPath);
+        if (config.VIRTUAL_SPHERE_RADIUS != sphereRadius) // Override defaults
             sphereRadius = config.VIRTUAL_SPHERE_RADIUS;
 
         this.setId(0); // Initialize Vhere Id

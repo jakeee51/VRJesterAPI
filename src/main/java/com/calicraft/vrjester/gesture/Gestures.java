@@ -23,6 +23,10 @@ import java.util.*;
 
 public class Gestures {
     // Class for storing the gestures in a namespace for each VRDevice
+    // The gesture store, stores gestures for reading and writing to/from JSON
+    // The namespace determines what's recognized as a complete gesture
+    // The mappings determine which devices recognize which gestures
+    // The radix trees store the actual gestures
 
     private final File gestureStoreFile;
     public final GestureStore gestureStore = new GestureStore();
@@ -33,15 +37,13 @@ public class Gestures {
     public RadixTree hmdGestures = new RadixTree(Constants.HMD);
     public RadixTree rcGestures = new RadixTree(Constants.RC);
     public RadixTree lcGestures = new RadixTree(Constants.LC);
+    public HashMap<String, List<String>> eitherDeviceGestures = new HashMap<>();
 
     public Config config;
 
-    public Gestures(Config config) {
+    public Gestures(Config config, String gesture_store_path) {
         this.config = config;
-        if (System.getenv("dev") != null)
-            gestureStoreFile = new File(Constants.DEV_GESTURE_STORE_PATH);
-        else
-            gestureStoreFile = new File(Constants.GESTURE_STORE_PATH);
+        gestureStoreFile = new File(gesture_store_path);
     }
 
     // Read in gestures from gesture store file and return GestureStore object
@@ -103,6 +105,7 @@ public class Gestures {
         StringBuilder sb = new StringBuilder();
         for (String vrDevice: Constants.DEVICES) {
             if (!gesture.validDevices.isEmpty()) { // Gestures for either OR, VRDevice storage instance handler
+                eitherDeviceGestures.put(name, gesture.validDevices);
                 String newId = storeToMapping(gesture, name, vrDevice);
                 if (!sb.toString().contains(newId))
                     sb.append(newId);
@@ -157,7 +160,8 @@ public class Gestures {
     // Add each gesture to GestureStore object for writing to gesture store file
     private void writeGestures(String vrDevice, Node current, List<GestureComponent> result) {
         if (current.isGesture) {
-            gestureStore.addGesture(vrDevice, getGestureMapping(vrDevice).get(result.hashCode()), result);
+            String gestureName = getGestureMapping(vrDevice).get(result.hashCode());
+            gestureStore.addGesture(vrDevice, gestureName, result, eitherDeviceGestures.get(gestureName));
         }
         for (Path path : current.paths.values()) {
             writeGestures(vrDevice, path.next, GestureComponent.concat(result, path.gesture));

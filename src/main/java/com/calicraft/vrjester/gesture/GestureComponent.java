@@ -27,6 +27,8 @@ public record GestureComponent(String vrDevice, String movement,
                 vrDevice, movement, elapsedTime, speed, direction.x, direction.y, direction.z);
     }
 
+    // Note to self: DO NOT include vrDevice in hashCode, this is how 'either or' functionality works.
+    // This way either vrDevice can recognize the same gesture
     @Override
     public int hashCode() {
         return Objects.hash(movement, elapsedTime, speed, direction, devicesInProximity);
@@ -106,6 +108,7 @@ public record GestureComponent(String vrDevice, String movement,
         return Stream.concat(gestureComponent1.stream(), gestureComponent2.stream()).toList();
     }
 
+    // Copy the given gesture and override fields with new values
     public static List<GestureComponent> copy(List<GestureComponent> gesture, Map<String, String> newValues) {
         List<GestureComponent> newGesture = new ArrayList<>();
         for (GestureComponent gestureComponent: gesture) {

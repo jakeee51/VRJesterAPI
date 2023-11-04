@@ -1,7 +1,10 @@
 package com.calicraft.vrjester.gesture;
 
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class GestureStore {
@@ -12,9 +15,16 @@ public class GestureStore {
     public GestureStore() {}
 
     // Add gesture to GestureStore based on VRDevice
-    public void addGesture(String vrDevice, String gestureName, List<GestureComponent> gesture) {
+    public void addGesture(String vrDevice, String gestureName, List<GestureComponent> gesture, List<String> validDevices) {
         HashMap<String, List<GestureComponent>> deviceGesture = GESTURES.getOrDefault(gestureName, new HashMap<>());
-        deviceGesture.put(vrDevice, gesture);
-        GESTURES.put(gestureName, deviceGesture);
+        if (validDevices != null) {
+            vrDevice = String.join("|", validDevices);
+            List<GestureComponent> newGesture = GestureComponent.copy(gesture, Map.of("vrDevice", vrDevice));
+            deviceGesture.put(vrDevice, newGesture);
+            GESTURES.put(gestureName, deviceGesture);
+        } else {
+            deviceGesture.put(vrDevice, gesture);
+            GESTURES.put(gestureName, deviceGesture);
+        }
     }
 }

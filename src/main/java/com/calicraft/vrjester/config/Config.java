@@ -57,11 +57,7 @@ public class Config {
     public static Config readConfig() {
         try {
             StringBuilder sb = new StringBuilder();
-            File configFile;
-            if (System.getenv("dev") != null)
-                configFile = new File(Constants.DEV_CONFIG_PATH);
-            else
-                configFile = new File(Constants.CONFIG_PATH);
+            File configFile = new File(Constants.CONFIG_PATH);
             Scanner myReader = new Scanner(configFile);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -96,8 +92,8 @@ public class Config {
             Gson gson = builder.create();
             return gson.fromJson(sb.toString(), Config.class);
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred reading config json!");
-            e.printStackTrace();
+            System.out.println("An error occurred reading config json! Attempting to generate new config...");
+            writeConfig();
         }
         return readConfig(); // Use default Minecraft config path
     }
@@ -142,16 +138,19 @@ public class Config {
 
         rcGesture.add(gestureComponent1);
         Gesture strikeGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
+        strikeGesture.validDevices.add(Constants.RC);
+        strikeGesture.validDevices.add(Constants.LC);
         TriggerEventHandler.gestures.store(strikeGesture, "STRIKE");
         rcGesture2.add(gestureComponent1);
         rcGesture2.add(gestureComponent2);
         Gesture uppercutGesture = new Gesture(hmdGesture, rcGesture2, lcGesture);
+        uppercutGesture.validDevices.add(Constants.RC);
+        uppercutGesture.validDevices.add(Constants.LC);
         TriggerEventHandler.gestures.store(uppercutGesture, "UPPERCUT");
         rcGesture3.add(gestureComponent3);
         lcGesture.add(gestureComponent4);
         Gesture burstGesture = new Gesture(hmdGesture, rcGesture3, lcGesture);
         TriggerEventHandler.gestures.store(burstGesture, "BURST");
-
         TriggerEventHandler.gestures.write();
     }
 }

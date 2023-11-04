@@ -16,7 +16,7 @@ plugins {
 }
 
 apply plugin: 'net.minecraftforge.gradle'
-version = '1.19.3-0.7.0'
+version = '1.19.3-0.8.0'
 group = 'com.calicraft.vrjester' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'VRJesterAPI'
 
@@ -249,7 +249,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 test {
-    environment "dev", "true"
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"

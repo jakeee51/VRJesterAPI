@@ -12,7 +12,6 @@ public class Gesture {
     // Class that handles compiling the GestureComponent list for each VRDevice
     // Note: A list of GestureComponent's represents a gesture of an individual VRDevice
 
-    private boolean completeGesture = true;
     private final List<Vhere> vhereList = new ArrayList<>();
     public List<GestureComponent> hmdGesture = new ArrayList<>();
     public List<GestureComponent> rcGesture = new ArrayList<>();
@@ -23,9 +22,9 @@ public class Gesture {
     public Gesture(VRDataState vrDataState) {
         // Note: Facing direction is set here, meaning all movements after tracing this Gesture object are relative to that
         Vec3[] hmdOrigin = vrDataState.getHmd(), rcOrigin = vrDataState.getRc(), lcOrigin = vrDataState.getLc();
-        Vhere hmdVhere = new Vhere(VRDevice.HEAD_MOUNTED_DISPLAY, hmdOrigin);
-        Vhere rcVhere = new Vhere(VRDevice.RIGHT_CONTROLLER, rcOrigin);
-        Vhere lcVhere = new Vhere(VRDevice.LEFT_CONTROLLER, lcOrigin);
+        Vhere hmdVhere = new Vhere(VRDevice.HEAD_MOUNTED_DISPLAY, hmdOrigin, Constants.CONFIG_PATH);
+        Vhere rcVhere = new Vhere(VRDevice.RIGHT_CONTROLLER, rcOrigin, Constants.CONFIG_PATH);
+        Vhere lcVhere = new Vhere(VRDevice.LEFT_CONTROLLER, lcOrigin, Constants.CONFIG_PATH);
         vhereList.add(hmdVhere); vhereList.add(rcVhere); vhereList.add(lcVhere);
     }
 
@@ -115,23 +114,6 @@ public class Gesture {
                 }
             }
         }
-    }
-
-    public void setComplete(boolean completedGesture) {
-        completeGesture = completedGesture;
-    }
-
-    public boolean isComplete() {
-        return completeGesture;
-    }
-
-    public void clear() {
-        completeGesture = true;
-        vhereList.clear();
-        hmdGesture.clear();
-        rcGesture.clear();
-        lcGesture.clear();
-        validDevices.clear();
     }
 
     public List<GestureComponent> getHmdGesture() {
