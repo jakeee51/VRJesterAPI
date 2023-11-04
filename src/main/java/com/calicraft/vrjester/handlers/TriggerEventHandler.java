@@ -89,8 +89,6 @@ public class TriggerEventHandler {
             if (config.RECOGNIZE_ON.equals("RECOGNIZE")) { // Recognize gesture within delay interval.
                 // If a gesture is recognized, wait for the next interval to see if another gesture is recognized
                 HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
-                System.out.println("GESTURE: " + gesture);
-                System.out.println("recognizedGesture: " + recognizedGesture);
                 if (sleep != 0) { // Execute every tick
                     if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
                         previousGesture = recognizedGesture.get("gestureName");
@@ -100,7 +98,6 @@ public class TriggerEventHandler {
                     }
                 } else { // Reset trigger every delay interval
 //                    System.out.println("JESTER DONE LISTENING");
-                    System.out.println("LIMITER: " + limiter);
                     sleep = DELAY;
                     if (!recognizedGesture.isEmpty()) {
                         MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
