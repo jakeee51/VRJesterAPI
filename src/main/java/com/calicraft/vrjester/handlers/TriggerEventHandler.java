@@ -99,7 +99,7 @@ public class TriggerEventHandler {
                 } else { // Reset trigger every delay interval
 //                    System.out.println("JESTER DONE LISTENING");
                     sleep = DELAY;
-                    if (!recognizedGesture.isEmpty()) {
+                    if (!recognizedGesture.isEmpty()) { // Final gesture recognition check after delay interval reset
                         MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                         sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
                         if (config.DEMO_MODE)
