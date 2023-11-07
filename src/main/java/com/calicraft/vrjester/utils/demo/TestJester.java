@@ -1,4 +1,4 @@
-package com.calicraft.vrjester.utils.tools;
+package com.calicraft.vrjester.utils.demo;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
@@ -9,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
 
-import static com.calicraft.vrjester.utils.tools.SpawnParticles.moveParticles;
+import static com.calicraft.vrjester.utils.demo.SpawnParticles.moveParticles;
 
 public class TestJester {
 

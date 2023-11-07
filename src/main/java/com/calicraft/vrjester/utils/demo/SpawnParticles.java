@@ -1,4 +1,4 @@
-package com.calicraft.vrjester.utils.tools;
+package com.calicraft.vrjester.utils.demo;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.level.Level;

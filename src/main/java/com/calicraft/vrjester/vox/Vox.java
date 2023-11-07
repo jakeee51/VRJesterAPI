@@ -13,7 +13,7 @@
 //import java.util.HashMap;
 //import java.util.Map;
 //
-//import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
+//import static com.calicraft.vrjester.utils.tools.demo.SpawnParticles.createParticles;
 //
 //public class Vox {
 //    // Class that represents a virtual box

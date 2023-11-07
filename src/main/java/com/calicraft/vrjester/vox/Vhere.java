@@ -10,8 +10,6 @@ import net.minecraft.world.phys.Vec3;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.calicraft.vrjester.utils.tools.SpawnParticles.createParticles;
-
 public class Vhere {
     // Class that represents a virtual sphere
 

@@ -8,7 +8,6 @@ public class EventsLoader {
     // Class for registering VR Jester API events
 
     public static void register() {
-        // Register for relevant vrjester events
         MinecraftForge.EVENT_BUS.register(new TriggerEventHandler());
         MinecraftForge.EVENT_BUS.register(new GestureEventHandler());
 //        MinecraftForge.EVENT_BUS.register(new PlayerInitHandler());
