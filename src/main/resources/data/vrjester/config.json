@@ -1,78 +1,80 @@
 {
-	"RECOGNIZE_ON": "RECOGNIZE",
-	"GESTURE_NAME": "GESTURE 1",
-	"RECORD_MODE": false,
-	"READ_DATA": false,
-	"WRITE_DATA": false,
-	"DEMO_MODE": true,
-	"VIRTUAL_SPHERE_RADIUS": 0.3,
-	"MAX_LISTENING_TIME": 200,
-	"TESTING_GESTURES": {
-		"LOWER": {
-			"velocity": "1.0",
-			"rcParticle": "5",
-			"lcParticle": "5"
-		},
-		"RAISE": {
-			"velocity": "0.5",
-			"rcParticle": "4",
-			"lcParticle": "4"
-		},
-		"GROW": {
-			"velocity": "0.5",
-			"rcParticle": "1",
-			"lcParticle": "1"
-		},
-		"SHRINK": {
-			"velocity": "0.0",
-			"rcParticle": "2",
-			"lcParticle": "2"
-		},
-		"PUSH": {
-			"velocity": "1.0",
-			"rcParticle": "0",
-			"lcParticle": "0"
-		},
-		"PULL": {
-			"velocity": "1.0",
-			"rcParticle": "5",
-			"lcParticle": "5"
-		},
-		"KAMEHAMEHA": {
-			"velocity": "1.0",
-			"rcParticle": "1",
-			"lcParticle": "-1"
-		},
-		"BURST": {
-			"velocity": "1.0",
-			"rcParticle": "3",
-			"lcParticle": "3"
-		},
-		"STRIKE": {
-			"velocity": "1.0",
-			"rcParticle": "0",
-			"lcParticle": "0"
-		},
-		"BLOCK": {
-			"velocity": "0.5",
-			"rcParticle": "3",
-			"lcParticle": "3"
-		},
-		"IDLE UP": {
-			"velocity": "0.5",
-			"rcParticle": "3",
-			"lcParticle": "3"
-		},
-		"UPPERCUT": {
-			"velocity": "0.25",
-			"rcParticle": "3",
-			"lcParticle": "3"
-		}
-	},
-	"LOG": {
-		"name": "vrdata",
-		"gesture": "GESTURE 1",
-		"devices": ["rc", "lc"],
-		"pose": "0"
-	}
+  "RECOGNIZE_ON": "RECOGNIZE",
+  "GESTURE_NAME": "GESTURE 1",
+  "RECORD_MODE": false,
+  "READ_DATA": false,
+  "WRITE_DATA": false,
+  "DEMO_MODE": true,
+  "DEBUG_MODE": true,
+  "VIRTUAL_SPHERE_RADIUS": 0.3,
+  "INTERVAL_DELAY": 15,
+  "MAX_LISTENING_TIME": 400,
+  "TESTING_GESTURES": {
+    "LOWER": {
+      "velocity": "1.0",
+      "rcParticle": "5",
+      "lcParticle": "5"
+    },
+    "RAISE": {
+      "velocity": "0.5",
+      "rcParticle": "4",
+      "lcParticle": "4"
+    },
+    "GROW": {
+      "velocity": "0.5",
+      "rcParticle": "1",
+      "lcParticle": "1"
+    },
+    "SHRINK": {
+      "velocity": "0.0",
+      "rcParticle": "2",
+      "lcParticle": "2"
+    },
+    "PUSH": {
+      "velocity": "1.0",
+      "rcParticle": "0",
+      "lcParticle": "0"
+    },
+    "PULL": {
+      "velocity": "1.0",
+      "rcParticle": "5",
+      "lcParticle": "5"
+    },
+    "KAMEHAMEHA": {
+      "velocity": "1.0",
+      "rcParticle": "1",
+      "lcParticle": "-1"
+    },
+    "BURST": {
+      "velocity": "1.0",
+      "rcParticle": "3",
+      "lcParticle": "3"
+    },
+    "STRIKE": {
+      "velocity": "1.0",
+      "rcParticle": "0",
+      "lcParticle": "0"
+    },
+    "BLOCK": {
+      "velocity": "0.5",
+      "rcParticle": "3",
+      "lcParticle": "3"
+    },
+    "IDLE UP": {
+      "velocity": "0.5",
+      "rcParticle": "3",
+      "lcParticle": "3"
+    },
+    "UPPERCUT": {
+      "velocity": "0.25",
+      "rcParticle": "3",
+      "lcParticle": "3"
+    }
+  },
+  "LOG": {
+    "name": "vrdata",
+    "gesture": "GESTURE 1",
+    "devices": ["rc", "lc"],
+    "pose": "0"
+  }
 }
