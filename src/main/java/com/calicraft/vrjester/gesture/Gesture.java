@@ -70,9 +70,9 @@ public class Gesture {
     @Override
     public String toString() {
         return "Gesture:" +
-                "\r\n \t hmdGesture: " + hmdGesture +
-                "\r\n \t rcGesture: " + rcGesture +
-                "\r\n \t lcGesture: " + lcGesture;
+                "\r\n  hmdGesture: " + hmdGesture +
+                "\r\n  rcGesture: " + rcGesture +
+                "\r\n  lcGesture: " + lcGesture;
     }
 
     // Record the Vox trace of each VRDevice and store the resulting data

@@ -23,7 +23,9 @@ public class Config {
     public boolean READ_DATA = Constants.READ_DATA;
     public boolean WRITE_DATA = Constants.WRITE_DATA;
     public boolean DEMO_MODE = Constants.DEMO_MODE;
+    public boolean DEBUG_MODE = Constants.DEBUG_MODE;
     public float VIRTUAL_SPHERE_RADIUS = Constants.VIRTUAL_SPHERE_RADIUS;
+    public int INTERVAL_DELAY = Constants.INTERVAL_DELAY;
     public int MAX_LISTENING_TIME = Constants.MAX_LISTENING_TIME;
     public HashMap<String, GestureContext> TESTING_GESTURES = new HashMap<>();
 //    public Log LOG = new Log();

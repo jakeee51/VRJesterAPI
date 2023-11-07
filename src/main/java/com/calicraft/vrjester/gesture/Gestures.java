@@ -177,6 +177,7 @@ public class Gestures {
         hmdGestureMapping = new HashMap<>();
         rcGestureMapping = new HashMap<>();
         lcGestureMapping = new HashMap<>();
+        eitherDeviceGestures = new HashMap<>();
     }
 
     // Return gesture mapping based on VRDevice
