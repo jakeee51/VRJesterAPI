@@ -6,7 +6,6 @@ import com.calicraft.vrjester.utils.tools.EventsLoader;
 import com.calicraft.vrjester.utils.tools.GestureCommand;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -42,8 +41,6 @@ public class VrJesterApi {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         // Register the processIMC method for mod loading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        // Register the registerBindings method for mod loading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerBindings);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         EventsLoader.register();
@@ -75,11 +72,6 @@ public class VrJesterApi {
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Do client stuff like get game settings");
-    }
-
-    public void registerBindings(RegisterKeyMappingsEvent event) {
-        LOGGER.info("Registering KeyMappings");
-        event.register(MOD_KEY);
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

@@ -1,9 +1,9 @@
 package com.calicraft.vrjester.utils.tools;
 
+import com.mojang.math.Vector3f;
 import com.mojang.serialization.Codec;
 import net.minecraft.Util;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
 import java.util.List;
 

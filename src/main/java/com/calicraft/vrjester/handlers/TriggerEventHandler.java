@@ -5,26 +5,23 @@ import com.calicraft.vrjester.api.GestureEvent;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
-import com.calicraft.vrjester.gesture.GestureComponent;
 import com.calicraft.vrjester.gesture.Gestures;
 import com.calicraft.vrjester.gesture.recognition.Recognition;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.demo.TestJester;
-import com.calicraft.vrjester.utils.tools.Vec3;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDataType;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static com.calicraft.vrjester.VrJesterApi.VIVECRAFT_LOADED;
 import static com.calicraft.vrjester.VrJesterApi.getMCI;
@@ -53,7 +50,7 @@ public class TriggerEventHandler {
     private static LocalPlayer player;
 
     @SubscribeEvent
-    public void onJesterTrigger(InputEvent.Key event) {
+    public void onJesterTrigger(InputEvent.KeyInputEvent event) {
         if (event.getKey() == VrJesterApi.MOD_KEY.getKey().getValue()) {
             if (setupJesterComplete()) {
                 // Trigger the gesture listening phase
@@ -233,9 +230,9 @@ public class TriggerEventHandler {
 //        if (!msgSentOnce) {
         msgSentOnce = true;
         LocalPlayer player = getMCI().player;
-        Component text = Component.literal(msg);
+        Component text = new TextComponent(msg);
         assert player != null;
-        player.sendSystemMessage(text);
+        player.sendMessage(text, player.getUUID());
 //        }
     }
 }
