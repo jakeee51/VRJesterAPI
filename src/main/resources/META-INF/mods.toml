@@ -34,8 +34,7 @@ credits="" #optional
 authors="Cali" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A Minecraft mod API to allow developers to implement gesture controls in VR for their mod.
-'''
+A Minecraft mod API to allow developers to implement gesture controls in VR for their mod.'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.vrjesterapi]] #optional
     # the modid of the dependency
