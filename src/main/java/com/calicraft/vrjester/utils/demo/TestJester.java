@@ -20,9 +20,9 @@ public class TestJester {
     public TestJester() {}
 
     public void trigger(HashMap<String, String> gesture, VRDataState vrDataWorldPre, Config config) {
-        Config.GestureContext gestureCtx = config.TESTING_GESTURES.get(gesture.get("gestureName"));
+        Config.ParticleContext gestureCtx = config.TESTING_GESTURES.get(gesture.get("gestureName"));
         if (gestureCtx == null)
-            gestureCtx = config.new GestureContext(1.0, 0, 0);
+            gestureCtx = config.new ParticleContext(1.0, 0, 0);
 
         Vec3 avgDir = vrDataWorldPre.getRc()[1].add(vrDataWorldPre.getHmd()[1]).multiply((.5), (.5), (.5));
         if (gestureCtx.rcParticle > -1 && gestureCtx.rcParticle < particleTypes.length && gesture.containsKey(Constants.RC)) {

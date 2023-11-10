@@ -5,15 +5,17 @@ import com.calicraft.vrjester.api.GestureEvent;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
+import com.calicraft.vrjester.gesture.GestureComponent;
 import com.calicraft.vrjester.gesture.Gestures;
 import com.calicraft.vrjester.gesture.recognition.Recognition;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.demo.TestJester;
+import com.calicraft.vrjester.utils.tools.Vec3;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDataType;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.client.event.InputEvent;
@@ -21,11 +23,11 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import static com.calicraft.vrjester.VrJesterApi.VIVECRAFT_LOADED;
-import static com.calicraft.vrjester.VrJesterApi.getMCI;
-import static com.calicraft.vrjester.utils.demo.SpawnParticles.moveParticles;
+import static com.calicraft.vrjester.VrJesterApi.*;
 
 
 public class TriggerEventHandler {
@@ -65,9 +67,6 @@ public class TriggerEventHandler {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (VrJesterApi.MOD_KEY.isDown() && !VIVECRAFT_LOADED)
-            moveParticles(ParticleTypes.FLAME, 0);
-
         if (listener) { // Capture VR data in real time after trigger
             vrDataRoomPre = preRoomDataAggregator.listen();
             vrDataWorldPre = preWorldDataAggregator.listen();
@@ -96,7 +95,7 @@ public class TriggerEventHandler {
                         sleep = DELAY; // Reset ticker to extend listening time
                         limiter = config.MAX_LISTENING_TIME; // Reset limiter
                     }
-                } else { // Reset trigger every delay interval
+                } else { // Reset trigger at the end of the delay interval
 //                    System.out.println("JESTER DONE LISTENING");
                     sleep = DELAY;
                     if (!recognizedGesture.isEmpty()) { // Final gesture recognition check after delay interval reset
@@ -135,6 +134,8 @@ public class TriggerEventHandler {
             }
             checkConfig();
             stopJesterListener();
+            for (KeyMapping keyMapping: KEY_MAPPINGS.values()) // Release all keys
+                keyMapping.setDown(false);
 //            elapsedTime = (System.nanoTime() - elapsedTime) / 1000000; // Total time to listen & recognize gesture
             msgSentOnce = false; elapsedTime = 0;
         }
@@ -144,9 +145,14 @@ public class TriggerEventHandler {
     private void handleNonVrJester() {
         if (VrJesterApi.MOD_KEY.isDown()) {
             System.out.println("NON-VR JESTER TRIGGERED");
+            lcGesture.add(gestureComponent2);
+            gesture = new Gesture(hmdGesture, rcGesture, lcGesture);
         } else {
             System.out.println("JESTER RELEASED");
 //            checkConfig();
+            for (KeyMapping keyMapping: KEY_MAPPINGS.values()) // Release all keys
+                keyMapping.setDown(false);
+            checkConfig();
 //            List<GestureComponent> hmdGesture = new ArrayList<>();
 //            List<GestureComponent> rcGesture = new ArrayList<>();
 //            List<GestureComponent> lcGesture = new ArrayList<>();

@@ -9,6 +9,9 @@
   "VIRTUAL_SPHERE_RADIUS": 0.3,
   "INTERVAL_DELAY": 15,
   "MAX_LISTENING_TIME": 400,
+  "GESTURE_MAPPINGS": {
+    "GESTURE 1": "examplemod.key.ability_1"
+  },
   "TESTING_GESTURES": {
     "LOWER": {
       "velocity": "1.0",

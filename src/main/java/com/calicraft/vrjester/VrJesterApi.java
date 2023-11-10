@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -32,6 +33,7 @@ public class VrJesterApi {
     public static boolean VIVECRAFT_LOADED = false;
     public static final String MOD_ID = "vrjester";
     public static final KeyMapping MOD_KEY = new KeyMapping("key.vrjester.71", 71, MOD_ID);
+    public static HashMap<String, KeyMapping> KEY_MAPPINGS = new HashMap<>();
 
     public VrJesterApi() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -55,7 +57,10 @@ public class VrJesterApi {
 
     private void setup(final FMLCommonSetupEvent event) {
         LOGGER.info("HELLO FROM PREINIT");
+        File configFile = new File(Constants.CONFIG_PATH);
         File gestureStoreFile = new File(Constants.GESTURE_STORE_PATH);
+        if (!configFile.exists())
+            Config.writeConfig();
         if (!gestureStoreFile.exists())
             Config.writeGestureStore();
     }
@@ -74,8 +79,19 @@ public class VrJesterApi {
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
-        LOGGER.info("Do client stuff like get game settings");
+        LOGGER.info("Setting keybindings");
         ClientRegistry.registerKeyBinding(MOD_KEY);
+        Config config = Config.readConfig();
+        KeyMapping[] keyMappings = getMCI().options.keyMappings;
+        HashMap<String, String> gestureMappings = config.GESTURE_KEY_MAPPINGS;
+        for (String gestureMapping: gestureMappings.values()) {
+            for (KeyMapping keyMapping: keyMappings) {
+                if (keyMapping.getName().equals(gestureMapping)) {
+                    LOGGER.info("Adding gesture key mapping -> mapping name: " + gestureMapping + " | key name: " + keyMapping.saveString());
+                    KEY_MAPPINGS.put(gestureMapping, keyMapping);
+                }
+            }
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

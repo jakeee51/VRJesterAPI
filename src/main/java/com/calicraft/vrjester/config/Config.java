@@ -27,7 +27,8 @@ public class Config {
     public float VIRTUAL_SPHERE_RADIUS = Constants.VIRTUAL_SPHERE_RADIUS;
     public int INTERVAL_DELAY = Constants.INTERVAL_DELAY;
     public int MAX_LISTENING_TIME = Constants.MAX_LISTENING_TIME;
-    public HashMap<String, GestureContext> TESTING_GESTURES = new HashMap<>();
+    public HashMap<String, String> GESTURE_KEY_MAPPINGS = new HashMap<>();
+    public HashMap<String, ParticleContext> TESTING_GESTURES = new HashMap<>();
 //    public Log LOG = new Log();
 
     public class Log {
@@ -38,19 +39,19 @@ public class Config {
         public String[] devices = new String[]{};
     }
 
-    public class GestureContext {
+    public class ParticleContext {
         // Class that represents a gesture event configuration
         public double velocity;
         public int rcParticle;
         public int lcParticle;
 
-        public GestureContext() {
+        public ParticleContext() {
             this.velocity = 1.0;
             this.rcParticle = -1;
             this.lcParticle = -1;
         }
 
-        public GestureContext(double velocity, int rcParticle, int lcParticle) {
+        public ParticleContext(double velocity, int rcParticle, int lcParticle) {
             this.velocity = velocity;
             this.rcParticle = rcParticle;
             this.lcParticle = lcParticle;
@@ -105,9 +106,10 @@ public class Config {
         try {
             Config config = new Config();
             File configFile = new File(Constants.CONFIG_PATH);
-            GestureContext strikeContext = config.new GestureContext(1.0, 0, 0);
-            GestureContext burstContext = config.new GestureContext(1.0, 3, 3);
-            GestureContext uppercutContext = config.new GestureContext(0.25, 3, 3);
+            ParticleContext strikeContext = config.new ParticleContext(1.0, 0, 0);
+            ParticleContext burstContext = config.new ParticleContext(1.0, 3, 3);
+            ParticleContext uppercutContext = config.new ParticleContext(0.25, 3, 3);
+            config.GESTURE_KEY_MAPPINGS.put("GESTURE 1", "examplemod.key.ability_1");
             config.TESTING_GESTURES.put("STRIKE", strikeContext);
             config.TESTING_GESTURES.put("BURST", burstContext);
             config.TESTING_GESTURES.put("UPPERCUT", uppercutContext);
