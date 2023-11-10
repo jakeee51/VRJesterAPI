@@ -149,7 +149,6 @@ public class TriggerEventHandler {
             gesture = new Gesture(hmdGesture, rcGesture, lcGesture);
         } else {
             System.out.println("JESTER RELEASED");
-//            checkConfig();
             for (KeyMapping keyMapping: KEY_MAPPINGS.values()) // Release all keys
                 keyMapping.setDown(false);
             checkConfig();
