@@ -123,6 +123,26 @@ public class Config {
         }
     }
 
+    public static void writeConfig(Config config) {
+        try {
+            File configFile = new File(Constants.CONFIG_PATH);
+            ParticleContext strikeContext = config.new ParticleContext(1.0, 0, 0);
+            ParticleContext burstContext = config.new ParticleContext(1.0, 3, 3);
+            ParticleContext uppercutContext = config.new ParticleContext(0.25, 3, 3);
+            config.GESTURE_KEY_MAPPINGS.put("GESTURE 1", "examplemod.key.ability_1");
+            config.TESTING_GESTURES.put("STRIKE", strikeContext);
+            config.TESTING_GESTURES.put("BURST", burstContext);
+            config.TESTING_GESTURES.put("UPPERCUT", uppercutContext);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            FileWriter writer = new FileWriter(configFile);
+            gson.toJson(config, writer);
+            writer.flush();
+        } catch (IOException e) {
+            System.out.println("An error occurred writing config json!");
+            e.printStackTrace();
+        }
+    }
+
     public static void writeGestureStore() {
         List<GestureComponent> hmdGesture = new ArrayList<>();
         List<GestureComponent> rcGesture = new ArrayList<>();

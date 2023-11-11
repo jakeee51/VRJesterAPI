@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 /**
  * @param vrDevice           = "RC"; // The VRDevice
  * @param movement           = "idle"; // Movement taken to get to Vox
- * @param elapsedTime        = 0; // Time spent within Vox in ms (added on the fly while idle)
- * @param speed              = 0.0; // Average speed within a Vox (calculated on the fly while idle)
+ * @param elapsedTime        = 0; // Time spent within Vox in milliseconds (added on the fly while idle)
+ * @param speed              = 0.0; // Average speed within a Vox in m/s (calculated on the fly while idle)
  * @param direction          = {0.0 , 0.0, 0.0}; // Average direction the VRDevice is facing
  * @param devicesInProximity = new HashMap<>(); // Other VRDevices within the Vox
  */

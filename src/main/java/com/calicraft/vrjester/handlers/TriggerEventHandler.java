@@ -5,12 +5,10 @@ import com.calicraft.vrjester.api.GestureEvent;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
-import com.calicraft.vrjester.gesture.GestureComponent;
 import com.calicraft.vrjester.gesture.Gestures;
 import com.calicraft.vrjester.gesture.recognition.Recognition;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.demo.TestJester;
-import com.calicraft.vrjester.utils.tools.Vec3;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDataType;
@@ -23,9 +21,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static com.calicraft.vrjester.VrJesterApi.*;
 
@@ -145,8 +141,6 @@ public class TriggerEventHandler {
     private void handleNonVrJester() {
         if (VrJesterApi.MOD_KEY.isDown()) {
             System.out.println("NON-VR JESTER TRIGGERED");
-            lcGesture.add(gestureComponent2);
-            gesture = new Gesture(hmdGesture, rcGesture, lcGesture);
         } else {
             System.out.println("JESTER RELEASED");
             for (KeyMapping keyMapping: KEY_MAPPINGS.values()) // Release all keys
@@ -204,7 +198,7 @@ public class TriggerEventHandler {
         if (config.READ_DATA)
             gestures.load();
         if (config.RECORD_MODE) {
-            sendDebugMsg("Storing gesture: " + gesture);
+            sendDebugMsg("Storing gesture: \n" + gesture.prettyString());
             gestures.store(gesture, config.GESTURE_NAME);
         }
         if (config.WRITE_DATA)

@@ -137,4 +137,22 @@ public class Gesture {
         }
         return gesture;
     }
+
+    public String prettyString() {
+        StringBuilder sb = new StringBuilder();
+        if (!hmdGesture.isEmpty())
+            sb.append("HMD: " + getMovementList(hmdGesture));
+        if (!rcGesture.isEmpty())
+            sb.append("\nRC: " + getMovementList(rcGesture));
+        if (!lcGesture.isEmpty())
+            sb.append("\nLC: " + getMovementList(lcGesture));
+        return sb.toString();
+    }
+
+    public static List<String> getMovementList( List<GestureComponent> gesture) {
+        List<String> ret = new ArrayList<>();
+        for (GestureComponent component: gesture)
+            ret.add(String.format("{%s, %d ms, %.2f m/s}", component.movement(), component.elapsedTime(), component.speed()));
+        return ret;
+    }
 }

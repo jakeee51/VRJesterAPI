@@ -1,5 +1,6 @@
 package com.calicraft.vrjester.utils.tools;
 
+import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.handlers.TriggerEventHandler;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -10,9 +11,9 @@ import static com.calicraft.vrjester.VrJesterApi.VIVECRAFT_LOADED;
 
 public class GestureCommand {
     // Class for registering the '/gesture' command
-
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         if (VIVECRAFT_LOADED) { // VR
+            // TODO - Fix record command
             dispatcher.register(Commands.literal("gesture")
                     .then(Commands.literal("record")
                             .then(Commands.argument("value", BoolArgumentType.bool())
@@ -20,6 +21,7 @@ public class GestureCommand {
                                         TriggerEventHandler.oneRecorded = false;
                                         boolean mode = BoolArgumentType.getBool(c, "value");
                                         TriggerEventHandler.config.RECORD_MODE = mode;
+                                        Config.writeConfig(TriggerEventHandler.config);
                                         if (mode)
                                             TriggerEventHandler.sendDebugMsg("Record mode enabled.");
                                         else
@@ -37,7 +39,8 @@ public class GestureCommand {
                     .then(Commands.literal("reload")
                             .executes(c -> {
                                 TriggerEventHandler.gestures.load();
-                                TriggerEventHandler.sendDebugMsg("Reloading gestures from file!");
+                                TriggerEventHandler.config = Config.readConfig();
+                                TriggerEventHandler.sendDebugMsg("Reloading gestures & config from files!");
                                 return 1;
                             })
                     )
