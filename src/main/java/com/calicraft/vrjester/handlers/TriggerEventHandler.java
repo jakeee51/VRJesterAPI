@@ -198,8 +198,11 @@ public class TriggerEventHandler {
         if (config.READ_DATA)
             gestures.load();
         if (config.RECORD_MODE) {
-            sendDebugMsg("Storing gesture: \n" + gesture.prettyString());
-            gestures.store(gesture, config.GESTURE_NAME);
+            if (gesture != null) {
+                sendDebugMsg("Storing gesture: \n" + gesture.prettyString());
+                gestures.store(gesture, config.GESTURE_NAME);
+            } else
+                sendDebugMsg("Error: gesture was null!");
         }
         if (config.WRITE_DATA)
             gestures.write();
