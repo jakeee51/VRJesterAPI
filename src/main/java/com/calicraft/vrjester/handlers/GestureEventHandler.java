@@ -12,8 +12,8 @@ public class GestureEventHandler {
 
     @SubscribeEvent
     public void onGestureEvent(GestureEvent event) {
-        System.out.println("GESTURE EVENT POSTED & RECEIVED!");
         String gestureName = event.getGestureName();
+        System.out.println("GESTURE EVENT POSTED & RECEIVED! " + gestureName);
         String gestureKeyMapping = TriggerEventHandler.config.GESTURE_KEY_MAPPINGS.get(gestureName);
         KeyMapping keyMapping = KEY_MAPPINGS.get(gestureKeyMapping);
         if (keyMapping != null)

@@ -70,16 +70,6 @@ public class TriggerEventHandler {
                 gesture = new Gesture(vrDataRoomPre);
             } else {
                 gesture.track(vrDataRoomPre);
-//                if (config.RECOGNIZE_ON.equals("RECOGNIZE")) { // Recognize gesture right away
-//                    HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
-//                    if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
-//                        previousGesture = recognizedGesture.get("gestureName");
-//                        MinecraftForge.EVENT_BUS.post(new GestureEvent(player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
-//                        sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
-//                        test.trigger(recognizedGesture, vrDataWorldPre, config);
-//                        stopJesterListener();
-//                    }
-//                }
             }
             if (config.RECOGNIZE_ON.equals("RECOGNIZE")) { // Recognize gesture within delay interval.
                 // If a gesture is recognized, wait for the next interval to see if another gesture is recognized
