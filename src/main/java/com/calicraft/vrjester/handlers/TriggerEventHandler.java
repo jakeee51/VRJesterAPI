@@ -205,6 +205,7 @@ public class TriggerEventHandler {
             gestures.write();
         if (oneRecorded) {
             oneRecorded = false; config.RECORD_MODE = false;
+            Config.writeConfig(config);
             sendDebugMsg("New gesture recorded!");
         }
     }
