@@ -24,6 +24,7 @@ public class VrJesterApi {
     public static HashMap<String, KeyMapping> KEY_MAPPINGS = new HashMap<>();
 
     public static void init() {
+        LOGGER.info("Initializing VR Jester API");
         System.out.println(ModExpectPlatform.getConfigDirectory().toAbsolutePath().normalize().toString());
         setup();
         setupClientStuff();
