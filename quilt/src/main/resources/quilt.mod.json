@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "${group}",
+    "id": "logo.png",
+    "version": "${version}",
+    "metadata": {
+      "name": "VR Jester API",
+      "description": "A Minecraft mod API to allow developers to implement gesture controls in VR for their mod.",
+      "contributors": {
+        "Caliburs": "Owner"
+      },
+      "contact": {
+        "sources": "https://github.com/architectury/architectury-templates"
+      },
+      "icon": "icon.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": [
+        "com.calicraft.vrjester.quilt.VrJesterApiQuilt"
+      ]
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "version": "*"
+      },
+      {
+        "id": "quilt_base",
+        "version": "*"
+      },
+      {
+        "id": "minecraft",
+        "version": ">=1.18.2"
+      },
+      {
+        "id": "architectury",
+        "version": ">=4.11.93"
+      }
+    ]
+  },
+  "minecraft": {
+    "environment": "*"
+  }
+}
