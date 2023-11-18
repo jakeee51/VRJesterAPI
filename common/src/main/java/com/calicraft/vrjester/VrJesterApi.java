@@ -2,6 +2,7 @@ package com.calicraft.vrjester;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.handlers.TriggerEventHandler;
 import com.calicraft.vrjester.utils.tools.GestureCommand;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
@@ -27,8 +28,8 @@ public class VrJesterApi {
         LOGGER.info("Initializing VR Jester API");
         System.out.println(ModExpectPlatform.getConfigDirectory().toAbsolutePath().normalize().toString());
         setup();
-        setupClientStuff();
-        GestureCommand.init();
+        setupClient();
+        TriggerEventHandler.init();
     }
 
     public static Minecraft getMCI() {
@@ -45,11 +46,11 @@ public class VrJesterApi {
             Config.writeGestureStore();
     }
 
-    private static void setupClientStuff() {
-        // do something that can only be done on the client
+    private static void setupClient() {
+        LOGGER.info("Setting up commands...");
+        GestureCommand.init();
         LOGGER.info("Setting up keybindings...");
         KeyMappingRegistry.register(MOD_KEY);
-
         Config config = Config.readConfig();
         KeyMapping[] keyMappings = getMCI().options.keyMappings;
         HashMap<String, String> gestureMappings = config.GESTURE_KEY_MAPPINGS;

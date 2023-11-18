@@ -1,7 +1,5 @@
 package com.calicraft.vrjester.handlers;
 
-import com.calicraft.vrjester.VrJesterApi;
-import com.calicraft.vrjester.api.GestureEvent;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
@@ -12,6 +10,9 @@ import com.calicraft.vrjester.utils.demo.TestJester;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDataType;
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.client.ClientRawInputEvent;
+import dev.architectury.event.events.client.ClientTickEvent;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -34,101 +35,108 @@ public class TriggerEventHandler {
     private static final int DELAY = config.INTERVAL_DELAY; // 0.75 second (15 ticks)
     private static int sleep = DELAY;
     private static int limiter = config.MAX_LISTENING_TIME; // 10 seconds (400 ticks)
-    private static boolean listener = false;
+    private static boolean listening = false;
+    private static boolean nonVrListening = false;
     public static boolean oneRecorded = false;
-    private long elapsedTime = 0;
+    private static long elapsedTime = 0;
     private static String previousGesture = "";
     private static Gesture gesture;
     public static final Gestures gestures = new Gestures(config, Constants.GESTURE_STORE_PATH);
     private static final Recognition recognition = new Recognition(gestures);
     private static LocalPlayer player;
 
-//    @SubscribeEvent
-//    public void onJesterTrigger(InputEvent.KeyInputEvent event) {
-//        if (event.getKey() == VrJesterApi.MOD_KEY.getKey().getValue()) {
-//            if (setupJesterComplete()) {
-//                // Trigger the gesture listening phase
-//                if (VIVECRAFT_LOADED) {
-//                    handleVrJester();
-//                } else {
-//                    handleNonVrJester();
-//                }
-//            }
-//        }
-//    }
-//
-//    @SubscribeEvent
-//    public void onClientTick(TickEvent.ClientTickEvent event) {
-//        if (listener) { // Capture VR data in real time after trigger
-//            vrDataRoomPre = preRoomDataAggregator.listen();
-//            vrDataWorldPre = preWorldDataAggregator.listen();
-//            if (gesture == null) { // For initial tick from trigger
-//                gesture = new Gesture(vrDataRoomPre);
-//            } else {
-//                gesture.track(vrDataRoomPre);
-//            }
-//            if (config.RECOGNIZE_ON.equals("RECOGNIZE")) { // Recognize gesture within delay interval.
-//                // If a gesture is recognized, wait for the next interval to see if another gesture is recognized
-//                HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
-//                if (sleep != 0) { // Execute every tick
-//                    if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
-//                        previousGesture = recognizedGesture.get("gestureName");
+    public static void init() {
+        ClientRawInputEvent.KEY_PRESSED.register((client, keyCode, scanCode, action, modifiers) -> {
+            if (keyCode == MOD_KEY.getDefaultKey().getValue()) {
+                if (setupJesterComplete()) {
+                    // Trigger the gesture listening phase
+                    if (VIVECRAFT_LOADED)
+                        handleVrJester();
+                    else
+                        handleNonVrJester();
+                }
+            }
+            return EventResult.pass();
+        });
+        ClientTickEvent.CLIENT_POST.register(minecraft -> {
+            gestureListener();
+        });
+    }
+
+    private static void gestureListener() {
+        if (listening) { // Capture VR data in real time after trigger
+            vrDataRoomPre = preRoomDataAggregator.listen();
+            vrDataWorldPre = preWorldDataAggregator.listen();
+            if (gesture == null) { // For initial tick from trigger
+                gesture = new Gesture(vrDataRoomPre);
+            } else {
+                gesture.track(vrDataRoomPre);
+            }
+            if (config.RECOGNIZE_ON.equals("RECOGNIZE")) { // Recognize gesture within delay interval.
+                // If a gesture is recognized, wait for the next interval to see if another gesture is recognized
+                HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
+                if (sleep != 0) { // Execute every tick
+                    if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
+                        previousGesture = recognizedGesture.get("gestureName");
 //                        MinecraftForge.EVENT_BUS.post(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
-//                        sleep = DELAY; // Reset ticker to extend listening time
-//                        limiter = config.MAX_LISTENING_TIME; // Reset limiter
-//                    }
-//                } else { // Reset trigger at the end of the delay interval
-////                    System.out.println("JESTER DONE LISTENING");
-//                    sleep = DELAY;
-//                    if (!recognizedGesture.isEmpty()) { // Final gesture recognition check after delay interval reset
+                        sleep = DELAY; // Reset ticker to extend listening time
+                        limiter = config.MAX_LISTENING_TIME; // Reset limiter
+                    }
+                } else { // Reset trigger at the end of the delay interval
+//                    System.out.println("JESTER DONE LISTENING");
+                    sleep = DELAY;
+                    if (!recognizedGesture.isEmpty()) { // Final gesture recognition check after delay interval reset
 //                        MinecraftForge.EVENT_BUS.post(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
-//                        if (config.DEBUG_MODE)
-//                            sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
-//                        if (config.DEMO_MODE)
-//                            test.trigger(recognizedGesture, vrDataWorldPre, config);
-//                        limiter = config.MAX_LISTENING_TIME;
-//                        stopJesterListener();
-//                    }
-//                }
-//                if (limiter == 0)
-//                    stopJesterListener();
-//                sleep--;
-//            }
-//            limiter--;
-//        }
-//    }
+                        if (config.DEBUG_MODE)
+                            sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
+                        if (config.DEMO_MODE)
+                            test.trigger(recognizedGesture, vrDataWorldPre, config);
+                        limiter = config.MAX_LISTENING_TIME;
+                        stopJesterListener();
+                    }
+                }
+                if (limiter == 0)
+                    stopJesterListener();
+                sleep--;
+            }
+            limiter--;
+        }
+    }
 
     // Handle VR gesture listener
-//    private void handleVrJester() {
-//        if (VrJesterApi.MOD_KEY.isDown() && !listener) {
-//            System.out.println("JESTER TRIGGERED");
-//            listener = true; elapsedTime = System.nanoTime();
-//            config = Config.readConfig();
-//        } else {
-//            System.out.println("JESTER RELEASED");
-//            if (config.RECOGNIZE_ON.equals("RELEASE")) { // Recognize gesture upon releasing
-//                HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
-//                if (!recognizedGesture.isEmpty()) {
-//                    MinecraftForge.EVENT_BUS.post(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
-//                    if (config.DEBUG_MODE)
-//                        sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
-//                }
-//            }
-//            checkConfig();
-//            stopJesterListener();
-//            for (KeyMapping keyMapping: KEY_MAPPINGS.values()) // Release all keys
-//                keyMapping.setDown(false);
-////            elapsedTime = (System.nanoTime() - elapsedTime) / 1000000; // Total time to listen & recognize gesture
-//            msgSentOnce = false; elapsedTime = 0;
-//        }
-//    }
-
-    // Handle Non-VR gesture listener
-    private void handleNonVrJester() {
-        if (VrJesterApi.MOD_KEY.isDown()) {
-            System.out.println("NON-VR JESTER TRIGGERED");
+    private static void handleVrJester() {
+        if (MOD_KEY.isDown() && !listening) {
+            System.out.println("JESTER TRIGGERED");
+            listening = true; elapsedTime = System.nanoTime();
+            config = Config.readConfig();
         } else {
             System.out.println("JESTER RELEASED");
+            if (config.RECOGNIZE_ON.equals("RELEASE")) { // Recognize gesture upon releasing
+                HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
+                if (!recognizedGesture.isEmpty()) {
+//                    MinecraftForge.EVENT_BUS.post(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
+                    if (config.DEBUG_MODE)
+                        sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
+                }
+            }
+            checkConfig();
+            stopJesterListener();
+            for (KeyMapping keyMapping: KEY_MAPPINGS.values()) // Release all keys
+                keyMapping.setDown(false);
+//            elapsedTime = (System.nanoTime() - elapsedTime) / 1000000; // Total time to listen & recognize gesture
+            msgSentOnce = false; elapsedTime = 0;
+        }
+    }
+
+    // Handle Non-VR gesture listener
+    private static void handleNonVrJester() {
+        if (MOD_KEY.isDown() && !nonVrListening) {
+            System.out.println("NON-VR JESTER TRIGGERED");
+            nonVrListening = true;
+        }
+        if (!MOD_KEY.isDown() && nonVrListening) {
+            System.out.println("JESTER RELEASED");
+            nonVrListening = false;
             for (KeyMapping keyMapping: KEY_MAPPINGS.values()) // Release all keys
                 keyMapping.setDown(false);
             checkConfig();
@@ -173,14 +181,14 @@ public class TriggerEventHandler {
     }
 
     // Clear and reset gesture listener
-    private void stopJesterListener() {
-        gesture = null; listener = false;
+    private static void stopJesterListener() {
+        gesture = null; listening = false;
         previousGesture = "";
         limiter = config.MAX_LISTENING_TIME;
     }
 
     // Handle and update based on dev configurations
-    private void checkConfig() {
+    private static void checkConfig() {
         if (config.READ_DATA)
             gestures.load();
         if (config.RECORD_MODE) {
@@ -200,7 +208,7 @@ public class TriggerEventHandler {
     }
 
     // Setup and ensure player is not null and VRData is loaded
-    private boolean setupJesterComplete() {
+    private static boolean setupJesterComplete() {
         if (player == null) {
             player = getMCI().player; gestures.load();
             if (player == null)

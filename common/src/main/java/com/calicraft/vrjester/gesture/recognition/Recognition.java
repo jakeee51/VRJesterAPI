@@ -15,7 +15,7 @@ public class Recognition {
     //      - Note, I must determine how to know when to start & stop listening to a gesture.
     //      - There will be 2 modes of triggering & 3 modes of terminating the recognition listener
     //      - listenOnKey | listenOnPosition
-    //      - recognizeOnTime | recognizeOnRecognize | recognizeOnRelease
+    //      - recognizeOnContinuous | recognizeOnRecognize | recognizeOnRelease
     //      - Upon terminating the listener, a GestureRecognition Event
     //      will either be fired. As a traced gesture makes its way through
     //      the radix sort tree, each "isGesture node" will be fired to
