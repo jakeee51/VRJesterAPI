@@ -2,6 +2,7 @@ package com.calicraft.vrjester;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.handlers.GestureEventHandler;
 import com.calicraft.vrjester.handlers.TriggerEventHandler;
 import com.calicraft.vrjester.utils.tools.GestureCommand;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -26,17 +27,17 @@ public class VrJesterApi {
 
     public static void init() {
         LOGGER.info("Initializing VR Jester API");
-        System.out.println(ModExpectPlatform.getConfigDirectory().toAbsolutePath().normalize().toString());
-        setup();
+        System.out.println("Config Path: " + ModExpectPlatform.getConfigDirectory().toAbsolutePath().normalize().toString());
+        setupConfig();
         setupClient();
-        TriggerEventHandler.init();
+        setupEvents();
     }
 
     public static Minecraft getMCI() {
         return Minecraft.getInstance();
     }
 
-    private static void setup() {
+    private static void setupConfig() {
         LOGGER.info("Setting up config files...");
         File configFile = new File(Constants.CONFIG_PATH);
         File gestureStoreFile = new File(Constants.GESTURE_STORE_PATH);
@@ -62,5 +63,11 @@ public class VrJesterApi {
                 }
             }
         }
+    }
+
+    private static void setupEvents() {
+        LOGGER.info("Setting up events...");
+        GestureEventHandler.init();
+        TriggerEventHandler.init();
     }
 }

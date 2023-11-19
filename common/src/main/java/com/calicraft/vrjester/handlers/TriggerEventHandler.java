@@ -1,5 +1,7 @@
 package com.calicraft.vrjester.handlers;
 
+import com.calicraft.vrjester.api.GestureEvent;
+import com.calicraft.vrjester.api.GestureEventCallback;
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
@@ -78,7 +80,7 @@ public class TriggerEventHandler {
                 if (sleep != 0) { // Execute every tick
                     if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
                         previousGesture = recognizedGesture.get("gestureName");
-//                        MinecraftForge.EVENT_BUS.post(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
+                        GestureEventCallback.EVENT.invoker().interact(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                         sleep = DELAY; // Reset ticker to extend listening time
                         limiter = config.MAX_LISTENING_TIME; // Reset limiter
                     }
@@ -86,7 +88,7 @@ public class TriggerEventHandler {
 //                    System.out.println("JESTER DONE LISTENING");
                     sleep = DELAY;
                     if (!recognizedGesture.isEmpty()) { // Final gesture recognition check after delay interval reset
-//                        MinecraftForge.EVENT_BUS.post(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
+                        GestureEventCallback.EVENT.invoker().interact(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                         if (config.DEBUG_MODE)
                             sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
                         if (config.DEMO_MODE)
@@ -140,43 +142,6 @@ public class TriggerEventHandler {
             for (KeyMapping keyMapping: KEY_MAPPINGS.values()) // Release all keys
                 keyMapping.setDown(false);
             checkConfig();
-//            List<GestureComponent> hmdGesture = new ArrayList<>();
-//            List<GestureComponent> rcGesture = new ArrayList<>();
-//            List<GestureComponent> lcGesture = new ArrayList<>();
-//            Vec3 dir = new Vec3((0),(0),(0));
-//            Vec3 dir2 = new Vec3((0),(1),(0));
-//            HashMap<String, Integer> devices = new HashMap<>();
-//            GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "forward",
-//                    0, 0.0, dir, devices);
-//            GestureComponent gestureComponent2 = new GestureComponent(Constants.RC, "up",
-//                    0, 0.0, dir, devices);
-//            GestureComponent gestureComponent3 = new GestureComponent(Constants.RC, "up",
-//                    0, 0.0, dir2, devices);
-//            GestureComponent gestureComponent4 = new GestureComponent(Constants.LC, "up",
-//                    0, 0.0, dir2, devices);
-//            GestureComponent gestureComponent5 = new GestureComponent(Constants.RC, "idle",
-//                    301, 0.0, dir2, devices);
-//            GestureComponent gestureComponent6 = new GestureComponent(Constants.LC, "idle",
-//                    301, 0.0, dir2, devices);
-//
-//            rcGesture.add(gestureComponent1);
-//            Gesture strikeGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
-//            System.out.println("RECOGNIZED: " + recognition.recognize(strikeGesture));
-//
-//            rcGesture.add(gestureComponent2);
-//            Gesture uppercutGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
-//            System.out.println("RECOGNIZED: " + recognition.recognize(uppercutGesture));
-//            rcGesture.clear(); lcGesture.clear();
-//            rcGesture.add(gestureComponent3);
-//            lcGesture.add(gestureComponent4);
-//            Gesture blockGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
-//            System.out.println("RECOGNIZED: " + recognition.recognize(blockGesture));
-//            rcGesture.clear(); lcGesture.clear();
-//
-//            rcGesture.add(gestureComponent5);
-//            lcGesture.add(gestureComponent6);
-//            Gesture idleGesture = new Gesture(hmdGesture, rcGesture, lcGesture);
-//            System.out.println("RECOGNIZED: " + recognition.recognize(idleGesture));
         }
     }
 
