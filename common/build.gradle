@@ -33,3 +33,10 @@ publishing {
         // Add repositories to publish to here.
     }
 }
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}

@@ -50,7 +50,7 @@ public class TriggerEventHandler {
     public static void init() {
         ClientRawInputEvent.KEY_PRESSED.register((client, keyCode, scanCode, action, modifiers) -> {
             if (keyCode == MOD_KEY.getDefaultKey().getValue()) {
-                if (setupJesterComplete()) {
+                if (jesterSetupComplete()) {
                     // Trigger the gesture listening phase
                     if (VIVECRAFT_LOADED)
                         handleVrJester();
@@ -173,7 +173,7 @@ public class TriggerEventHandler {
     }
 
     // Setup and ensure player is not null and VRData is loaded
-    private static boolean setupJesterComplete() {
+    private static boolean jesterSetupComplete() {
         if (player == null) {
             player = getMCI().player; gestures.load();
             if (player == null)
