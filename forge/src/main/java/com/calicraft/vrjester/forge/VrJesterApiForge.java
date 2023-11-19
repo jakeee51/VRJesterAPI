@@ -11,5 +11,6 @@ public class VrJesterApiForge {
         // Submit our event bus to let architectury register our content on the right time
         EventBuses.registerModEventBus(VrJesterApi.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
         VrJesterApi.init();
+//        GestureEventHandler.init();
     }
 }
