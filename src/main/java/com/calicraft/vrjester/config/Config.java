@@ -3,9 +3,9 @@ package com.calicraft.vrjester.config;
 import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.gesture.GestureComponent;
 import com.calicraft.vrjester.handlers.TriggerEventHandler;
-import com.calicraft.vrjester.utils.tools.Vec3;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -142,7 +142,7 @@ public class Config {
         List<GestureComponent> rcGesture2 = new ArrayList<>(); // To reproduce null error, use same rcGesture object
         List<GestureComponent> rcGesture3 = new ArrayList<>();
         List<GestureComponent> lcGesture = new ArrayList<>();
-        Vec3 dir = new Vec3((0),(0),(0));
+        Vector3d dir = new Vector3d((0),(0),(0));
         HashMap<String, Integer> devices = new HashMap<>();
 
         GestureComponent gestureComponent1 = new GestureComponent(Constants.RC, "forward",

@@ -1,7 +1,7 @@
 //package com.calicraft.vrjester.vox;
 //
 //import com.calicraft.vrjester.utils.vrdata.VRDevice;
-//import net.minecraft.world.phys.Vec3;
+//import net.minecraft.util.math.vector.Vector3d;
 //import org.junit.jupiter.api.Test;
 //
 //import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,9 +10,9 @@
 //
 //    @Test
 //    public void hasPointTest(){
-//        Vec3[] centroidPose = new Vec3[2];
-//        centroidPose[0] = new Vec3(0,0,0);
-//        centroidPose[1] = new Vec3(0,0,0);
+//        Vector3d[] centroidPose = new Vector3d[2];
+//        centroidPose[0] = new Vector3d(0,0,0);
+//        centroidPose[1] = new Vector3d(0,0,0);
 //        Vox testVox = new Vox(VRDevice.RC, centroidPose, centroidPose[1], false);
 //        assertTrue(testVox.hasPoint(centroidPose[0]));
 //

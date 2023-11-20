@@ -2,7 +2,7 @@ package com.calicraft.vrjester.gesture;
 
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.vrdata.VRDevice;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,10 +21,10 @@ public class GestureTrace {
     public long elapsedTime = 0; // Time spent within Vox in ms (added on the fly while idle)
     public double speed; // Average speed within Vox (calculated on the fly while idle)
     public final Map<String, Integer> devicesInProximity = new HashMap<>(); // Time other VRDevices spent within this Vox
-    private Vec3 direction, front, back, right, left;
-    private final List<Vec3[]> poses = new ArrayList<>(); // Poses captured within Vox
+    private Vector3d direction, front, back, right, left;
+    private final List<Vector3d[]> poses = new ArrayList<>(); // Poses captured within Vox
 
-    public GestureTrace(String voxId, VRDevice vrDevice, Vec3[] pose, Vec3 faceDirection) {
+    public GestureTrace(String voxId, VRDevice vrDevice, Vector3d[] pose, Vector3d faceDirection) {
         this.voxId = voxId;
         this.vrDevice = vrDevice.name();
         setMovementBuckets(faceDirection);
@@ -40,7 +40,7 @@ public class GestureTrace {
     // Convert Trace object to GestureComponent
     public GestureComponent toGestureComponent() {
         return new GestureComponent(getVrDevice(), getMovement(), getElapsedTime(),
-                getSpeed(), new com.calicraft.vrjester.utils.tools.Vec3(getDirection()), getDevicesInProximity());
+                getSpeed(), getDirection(), getDevicesInProximity());
     }
 
     public String getVoxId() {
@@ -60,7 +60,7 @@ public class GestureTrace {
     }
 
     // Set the movement the VRDevice took to arrive at this current Trace
-    public void setMovement(Vec3 gestureDirection) {
+    public void setMovement(Vector3d gestureDirection) {
         if (gestureDirection.y > 0.85D) {
             movement = "up";
         } else if (gestureDirection.y < -0.85D) {
@@ -92,7 +92,7 @@ public class GestureTrace {
     }
 
     // Set speed in ms
-    public void setSpeed(Vec3 end) {
+    public void setSpeed(Vector3d end) {
         this.speed = (getMagnitude3D(end.subtract(poses.get(0)[0])) / elapsedTime) * 1000000;
     }
 
@@ -100,11 +100,11 @@ public class GestureTrace {
         return speed;
     }
 
-    public Vec3 getDirection() {
+    public Vector3d getDirection() {
         return direction;
     }
 
-    public void setDirection(Vec3 direction) {
+    public void setDirection(Vector3d direction) {
         this.direction = direction;
     }
 
@@ -116,15 +116,15 @@ public class GestureTrace {
         return devicesInProximity;
     }
 
-    public void addPose(Vec3[] pose) {
+    public void addPose(Vector3d[] pose) {
         poses.add(pose);
     }
 
     // Set all final values resulting from a VRDevice moving into a new Vox
-    public void completeTrace(Vec3[] end) {
+    public void completeTrace(Vector3d[] end) {
         // Note: After this executes, it is ready to be converted into a GestureComponent
-        Vec3 start = poses.get(0)[0];
-        Vec3 gestureDirection = end[0].subtract(start).normalize();
+        Vector3d start = poses.get(0)[0];
+        Vector3d gestureDirection = end[0].subtract(start).normalize();
         setMovement(gestureDirection);
         setElapsedTime(System.nanoTime());
         setSpeed(end[0]);
@@ -132,7 +132,7 @@ public class GestureTrace {
     }
 
     // Set all final values resulting from a VRDevice completing its trace while idle
-    public void completeIdleTrace(Vec3[] end) {
+    public void completeIdleTrace(Vector3d[] end) {
         // Note: After this executes, it is ready to be converted into a GestureComponent
         setElapsedTime(System.nanoTime());
         setSpeed(end[0]);
@@ -140,11 +140,11 @@ public class GestureTrace {
     }
 
     // Set all movement directional buckets used to determine movement
-    private void setMovementBuckets(Vec3 faceDirection) {
+    private void setMovementBuckets(Vector3d faceDirection) {
         front = faceDirection;
-        back = new Vec3(-faceDirection.x, faceDirection.y, -faceDirection.z);
-        right = new Vec3(-faceDirection.z, faceDirection.y, faceDirection.x);
-        left = new Vec3(faceDirection.z, faceDirection.y, -faceDirection.x);
+        back = new Vector3d(-faceDirection.x, faceDirection.y, -faceDirection.z);
+        right = new Vector3d(-faceDirection.z, faceDirection.y, faceDirection.x);
+        left = new Vector3d(faceDirection.z, faceDirection.y, -faceDirection.x);
         // yRot method causes following error: Unable to retrieve inform for type dumb-color
     }
 }

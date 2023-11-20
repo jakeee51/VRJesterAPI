@@ -7,7 +7,7 @@
 //import com.calicraft.vrjester.utils.tools.Calcs;
 //import com.calicraft.vrjester.utils.vrdata.VRDataState;
 //import com.calicraft.vrjester.utils.vrdata.VRDevice;
-//import net.minecraft.world.phys.Vec3;
+//import net.minecraft.util.math.vector.Vector3d;
 //
 //import java.util.Arrays;
 //import java.util.HashMap;
@@ -19,16 +19,16 @@
 //    // Class that represents a virtual box
 //
 //    private final VRDevice vrDevice;
-//    private final Map<String, Vec3> vertices = new HashMap<>();
+//    private final Map<String, Vector3d> vertices = new HashMap<>();
 //    public final Config config = Config.readConfig();
 //    private final boolean isDiamond;
 //    private int[] id, previousId;
 //    private String movementDirection = "idle";
 //    private GestureTrace gestureTrace;
-//    public Vec3 centroid, faceDirection;
+//    public Vector3d centroid, faceDirection;
 //    public float voxLength = Constants.VOX_LENGTH;
 //
-//    public Vox(VRDevice vrDevice, Vec3[] centroidPose, Vec3 faceDirection, boolean isDiamond) {
+//    public Vox(VRDevice vrDevice, Vector3d[] centroidPose, Vector3d faceDirection, boolean isDiamond) {
 //        // Override defaults
 //        if (config.VOX_LENGTH != voxLength)
 //            voxLength = config.VOX_LENGTH;
@@ -44,23 +44,23 @@
 //    }
 //
 //    // Check if point is within Vox
-//    public boolean hasPoint(Vec3 point) {
+//    public boolean hasPoint(Vector3d point) {
 //        boolean ret = false;
-//        Vec3 p1 = vertices.get("p1"); Vec3 p2 = vertices.get("p2");
-//        Vec3 p3 = vertices.get("p3"); Vec3 p5 = vertices.get("p5");
-//        Vec3 dirX = p2.subtract(p1); Vec3 dirY = p3.subtract(p1); Vec3 dirZ = p5.subtract(p1);
+//        Vector3d p1 = vertices.get("p1"); Vector3d p2 = vertices.get("p2");
+//        Vector3d p3 = vertices.get("p3"); Vector3d p5 = vertices.get("p5");
+//        Vector3d dirX = p2.subtract(p1); Vector3d dirY = p3.subtract(p1); Vector3d dirZ = p5.subtract(p1);
 //        double lengthX = Calcs.getMagnitude3D(dirX);
 //        double lengthY = Calcs.getMagnitude3D(dirY);
 //        double lengthZ = Calcs.getMagnitude3D(dirZ);
-//        Vec3 localX = dirX.normalize(); Vec3 localY = dirY.normalize(); Vec3 localZ = dirZ.normalize();
-//        Vec3 V = point.subtract(centroid);
+//        Vector3d localX = dirX.normalize(); Vector3d localY = dirY.normalize(); Vector3d localZ = dirZ.normalize();
+//        Vector3d V = point.subtract(centroid);
 //        double projectionX = Math.abs(V.dot(localX) * 2);
 //        double projectionY = Math.abs(V.dot(localY) * 2);
 //        double projectionZ = Math.abs(V.dot(localZ) * 2);
 //        if (projectionX <= lengthX && projectionY <= lengthY && projectionZ <= lengthZ)
 //            ret = true;
-////        Vec3 d1 = vertices.get("d1");
-////        Vec3 d2 = vertices.get("d2");
+////        Vector3d d1 = vertices.get("d1");
+////        Vector3d d2 = vertices.get("d2");
 ////        if (point.x >= d1.x && point.y >= d1.y && point.z >= d1.z)
 ////            if (point.x <= d2.x && point.y <= d2.y && point.z <= d2.z)
 ////                ret = true;
@@ -69,7 +69,7 @@
 //
 //    // Checks if VRDevice is in this Vox
 //    public void updateProximity(VRDataState vrDataRoomPre, VRDevice vrDevice) {
-//        Vec3 pos = VRDataState.getVRDevicePose(vrDataRoomPre, vrDevice, 0);
+//        Vector3d pos = VRDataState.getVRDevicePose(vrDataRoomPre, vrDevice, 0);
 //        if (hasPoint(pos)) {
 //            Map<String, Integer> devicesInProximity = gestureTrace.getDevicesInProximity();
 //            gestureTrace.updateDeviceInProximity(vrDevice.name(), devicesInProximity.getOrDefault(vrDevice.name(), 0));
@@ -77,9 +77,9 @@
 //    }
 //
 //    // Get new Vox ID and set traced movement direction based on which side the point withdrew from the Vox
-//    private int[] getVoxNeighbor(Vec3 point) {
+//    private int[] getVoxNeighbor(Vector3d point) {
 //        int[] ret = this.getId().clone();
-//        Vec3 d1 = vertices.get("d1"); Vec3 d2 = vertices.get("d2");
+//        Vector3d d1 = vertices.get("d1"); Vector3d d2 = vertices.get("d2");
 //        if (point.y < d1.y) { // Down
 //            ret[1]--; movementDirection = "down";
 //        }
@@ -98,8 +98,8 @@
 //    }
 //
 //    // When VRDevice is outside current Vox, new Vox is generated at neighboring position and returns the Trace data
-//    public Vec3[] generateVox(VRDataState vrDataRoomPre) {
-//        Vec3[] pose = new Vec3[2];
+//    public Vector3d[] generateVox(VRDataState vrDataRoomPre) {
+//        Vector3d[] pose = new Vector3d[2];
 //        for (int i = 0; i < VRDevice.values().length-1; i++) { // Check which VRDevice this Vox identifies with
 //            if (this.getVrDevice().equals(VRDevice.values()[i])) // Assign the current position of the identified VRDevice
 //                pose = VRDataState.getVRDevicePose(vrDataRoomPre, this.getVrDevice());
@@ -119,7 +119,7 @@
 //    }
 //
 //    // When VRDevice is outside current Vox, new Vox is visualized at neighboring position
-//    public void manifestVox(Vec3 point) {
+//    public void manifestVox(Vector3d point) {
 //        if (!this.hasPoint(point)) { // Check if point is outside of current Vox
 //            int[] newVoxId = this.getVoxNeighbor(point);
 //            this.updateVoxPosition(point, false);
@@ -129,7 +129,7 @@
 //    }
 //
 //    // Update Vox position values based on delta movement
-//    public void updateVoxPosition(Vec3 dif, boolean useDif) {
+//    public void updateVoxPosition(Vector3d dif, boolean useDif) {
 //        // Center of Vox
 //        if (useDif)
 //            centroid = centroid.add(dif);
@@ -159,10 +159,10 @@
 //    // Rotate Vox on Y-axis based on the degrees passed
 //    public void rotateVoxAround(float degrees){
 //        for (String i: vertices.keySet()) {
-//            Vec3 pt = vertices.get(i);
+//            Vector3d pt = vertices.get(i);
 //            float rads = (float) Math.toRadians(degrees);
 //            if (rads != 0)
-//                vertices.put(i, new Vec3(
+//                vertices.put(i, new Vector3d(
 //                        (Math.cos(rads) * (pt.x - centroid.x) - Math.sin(rads) * (pt.z - centroid.z) + centroid.x),
 //                        pt.y,
 //                        (Math.sin(rads) * (pt.x - centroid.x) + Math.cos(rads) * (pt.z - centroid.z) + centroid.z)
@@ -175,7 +175,7 @@
 //    }
 //
 //    // Begin with a new Trace object
-//    public GestureTrace beginTrace(Vec3[] pose) {
+//    public GestureTrace beginTrace(Vector3d[] pose) {
 //        gestureTrace = new GestureTrace(Arrays.toString(id), vrDevice, pose, faceDirection);
 //        return gestureTrace;
 //    }

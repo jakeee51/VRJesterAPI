@@ -2,7 +2,7 @@ package com.calicraft.vrjester.api;
 
 import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.HashMap;
 
@@ -12,7 +12,7 @@ public class GestureEvent extends VRPlayerEvent {
     private final String gestureName;
     private final Gesture gesture;
 
-    public GestureEvent(Player player, HashMap<String, String> gestureCtx, Gesture gesture, VRDataState vrDataRoomPre, VRDataState vrDataWorldPre) {
+    public GestureEvent(PlayerEntity player, HashMap<String, String> gestureCtx, Gesture gesture, VRDataState vrDataRoomPre, VRDataState vrDataWorldPre) {
         super(player, vrDataRoomPre, vrDataWorldPre);
         this.gestureName = gestureCtx.get("gestureName");
         this.gesture = gesture;

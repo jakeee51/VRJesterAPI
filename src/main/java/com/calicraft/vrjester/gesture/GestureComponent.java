@@ -2,7 +2,7 @@ package com.calicraft.vrjester.gesture;
 
 import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.utils.tools.Calcs;
-import com.calicraft.vrjester.utils.tools.Vec3;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 // This record represents a piece of a gesture & its attributes in an iteration in time per VRDevice
 public record GestureComponent(String vrDevice, String movement,
                                long elapsedTime, double speed,
-                               Vec3 direction, Map<String, Integer> devicesInProximity) {
+                               Vector3d direction, Map<String, Integer> devicesInProximity) {
 
     @Override
     public String toString() {
@@ -84,8 +84,8 @@ public record GestureComponent(String vrDevice, String movement,
     }
 
     // Check if traced gesture has a direction within angle of the stored gesture (represented as a cone shape)
-    private static boolean isWithinDirection(Vec3 direction, Vec3 otherDirection) {
-        if (direction.equals(new Vec3(0,0,0)))
+    private static boolean isWithinDirection(Vector3d direction, Vector3d otherDirection) {
+        if (direction.equals(new Vector3d(0,0,0)))
             return true;
         else
             return Calcs.getAngle3D(direction, otherDirection) <= Constants.DIRECTION_DEGREE_SPAN;
@@ -116,7 +116,7 @@ public record GestureComponent(String vrDevice, String movement,
             String movement = gestureComponent.movement();
             long elapsedTime = gestureComponent.elapsedTime();
             double speed = gestureComponent.speed();
-            Vec3 direction = gestureComponent.direction();
+            Vector3d direction = gestureComponent.direction();
             Map<String, Integer> devicesInProximity = gestureComponent.devicesInProximity();
 
             GestureComponent newComponent = new GestureComponent(

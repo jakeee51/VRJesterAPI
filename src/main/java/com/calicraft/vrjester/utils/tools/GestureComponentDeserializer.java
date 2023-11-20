@@ -2,6 +2,7 @@ package com.calicraft.vrjester.utils.tools;
 
 import com.calicraft.vrjester.gesture.GestureComponent;
 import com.google.gson.*;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -15,11 +16,11 @@ public class GestureComponentDeserializer implements JsonDeserializer<GestureCom
         JsonObject devices = jsonObject.get("devicesInProximity").getAsJsonObject();
         HashMap<String, Integer> devicesInProximity = new HashMap<>();
 
-        for (String device: devices.keySet()) {
-            devicesInProximity.put(device, devices.get(device).getAsInt());
-        }
+//        for (String device: devices.keySet()) {
+//            devicesInProximity.put(device, devices.get(device).getAsInt());
+//        }
 
-        Vec3 vec3 = new Vec3(
+        Vector3d vec3 = new Vector3d(
                 direction.get("x").getAsDouble(),
                 direction.get("y").getAsDouble(),
                 direction.get("z").getAsDouble());

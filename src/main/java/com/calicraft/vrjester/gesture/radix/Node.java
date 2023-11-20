@@ -2,7 +2,7 @@ package com.calicraft.vrjester.gesture.radix;
 
 import com.calicraft.vrjester.gesture.GestureComponent;
 import com.calicraft.vrjester.utils.tools.Calcs;
-import com.calicraft.vrjester.utils.tools.Vec3;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +33,7 @@ public class Node {
     public Path getMatchedPath(GestureComponent transitionPath) {
         Path newTransition = null;
         long maxTime = 0; double maxSpeed = 0.0;
-        double minDegree = 180.0D; Vec3 anyDirection = new Vec3(0,0,0);
+        double minDegree = 180.0D; Vector3d anyDirection = new Vector3d(0,0,0);
         for (GestureComponent gestureComponent : paths.keySet()) {
 //            System.out.println("MATCHES: " + gestureComponent.matches(transitionPath));
 //            System.out.println("gestureComponent: " + gestureComponent);
