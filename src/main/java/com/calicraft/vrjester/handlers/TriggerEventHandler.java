@@ -7,7 +7,6 @@ import com.calicraft.vrjester.config.Constants;
 import com.calicraft.vrjester.gesture.Gesture;
 import com.calicraft.vrjester.gesture.Gestures;
 import com.calicraft.vrjester.gesture.recognition.Recognition;
-import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.vrdata.VRDataAggregator;
 import com.calicraft.vrjester.utils.vrdata.VRDataState;
 import com.calicraft.vrjester.utils.vrdata.VRDataType;
@@ -48,13 +47,11 @@ public class TriggerEventHandler {
     @SubscribeEvent
     public void onJesterTrigger(InputEvent.KeyInputEvent event) {
         if (event.getKey() == VrJesterApi.MOD_KEY.getKey().getValue()) {
-            if (setupJesterComplete()) {
-                // Trigger the gesture listening phase
-                if (VIVECRAFT_LOADED) {
-                    handleVrJester();
-                } else {
-                    handleNonVrJester();
-                }
+            // Trigger the gesture listening phase
+            if (VIVECRAFT_LOADED) {
+                handleVrJester();
+            } else {
+                handleNonVrJester();
             }
         }
     }
@@ -163,20 +160,20 @@ public class TriggerEventHandler {
     }
 
     // Setup and ensure player is not null and VRData is loaded
-    private boolean setupJesterComplete() {
-        if (player == null) {
-            player = getMCI().player; gestures.load();
-            if (player == null)
-                return false;
-            try {
-                VIVECRAFT_LOADED = PositionTracker.vrAPI.playerInVR(player);
-            } catch (NullPointerException e) {
-                System.out.println("Threw NullPointerException trying to call IVRAPI.playerInVR");
-                return false;
-            }
-        }
-        return true;
-    }
+//    private boolean setupJesterComplete() {
+//        if (player == null) {
+//            player = getMCI().player; gestures.load();
+//            if (player == null)
+//                return false;
+//            try {
+//                VIVECRAFT_LOADED = PositionTracker.vrAPI.playerInVR(player);
+//            } catch (NullPointerException e) {
+//                System.out.println("Threw NullPointerException trying to call IVRAPI.playerInVR");
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     public static void sendDebugMsg(String msg) {
 //        if (!msgSentOnce) {

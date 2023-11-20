@@ -1,10 +1,8 @@
 package com.calicraft.vrjester.utils.vrdata;
 
 import com.calicraft.vrjester.tracker.Tracker;
-import net.blf02.vrapi.api.data.IVRPlayer;
 import net.minecraft.util.math.vector.Vector3d;
-
-import java.util.Arrays;
+import org.vivecraft.api.VRData;
 
 public class VRDataState {
     // Class for encapsulating VRData devices
@@ -12,21 +10,21 @@ public class VRDataState {
     private final Vector3d origin;
     private final Vector3d[] hmd, rc, lc, c2;
 
-    public VRDataState(IVRPlayer ivrPlayer) {
-        origin = new Vector3d((0), (0), (0));
-        hmd = Tracker.getPose(ivrPlayer.getHMD());
-        rc = Tracker.getPose(ivrPlayer.getController0());
-        lc = Tracker.getPose(ivrPlayer.getController1());
-        c2 = null;
+    public VRDataState(VRData vrData) {
+        origin = Tracker.getOrigin(vrData.toString());
+        hmd = Tracker.getPose(vrData.hmd);
+        rc = Tracker.getPose(vrData.c0);
+        lc = Tracker.getPose(vrData.c1);
+        c2 = Tracker.getPose(vrData.c2);
     }
 
     @Override
     public String toString() {
         return "data:" +
                 "\r\n \t origin: " + origin +
-                "\r\n \t hmd: " + Arrays.toString(hmd) +
-                "\r\n \t rc: " + Arrays.toString(rc) +
-                "\r\n \t lc: " + Arrays.toString(lc) +
+                "\r\n \t hmd: " + hmd +
+                "\r\n \t rc: " + rc +
+                "\r\n \t lc: " + lc +
                 "\r\n \t c2: " + c2;
     }
 
@@ -46,34 +44,38 @@ public class VRDataState {
         return c2;
     }
 
-    // Return position or direction based on VRDevice
-    public static Vector3d getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice, int pose) {
+    public static Vector3d getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice, int pose) { // Return pose based on VRDevice
         Vector3d ret;
         switch (vrDevice) {
-            case HEAD_MOUNTED_DISPLAY -> ret = vrDataState.getHmd()[pose];
-            case RIGHT_CONTROLLER -> ret = vrDataState.getRc()[pose];
-            case LEFT_CONTROLLER -> ret = vrDataState.getLc()[pose];
-            case EXTRA_TRACKER -> ret = vrDataState.getC2()[pose];
-            default -> {
+            case HEAD_MOUNTED_DISPLAY:
+                ret = vrDataState.getHmd()[pose]; break;
+            case RIGHT_CONTROLLER:
+                ret = vrDataState.getRc()[pose]; break;
+            case LEFT_CONTROLLER:
+                ret = vrDataState.getLc()[pose]; break;
+            case EXTRA_TRACKER:
+                ret = vrDataState.getC2()[pose]; break;
+            default:
                 System.err.println("VRDevice not yet supported!");
                 ret = new Vector3d((0), (0), (0));
-            }
         }
         return ret;
     }
 
-    // Return pose based on VRDevice
-    public static Vector3d[] getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice) {
+    public static Vector3d[] getVRDevicePose(VRDataState vrDataState, VRDevice vrDevice) { // Return pose based on VRDevice
         Vector3d[] ret;
         switch (vrDevice) {
-            case HEAD_MOUNTED_DISPLAY -> ret = vrDataState.getHmd();
-            case RIGHT_CONTROLLER -> ret = vrDataState.getRc();
-            case LEFT_CONTROLLER -> ret = vrDataState.getLc();
-            case EXTRA_TRACKER -> ret = vrDataState.getC2();
-            default -> {
+            case HEAD_MOUNTED_DISPLAY:
+                ret = vrDataState.getHmd(); break;
+            case RIGHT_CONTROLLER:
+                ret = vrDataState.getRc(); break;
+            case LEFT_CONTROLLER:
+                ret = vrDataState.getLc(); break;
+            case EXTRA_TRACKER:
+                ret = vrDataState.getC2(); break;
+            default:
                 System.err.println("VRDevice not yet supported!");
                 ret = new Vector3d[]{new Vector3d((0), (0), (0)), new Vector3d((0), (0), (0))};
-            }
         }
         return ret;
     }

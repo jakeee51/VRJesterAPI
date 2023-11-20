@@ -5,6 +5,7 @@ import com.calicraft.vrjester.utils.tools.Calcs;
 import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -17,9 +18,22 @@ import java.util.stream.Stream;
  */
 
 // This record represents a piece of a gesture & its attributes in an iteration in time per VRDevice
-public record GestureComponent(String vrDevice, String movement,
-                               long elapsedTime, double speed,
-                               Vector3d direction, Map<String, Integer> devicesInProximity) {
+public class GestureComponent {
+    public String vrDevice; public String movement;
+    public long elapsedTime; public double speed;
+    public Vector3d direction;
+    public Map<String, Integer> devicesInProximity;
+
+    public GestureComponent(String vrDevice, String movement,
+                            long elapsedTime, double speed,
+                            Vector3d direction, Map<String, Integer> devicesInProximity) {
+        this.vrDevice = vrDevice;
+        this.movement = movement;
+        this.elapsedTime = elapsedTime;
+        this.speed = speed;
+        this.direction = direction;
+        this.devicesInProximity = devicesInProximity;
+    }
 
     @Override
     public String toString() {
@@ -39,9 +53,10 @@ public record GestureComponent(String vrDevice, String movement,
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
-        } else if (!(obj instanceof GestureComponent other)) {
+        } else if (!(obj instanceof GestureComponent)) {
             return false;
         } else {
+            GestureComponent other = (GestureComponent) obj;
             return Objects.equals(vrDevice, other.vrDevice) &&
                    Objects.equals(movement, other.movement) &&
                    Objects.equals(elapsedTime, other.elapsedTime) &&
@@ -105,19 +120,19 @@ public record GestureComponent(String vrDevice, String movement,
             gestureComponent1 = new ArrayList<>();
         if(gestureComponent2 == null)
             gestureComponent2 = new ArrayList<>();
-        return Stream.concat(gestureComponent1.stream(), gestureComponent2.stream()).toList();
+        return Stream.concat(gestureComponent1.stream(), gestureComponent2.stream()).collect(Collectors.toList());
     }
 
     // Copy the given gesture and override fields with new values
     public static List<GestureComponent> copy(List<GestureComponent> gesture, Map<String, String> newValues) {
         List<GestureComponent> newGesture = new ArrayList<>();
         for (GestureComponent gestureComponent: gesture) {
-            String vrDevice = newValues.get("vrDevice") == null ? gestureComponent.vrDevice() : newValues.get("vrDevice");
-            String movement = gestureComponent.movement();
-            long elapsedTime = gestureComponent.elapsedTime();
-            double speed = gestureComponent.speed();
-            Vector3d direction = gestureComponent.direction();
-            Map<String, Integer> devicesInProximity = gestureComponent.devicesInProximity();
+            String vrDevice = newValues.get("vrDevice") == null ? gestureComponent.vrDevice : newValues.get("vrDevice");
+            String movement = gestureComponent.movement;
+            long elapsedTime = gestureComponent.elapsedTime;
+            double speed = gestureComponent.speed;
+            Vector3d direction = gestureComponent.direction;
+            Map<String, Integer> devicesInProximity = gestureComponent.devicesInProximity;
 
             GestureComponent newComponent = new GestureComponent(
                     vrDevice, movement,

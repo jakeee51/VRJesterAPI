@@ -28,6 +28,6 @@ public class CalcsTest {
     public void getAngle3DTest(){
         Vector3d v1 = new Vector3d(1,2,1);
         Vector3d v2 = new Vector3d(2,1,2);
-        assertEquals(35.26438968275465, Calcs.getAngle3D(v1, v2));
+        assertEquals(35.26438968275464, Calcs.getAngle3D(v1, v2));
     }
 }

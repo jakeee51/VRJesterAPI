@@ -87,9 +87,12 @@ public class Gesture {
 //                System.out.println("COMPLETE TRACK: " + vhere.getId() + ": " + gestureTrace);
                 vhere.beginTrace(currentPoint);
                 switch (vhere.getVrDevice()) {  // Append a Vox trace's new GestureComponent object per VRDevice
-                    case HEAD_MOUNTED_DISPLAY -> hmdGesture.add(gestureTrace.toGestureComponent());
-                    case RIGHT_CONTROLLER -> rcGesture.add(gestureTrace.toGestureComponent());
-                    case LEFT_CONTROLLER -> lcGesture.add(gestureTrace.toGestureComponent());
+                    case HEAD_MOUNTED_DISPLAY:
+                        hmdGesture.add(gestureTrace.toGestureComponent()); break;
+                    case RIGHT_CONTROLLER:
+                        rcGesture.add(gestureTrace.toGestureComponent()); break;
+                    case LEFT_CONTROLLER:
+                        lcGesture.add(gestureTrace.toGestureComponent()); break;
                 }
             }
         }
@@ -110,9 +113,12 @@ public class Gesture {
     public List<GestureComponent> getGesture(String vrDevice) {
         List<GestureComponent> gesture = new ArrayList<>();
         switch(vrDevice) {
-            case Constants.HMD -> gesture = hmdGesture;
-            case Constants.RC  -> gesture = rcGesture;
-            case Constants.LC  -> gesture = lcGesture;
+            case Constants.HMD:
+                gesture = hmdGesture; break;
+            case Constants.RC:
+                gesture = rcGesture; break;
+            case Constants.LC:
+                gesture = lcGesture; break;
         }
         return gesture;
     }
@@ -131,7 +137,7 @@ public class Gesture {
     public static List<String> getMovementList( List<GestureComponent> gesture) {
         List<String> ret = new ArrayList<>();
         for (GestureComponent component: gesture)
-            ret.add(String.format("{%s, %d ms, %.2f m/s}", component.movement(), component.elapsedTime(), component.speed()));
+            ret.add(String.format("{%s, %d ms, %.2f m/s}", component.movement, component.elapsedTime, component.speed));
         return ret;
     }
 }

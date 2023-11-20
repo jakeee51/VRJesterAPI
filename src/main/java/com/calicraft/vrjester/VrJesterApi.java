@@ -2,6 +2,7 @@ package com.calicraft.vrjester;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.tools.EventsLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 public class VrJesterApi {
     // Main entry point
     public static final Logger LOGGER = LogManager.getLogger();
+    public static PositionTracker TRACKER;
     public static boolean VIVECRAFT_LOADED = false;
     public static final String MOD_ID = "vrjester";
     public static final KeyBinding MOD_KEY = new KeyBinding("key.vrjester.71", 71, MOD_ID);
@@ -37,6 +39,15 @@ public class VrJesterApi {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        try { // Check if Vivecraft is running
+            Class.forName("org.vivecraft.api.VRData");
+            VIVECRAFT_LOADED = true;
+            System.out.println("Vivecraft has been loaded!");
+            EventsLoader.register();
+            LOGGER.info("Events have been loaded!");
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            LOGGER.error("Vivecraft has failed to load!");
+        }
         EventsLoader.register();
     }
 

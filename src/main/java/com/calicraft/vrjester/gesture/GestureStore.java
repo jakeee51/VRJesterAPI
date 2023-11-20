@@ -17,7 +17,8 @@ public class GestureStore {
         HashMap<String, List<GestureComponent>> deviceGesture = GESTURES.getOrDefault(gestureName, new HashMap<>());
         if (validDevices != null) {
             vrDevice = String.join("|", validDevices);
-            List<GestureComponent> newGesture = GestureComponent.copy(gesture, Map.of("vrDevice", vrDevice));
+            HashMap<String, String> map = new HashMap<>(); map.put("vrDevice", vrDevice);
+            List<GestureComponent> newGesture = GestureComponent.copy(gesture, map);
             deviceGesture.put(vrDevice, newGesture);
             GESTURES.put(gestureName, deviceGesture);
         } else {

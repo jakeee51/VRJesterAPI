@@ -40,15 +40,15 @@ public class Node {
 //            System.out.println("transitionPath: " + transitionPath);
             if (gestureComponent.matches(transitionPath)) {
                 MetaData gestureMetaData = new MetaData(
-                        gestureComponent.elapsedTime(), gestureComponent.speed(),
-                        gestureComponent.direction(), gestureComponent.devicesInProximity());
-//                System.out.println("HERE: " + gestureMetaData.isClosestFit(maxTime, maxSpeed, minDegree, transitionPath.direction()));
+                        gestureComponent.elapsedTime, gestureComponent.speed,
+                        gestureComponent.direction, gestureComponent.devicesInProximity);
+//                System.out.println("HERE: " + gestureMetaData.isClosestFit(maxTime, maxSpeed, minDegree, transitionPath.direction));
 //                System.out.println("minDegree: " + minDegree);
-                if (gestureMetaData.isClosestFit(maxTime, maxSpeed, minDegree, transitionPath.direction())) {
-                    maxTime = gestureComponent.elapsedTime();
-                    maxSpeed = gestureComponent.speed();
-                    if (!gestureComponent.direction().equals(anyDirection)) {
-                        minDegree = Calcs.getAngle3D(gestureComponent.direction(), transitionPath.direction());
+                if (gestureMetaData.isClosestFit(maxTime, maxSpeed, minDegree, transitionPath.direction)) {
+                    maxTime = gestureComponent.elapsedTime;
+                    maxSpeed = gestureComponent.speed;
+                    if (!gestureComponent.direction.equals(anyDirection)) {
+                        minDegree = Calcs.getAngle3D(gestureComponent.direction, transitionPath.direction);
                     }
                     newTransition = paths.get(gestureComponent);
 //                    System.out.println("NEW minDegree: " + minDegree);

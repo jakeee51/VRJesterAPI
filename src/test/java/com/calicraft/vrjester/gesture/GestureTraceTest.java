@@ -26,9 +26,9 @@ public class GestureTraceTest {
         GestureComponent val1 = new GestureComponent(Constants.RC, "forward",
                 0, 0.0, centroidPose[1], gesturesTraced);
         GestureComponent val2 = ges.toGestureComponent();
-        assertEquals(val1.movement(), val2.movement());
-        assertEquals(val1.vrDevice(), val2.vrDevice());
-        assertEquals(val1.direction(), val2.direction());
+        assertEquals(val1.movement, val2.movement);
+        assertEquals(val1.vrDevice, val2.vrDevice);
+        assertEquals(val1.direction, val2.direction);
 
     }
 }

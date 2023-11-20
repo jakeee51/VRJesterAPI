@@ -1,31 +1,56 @@
 package com.calicraft.vrjester.tracker;
 
-import net.blf02.vrapi.api.data.IVRData;
 import net.minecraft.util.math.vector.Vector3d;
+import org.vivecraft.api.VRData;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class Tracker {
     // VRData Position Tracker Interface
 
-    // Get origin position
+    // TODO - To consume VRData from updated or additional sources
+    //      - Overload static methods with new parameters
+
     public static Vector3d getOrigin(String vrData) {
         // origin: (0.0, 0.0, 0.0)
+        Pattern pattern = Pattern.compile("origin: \\(.+, .+, .+\\)");
+        Matcher matcher = pattern.matcher(vrData);
+        if (matcher.find()) {
+            String pos = matcher.group().replaceAll("(origin: \\(|\\)| )", "");
+            String[] coords = pos.split(",");
+            return new Vector3d(Double.parseDouble(coords[0]),
+                    Double.parseDouble(coords[1]),
+                    Double.parseDouble(coords[2]));
+        }
         return new Vector3d((0), (0), (0));
     }
 
-    // Get the 3D positional coordinate of passed device
-    public static Vector3d getPosition(IVRData device) {
+    public static Vector3d getPosition(VRData.VRDevicePose device) {
+        // Get the 3D positional coordinate of passed device
         // pos:(1.0, 2.0, 3.0) dir: (4.0, 5.0, 6.0)
-        return device.position();
+        String pose = device.toString();
+        pose = pose.replaceAll("(Device: pos:\\(|\\) dir: \\(.+| )", "");
+        String[] coords = pose.split(",");
+        return new Vector3d(Double.parseDouble(coords[0]),
+                Double.parseDouble(coords[1]),
+                Double.parseDouble(coords[2]));
     }
 
-    // Get the 3D directional vector of passed device
-    public static Vector3d getDirection(IVRData device) {
+    public static Vector3d getDirection(VRData.VRDevicePose device) {
+        // Get the 3D directional vector of passed device
         // pos:(1.0, 2.0, 3.0) dir: (4.0, 5.0, 6.0)
-        return device.getLookAngle();
+        String pose = device.toString();
+        pose = pose.split("\\) dir: \\(")[1].replaceAll("[ )]", "");
+        String[] coords = pose.split(",");
+
+        return new Vector3d(Double.parseDouble(coords[0]),
+                Double.parseDouble(coords[1]),
+                Double.parseDouble(coords[2]));
     }
 
-    // Get both position & direction of device
-    public static Vector3d[] getPose(IVRData device) {
+    public static Vector3d[] getPose(VRData.VRDevicePose device) {
+        // Get both position & direction of device
         Vector3d[] pose = new Vector3d[2];
         pose[0] = getPosition(device);
         pose[1] = getDirection(device);

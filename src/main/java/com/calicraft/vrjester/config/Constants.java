@@ -1,5 +1,6 @@
 package com.calicraft.vrjester.config;
 
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class Constants {
@@ -30,5 +31,5 @@ public abstract class Constants {
     public static final String RC = "RIGHT_CONTROLLER";
     public static final String LC = "LEFT_CONTROLLER";
     public static final String C2 = "EXTRA_TRACKER";
-    public static final List<String> DEVICES = List.of(HMD, RC, LC);
+    public static final List<String> DEVICES = Arrays.asList(HMD, RC, LC);
 }
