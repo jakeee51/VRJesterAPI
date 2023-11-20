@@ -22,7 +22,6 @@ public class PositionTracker implements VRAPIPluginProvider {
     // Note: VR data getters must be called later after initialization to avoid NullPointerException (i.e.: ExceptionInInitializerError: null)
     // Return real world VR data pre-tick
     public static IVRPlayer getVRDataRoomPre() {
-
         return vrAPI.getVRPlayer(getMCI().player);
     }
 
