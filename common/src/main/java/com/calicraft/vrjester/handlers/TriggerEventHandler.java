@@ -1,5 +1,6 @@
 package com.calicraft.vrjester.handlers;
 
+import com.calicraft.vrjester.VrJesterApi;
 import com.calicraft.vrjester.api.GestureEvent;
 import com.calicraft.vrjester.api.GestureEventCallback;
 import com.calicraft.vrjester.config.Config;
@@ -108,11 +109,11 @@ public class TriggerEventHandler {
     // Handle VR gesture listener
     private static void handleVrJester() {
         if (MOD_KEY.isDown() && !listening) {
-            System.out.println("JESTER TRIGGERED");
+//            System.out.println("JESTER TRIGGERED");
             listening = true; elapsedTime = System.nanoTime();
             config = Config.readConfig();
         } else {
-            System.out.println("JESTER RELEASED");
+//            System.out.println("JESTER RELEASED");
             if (config.RECOGNIZE_ON.equals("RELEASE")) { // Recognize gesture upon releasing
                 HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
                 if (!recognizedGesture.isEmpty()) {
@@ -176,6 +177,7 @@ public class TriggerEventHandler {
     private static boolean jesterSetupComplete() {
         if (player == null) {
             player = getMCI().player; gestures.load();
+            VrJesterApi.setupClient();
             if (player == null)
                 return false;
             try {

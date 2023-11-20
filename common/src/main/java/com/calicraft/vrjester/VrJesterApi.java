@@ -29,8 +29,8 @@ public class VrJesterApi {
         LOGGER.info("Initializing VR Jester API");
         System.out.println("Config Path: " + ModExpectPlatform.getConfigDirectory().toAbsolutePath().normalize().toString());
         setupConfig();
-        setupClient();
         setupEvents();
+        setupClient();
     }
 
     public static Minecraft getMCI() {
@@ -47,7 +47,7 @@ public class VrJesterApi {
             Config.writeGestureStore();
     }
 
-    private static void setupClient() {
+    public static void setupClient() {
         LOGGER.info("Setting up commands...");
         GestureCommand.init();
         LOGGER.info("Setting up keybindings...");

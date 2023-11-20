@@ -80,6 +80,10 @@ remapJar {
     dependsOn shadowJar
 }
 
+allprojects {
+    version = rootProject.mod_version + "-forge"
+}
+
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
