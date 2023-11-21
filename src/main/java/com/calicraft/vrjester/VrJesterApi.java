@@ -2,6 +2,7 @@ package com.calicraft.vrjester;
 
 import com.calicraft.vrjester.config.Config;
 import com.calicraft.vrjester.config.Constants;
+import com.calicraft.vrjester.handlers.PlayerInitHandler;
 import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.tools.EventsLoader;
 import net.minecraft.client.Minecraft;
@@ -43,7 +44,7 @@ public class VrJesterApi {
             Class.forName("org.vivecraft.api.VRData");
             VIVECRAFT_LOADED = true;
             System.out.println("Vivecraft has been loaded!");
-            EventsLoader.register();
+            MinecraftForge.EVENT_BUS.register(new PlayerInitHandler());
             LOGGER.info("Events have been loaded!");
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             LOGGER.error("Vivecraft has failed to load!");
@@ -56,7 +57,7 @@ public class VrJesterApi {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        LOGGER.info("HELLO FROM PREINIT");
+        LOGGER.info("Setting configs");
         File configFile = new File(Constants.CONFIG_PATH);
         File gestureStoreFile = new File(Constants.GESTURE_STORE_PATH);
         if (!configFile.exists())
@@ -66,9 +67,9 @@ public class VrJesterApi {
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
         LOGGER.info("Setting keybindings");
         ClientRegistry.registerKeyBinding(MOD_KEY);
+        LOGGER.info("Setting key mappings");
         Config config = Config.readConfig();
         KeyBinding[] keyMappings = getMCI().options.keyMappings;
         HashMap<String, String> gestureMappings = config.GESTURE_KEY_MAPPINGS;

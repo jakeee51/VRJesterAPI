@@ -1,8 +1,9 @@
 package com.calicraft.vrjester.handlers;
 
 import com.calicraft.vrjester.api.GestureEvent;
-import com.calicraft.vrjester.api.VRPlayerEvent;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import static com.calicraft.vrjester.VrJesterApi.KEY_MAPPINGS;
@@ -17,13 +18,6 @@ public class GestureEventHandler {
         String gestureKeyBinding = TriggerEventHandler.config.GESTURE_KEY_MAPPINGS.get(gestureName);
         KeyBinding keyMapping = KEY_MAPPINGS.get(gestureKeyBinding);
         if (keyMapping != null)
-            keyMapping.setDown(true);
-    }
-
-    @SubscribeEvent
-    public void onVRPlayerEvent(VRPlayerEvent event) {
-        System.out.println("VRPlayer EVENT POSTED & RECEIVED!");
-//        System.out.println(event.getVrDataRoomPre());
-//        System.out.println(event.getVrDataWorldPre());
+            MinecraftForge.EVENT_BUS.post(new InputEvent.KeyInputEvent(keyMapping.getKey().getValue(), 0, 1, 0));
     }
 }

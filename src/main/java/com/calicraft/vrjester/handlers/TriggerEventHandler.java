@@ -36,6 +36,7 @@ public class TriggerEventHandler {
     private static int sleep = DELAY;
     private static int limiter = config.MAX_LISTENING_TIME; // 10 seconds (400 ticks)
     private static boolean listener = false;
+    private static boolean nonVrListener = false;
     public static boolean oneRecorded = false;
     private long elapsedTime = 0;
     private static String previousGesture = "";
@@ -46,6 +47,9 @@ public class TriggerEventHandler {
 
     @SubscribeEvent
     public void onJesterTrigger(InputEvent.KeyInputEvent event) {
+        gestures.load();
+        if (player == null)
+            player = getMCI().player;
         if (event.getKey() == VrJesterApi.MOD_KEY.getKey().getValue()) {
             // Trigger the gesture listening phase
             if (VIVECRAFT_LOADED) {
@@ -102,32 +106,43 @@ public class TriggerEventHandler {
             listener = true; elapsedTime = System.nanoTime();
             config = Config.readConfig();
         } else {
-            System.out.println("JESTER RELEASED");
-            if (config.RECOGNIZE_ON.equals("RELEASE")) { // Recognize gesture upon releasing
-                HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
-                if (!recognizedGesture.isEmpty()) {
-                    MinecraftForge.EVENT_BUS.post(new GestureEvent(getMCI().player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
-                    if (config.DEBUG_MODE)
-                        sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
+            if (!MOD_KEY.isDown() && listener) {
+                System.out.println("JESTER RELEASED");
+                if (config.RECOGNIZE_ON.equals("RELEASE")) { // Recognize gesture upon releasing
+                    HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
+                    if (!recognizedGesture.isEmpty()) {
+                        MinecraftForge.EVENT_BUS.post(new GestureEvent(getMCI().player, recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
+                        if (config.DEBUG_MODE)
+                            sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
+                    }
                 }
-            }
-            checkConfig();
-            stopJesterListener();
-            for (KeyBinding keyMapping: KEY_MAPPINGS.values()) // Release all keys
-                keyMapping.setDown(false);
+                checkConfig();
+                stopJesterListener();
+                for (KeyBinding keyMapping: KEY_MAPPINGS.values()) // Release all keys
+                    MinecraftForge.EVENT_BUS.post(new InputEvent.KeyInputEvent(keyMapping.getKey().getValue(), 0, 0, 0));
 //            elapsedTime = (System.nanoTime() - elapsedTime) / 1000000; // Total time to listen & recognize gesture
-            msgSentOnce = false; elapsedTime = 0;
+                msgSentOnce = false; elapsedTime = 0;
+            }
         }
     }
 
     // Handle Non-VR gesture listener
     private void handleNonVrJester() {
-        if (VrJesterApi.MOD_KEY.isDown()) {
+        if (MOD_KEY.isDown() && !nonVrListener) {
             System.out.println("NON-VR JESTER TRIGGERED");
-        } else {
+            nonVrListener = true;
+            config = Config.readConfig();
+            KeyBinding km = KEY_MAPPINGS.get(config.GESTURE_NAME);
+            if (km != null) {
+                MinecraftForge.EVENT_BUS.post(new InputEvent.KeyInputEvent(km.getKey().getValue(), 0, 1, 0));
+                MinecraftForge.EVENT_BUS.post(new InputEvent.KeyInputEvent(km.getKey().getValue(), 0, 0, 0));
+            }
+        }
+        if (!MOD_KEY.isDown() && nonVrListener) {
             System.out.println("JESTER RELEASED");
+            nonVrListener = false;
             for (KeyBinding keyMapping: KEY_MAPPINGS.values()) // Release all keys
-                keyMapping.setDown(false);
+                MinecraftForge.EVENT_BUS.post(new InputEvent.KeyInputEvent(keyMapping.getKey().getValue(), 0, 0, 0));
             checkConfig();
         }
     }
