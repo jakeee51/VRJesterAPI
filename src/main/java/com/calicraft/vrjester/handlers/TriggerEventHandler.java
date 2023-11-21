@@ -102,12 +102,12 @@ public class TriggerEventHandler {
     // Handle VR gesture listener
     private void handleVrJester() {
         if (VrJesterApi.MOD_KEY.isDown() && !listener) {
-            System.out.println("JESTER TRIGGERED");
+//            System.out.println("JESTER TRIGGERED");
             listener = true; elapsedTime = System.nanoTime();
             config = Config.readConfig();
         } else {
             if (!MOD_KEY.isDown() && listener) {
-                System.out.println("JESTER RELEASED");
+//                System.out.println("JESTER RELEASED");
                 if (config.RECOGNIZE_ON.equals("RELEASE")) { // Recognize gesture upon releasing
                     HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
                     if (!recognizedGesture.isEmpty()) {
@@ -173,22 +173,6 @@ public class TriggerEventHandler {
             sendDebugMsg("New gesture recorded!");
         }
     }
-
-    // Setup and ensure player is not null and VRData is loaded
-//    private boolean setupJesterComplete() {
-//        if (player == null) {
-//            player = getMCI().player; gestures.load();
-//            if (player == null)
-//                return false;
-//            try {
-//                VIVECRAFT_LOADED = PositionTracker.vrAPI.playerInVR(player);
-//            } catch (NullPointerException e) {
-//                System.out.println("Threw NullPointerException trying to call IVRAPI.playerInVR");
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
 
     public static void sendDebugMsg(String msg) {
 //        if (!msgSentOnce) {

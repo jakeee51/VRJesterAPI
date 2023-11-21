@@ -57,7 +57,7 @@ public class VrJesterApi {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        LOGGER.info("Setting configs");
+        LOGGER.info("Setting up config files...");
         File configFile = new File(Constants.CONFIG_PATH);
         File gestureStoreFile = new File(Constants.GESTURE_STORE_PATH);
         if (!configFile.exists())
@@ -67,9 +67,9 @@ public class VrJesterApi {
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        LOGGER.info("Setting keybindings");
+        LOGGER.info("Setting up keybindings...");
         ClientRegistry.registerKeyBinding(MOD_KEY);
-        LOGGER.info("Setting key mappings");
+        LOGGER.info("Setting up key mappings...");
         Config config = Config.readConfig();
         KeyBinding[] keyMappings = getMCI().options.keyMappings;
         HashMap<String, String> gestureMappings = config.GESTURE_KEY_MAPPINGS;
