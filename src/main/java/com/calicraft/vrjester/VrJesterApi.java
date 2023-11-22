@@ -7,6 +7,8 @@ import com.calicraft.vrjester.tracker.PositionTracker;
 import com.calicraft.vrjester.utils.tools.EventsLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -14,6 +16,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,6 +33,8 @@ public class VrJesterApi {
     public static boolean VIVECRAFT_LOADED = false;
     public static final String MOD_ID = "vrjester";
     public static final KeyBinding MOD_KEY = new KeyBinding("key.vrjester.71", 71, MOD_ID);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, MOD_ID);
+    public static SoundEvent DEKU_SMASH;
     public static HashMap<String, KeyBinding> KEY_MAPPINGS = new HashMap<>();
 
     public VrJesterApi() {
@@ -67,6 +73,10 @@ public class VrJesterApi {
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
+        LOGGER.info("Setting up sounds...");
+        DEKU_SMASH = new SoundEvent(new ResourceLocation(MOD_ID, "deku_smash"));
+        SOUNDS.register("deku_smash", () -> DEKU_SMASH);
+        SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
         LOGGER.info("Setting up keybindings...");
         ClientRegistry.registerKeyBinding(MOD_KEY);
         LOGGER.info("Setting up key mappings...");

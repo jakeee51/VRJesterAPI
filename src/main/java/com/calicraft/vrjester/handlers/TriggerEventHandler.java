@@ -70,6 +70,10 @@ public class TriggerEventHandler {
             } else {
                 gesture.track(vrDataRoomPre);
             }
+//            if (config.READ_DATA && !msgSentOnce) {
+//                assert getMCI().player != null; msgSentOnce = true;
+//                getMCI().player.playSound(DEKU_SMASH, 1.0f, 1.0f);
+//            }
             if (config.RECOGNIZE_ON.equals("RECOGNIZE")) { // Recognize gesture within delay interval.
                 // If a gesture is recognized, wait for the next interval to see if another gesture is recognized
                 HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
