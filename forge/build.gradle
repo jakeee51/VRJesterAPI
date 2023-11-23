@@ -52,7 +52,7 @@ dependencies {
     def modsList =  fileTree("libs").filter { it.isFile() }.files.name
     for (int i = 0; i < modsList.size(); i++) {
         println("Implementing mod for run config: " +  modsList[i])
-        modApi files("libs/" + modsList[i])
+        modImplementation files("libs/" + modsList[i])
     }
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
