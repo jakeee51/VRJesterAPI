@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[40,)"
 #issueTrackerURL = ""
-license = "Insert License Here"
+license = "All Rights Reserved"
 
 [[mods]]
 modId = "vrjester"
@@ -11,7 +11,7 @@ authors = "Caliburs"
 description = '''
 A Minecraft mod API to allow developers to implement gesture controls in VR for their mod.
 '''
-logoFile = "logo.png"
+logoFile = "icon.png"
 
 [[dependencies.vrjester]]
 modId = "forge"
