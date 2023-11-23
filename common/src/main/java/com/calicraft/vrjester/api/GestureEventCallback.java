@@ -6,5 +6,5 @@ import dev.architectury.event.EventFactory;
 public interface GestureEventCallback {
     Event<GestureEventCallback> EVENT = EventFactory.createLoop();
 
-    void interact(GestureEvent gestureEvent);
+    void post(GestureEvent gestureEvent);
 }

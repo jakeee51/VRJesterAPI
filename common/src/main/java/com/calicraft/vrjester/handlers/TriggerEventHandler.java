@@ -81,7 +81,7 @@ public class TriggerEventHandler {
                 if (sleep != 0) { // Execute every tick
                     if (!recognizedGesture.isEmpty() && !previousGesture.equals(recognizedGesture.get("gestureName"))) {
                         previousGesture = recognizedGesture.get("gestureName");
-                        GestureEventCallback.EVENT.invoker().interact(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
+                        GestureEventCallback.EVENT.invoker().post(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                         sleep = DELAY; // Reset ticker to extend listening time
                         limiter = config.MAX_LISTENING_TIME; // Reset limiter
                     }
@@ -89,7 +89,7 @@ public class TriggerEventHandler {
 //                    System.out.println("JESTER DONE LISTENING");
                     sleep = DELAY;
                     if (!recognizedGesture.isEmpty()) { // Final gesture recognition check after delay interval reset
-                        GestureEventCallback.EVENT.invoker().interact(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
+                        GestureEventCallback.EVENT.invoker().post(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                         if (config.DEBUG_MODE)
                             sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
                         if (config.DEMO_MODE)
@@ -117,7 +117,7 @@ public class TriggerEventHandler {
             if (config.RECOGNIZE_ON.equals("RELEASE")) { // Recognize gesture upon releasing
                 HashMap<String, String> recognizedGesture = recognition.recognize(gesture);
                 if (!recognizedGesture.isEmpty()) {
-//                    MinecraftForge.EVENT_BUS.post(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
+                    GestureEventCallback.EVENT.invoker().post(new GestureEvent(recognizedGesture, gesture, vrDataRoomPre, vrDataWorldPre));
                     if (config.DEBUG_MODE)
                         sendDebugMsg("RECOGNIZED: " + recognizedGesture.get("gestureName"));
                 }
