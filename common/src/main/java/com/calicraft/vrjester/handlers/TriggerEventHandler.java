@@ -19,7 +19,6 @@ import dev.architectury.event.events.client.ClientTickEvent;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 import java.util.HashMap;
 
@@ -194,9 +193,9 @@ public class TriggerEventHandler {
 //        if (!msgSentOnce) {
         msgSentOnce = true;
         LocalPlayer player = getMCI().player;
-        Component text = new TextComponent(msg);
+        Component text = Component.literal(msg);
         assert player != null;
-        player.sendMessage(text, player.getUUID());
+        player.sendSystemMessage(text);
 //        }
     }
 }

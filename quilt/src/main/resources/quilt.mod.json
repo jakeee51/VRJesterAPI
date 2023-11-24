@@ -11,7 +11,7 @@
         "Caliburs": "Owner"
       },
       "contact": {
-        "sources": "https://github.com/architectury/architectury-templates"
+        "sources": "https://github.com/jakeee51"
       },
       "icon": "icon.png"
     },
@@ -32,11 +32,11 @@
       },
       {
         "id": "minecraft",
-        "version": ">=1.18.2"
+        "version": ">=1.19.2"
       },
       {
         "id": "architectury",
-        "version": ">=4.11.93"
+        "version": ">=6.5.85"
       }
     ]
   },

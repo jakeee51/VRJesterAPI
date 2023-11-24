@@ -17,7 +17,7 @@ public class GestureCommand {
     // Arch
     public static void init() {
         CommandRegistrationEvent.EVENT.register(
-                (dispatcher, selection) -> dispatcher.register(literal("gesture")
+                (dispatcher, registry, selection) -> dispatcher.register(literal("gesture")
                         .then(literal("record")
                                 .then(Commands.argument("value", BoolArgumentType.bool())
                                         .executes(c -> record(BoolArgumentType.getBool(c, "value")))

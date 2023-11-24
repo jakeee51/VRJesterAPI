@@ -34,7 +34,7 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api"
     }
 
-    modApi "curse.maven:mcvrapi-591092:4648725"
+    modApi "curse.maven:mcvrapi-591092:4648727"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionQuilt")) { transitive false }

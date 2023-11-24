@@ -8,8 +8,8 @@
     "Caliburs"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/vrjesterapi",
+    "sources": "https://github.com/jakeee51"
   },
   "license": "All Rights Reserved",
   "icon": "icon.png",
@@ -21,7 +21,7 @@
   },
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.18.2",
-    "architectury": ">=4.11.93"
+    "minecraft": ">=1.19.2",
+    "architectury": ">=6.5.85"
   }
 }
