@@ -133,11 +133,11 @@ public class TriggerEventHandler {
     // Handle Non-VR gesture listener
     private static void handleNonVrJester() {
         if (MOD_KEY.isDown() && !nonVrListening) {
-            System.out.println("NON-VR JESTER TRIGGERED");
+//            System.out.println("NON-VR JESTER TRIGGERED");
             nonVrListening = true;
         }
         if (!MOD_KEY.isDown() && nonVrListening) {
-            System.out.println("JESTER RELEASED");
+//            System.out.println("JESTER RELEASED");
             nonVrListening = false;
             for (KeyMapping keyMapping: KEY_MAPPINGS.values()) // Release all keys
                 keyMapping.setDown(false);
