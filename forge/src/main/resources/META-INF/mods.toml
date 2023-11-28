@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[43,)"
+loaderVersion = "[44,)"
 #issueTrackerURL = ""
 license = "All Rights Reserved"
 
@@ -9,27 +9,26 @@ version = "${version}"
 displayName = "VR Jester API"
 authors = "Caliburs"
 description = '''
-A Minecraft mod API to allow developers to implement gesture controls in VR for their mod.
-'''
+A Minecraft mod API to allow developers to implement gesture controls in VR for their mod.'''
 logoFile = "icon.png"
 
 [[dependencies.vrjester]]
 modId = "forge"
 mandatory = true
-versionRange = "[43,)"
+versionRange = "[44,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.vrjester]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.2,)"
+versionRange = "[1.19.3,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.vrjester]]
 modId = "architectury"
 mandatory = true
-versionRange = "[6.5.85,)"
+versionRange = "[7.1.86,)"
 ordering = "AFTER"
 side = "BOTH"
