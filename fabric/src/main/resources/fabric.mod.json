@@ -21,7 +21,7 @@
   },
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.19.4",
-    "architectury": ">=8.2.89"
+    "minecraft": ">=1.20.1",
+    "architectury": ">=9.1.12"
   }
 }
