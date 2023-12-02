@@ -1,4 +1,5 @@
-# VR Jester API
+VR Jester API
+==============
 
 A VR Gesture Recognition API for Vivecraft & QuestCraft.
 
