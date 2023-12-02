@@ -8,7 +8,9 @@ Play Minecraft VR? Love mods? Ever wish mods were more VR compatible? Wait no fu
 With this API, you may create **any** custom gestures that map to **any** key binds and trigger events.
 
 __Demos:__
-![Basic Demo](https://imgur.com/6xUNF6k.gif)
+https://imgur.com/a/sYXcike.mp4
+
+https://github.com/jakeee51/VRJesterAPI/assets/19763930/f88e1302-13d8-45bc-a716-3d49585590fe
 
 __Installation:__
 1. Install required dependency mods: https://www.curseforge.com/minecraft/mc-mods/vrjesterapi/relations/dependencies 
