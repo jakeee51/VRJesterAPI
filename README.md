@@ -70,14 +70,14 @@ __Info:__
 ```java
 @SubscribeEvent
 public void onGestureEvent(GestureEvent event) {
-// gesture handler code here -&gt; event.getGestureName()
+    // gesture handler code here -> event.getGestureName()
 }
 ```
 **Fabric:**
 ```java
 public static void init() {
-GestureEventCallback.EVENT.register((gestureEvent) -&gt; {
-// gesture handler code here -&gt; gestureEvent.getGestureName()
+GestureEventCallback.EVENT.register((gestureEvent) -> {
+    // gesture handler code here -> gestureEvent.getGestureName()
 });
 }
 ```
