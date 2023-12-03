@@ -63,8 +63,8 @@ __Info:__
       "LEFT_CONTROLLER": 20
   }
   ```
-    What this example means is that the vrDevice of this GestureComponent has to be within proximity of the left controller for 20 ticks.
-  - Subscribe to the event bus to handle events triggered by a recognized gesture (Forge) or register to the event callback interface (Fabric).
+  What this example means is that the vrDevice of this GestureComponent has to be within proximity of the left controller for 20 ticks.
+- Subscribe to the event bus to handle events triggered by a recognized gesture (Forge) or register to the event callback interface (Fabric).
 
 **Forge:**
 ```java
