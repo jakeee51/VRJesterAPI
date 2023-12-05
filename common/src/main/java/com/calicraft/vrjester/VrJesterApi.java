@@ -30,7 +30,7 @@ public class VrJesterApi {
         System.out.println("Config Path: " + ModExpectPlatform.getConfigDirectory().toAbsolutePath().normalize().toString());
         setupConfig();
         setupEvents();
-        setupClient();
+//        setupClient();
     }
 
     public static Minecraft getMCI() {
@@ -38,6 +38,10 @@ public class VrJesterApi {
     }
 
     private static void setupConfig() {
+        LOGGER.info("Setting up commands...");
+        GestureCommand.init();
+        LOGGER.info("Setting up keybindings...");
+        KeyMappingRegistry.register(MOD_KEY);
         LOGGER.info("Setting up config files...");
         File configFile = new File(Constants.CONFIG_PATH);
         File gestureStoreFile = new File(Constants.GESTURE_STORE_PATH);
@@ -48,10 +52,6 @@ public class VrJesterApi {
     }
 
     public static void setupClient() {
-        LOGGER.info("Setting up commands...");
-        GestureCommand.init();
-        LOGGER.info("Setting up keybindings...");
-        KeyMappingRegistry.register(MOD_KEY);
         Config config = Config.readConfig();
         KeyMapping[] keyMappings = getMCI().options.keyMappings;
         HashMap<String, String> gestureMappings = config.GESTURE_KEY_MAPPINGS;
