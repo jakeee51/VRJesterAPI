@@ -49,7 +49,7 @@ public class TriggerEventHandler {
 
     public static void init() {
         ClientRawInputEvent.KEY_PRESSED.register((client, keyCode, scanCode, action, modifiers) -> {
-            if (keyCode == MOD_KEY.getDefaultKey().getValue()) {
+            if (MOD_KEY.isDown()) {
                 if (jesterSetupComplete()) {
                     // Trigger the gesture listening phase
                     if (VIVECRAFT_LOADED)
