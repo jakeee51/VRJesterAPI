@@ -47,8 +47,8 @@ __Usage:__
    ```json
    "GESTURE_MAPPINGS": {
     "GESTURE 1": "examplemod.key.ability_1",
-    "GESTURE 2": "examplemod.key.ability_2",
-    "GESTURE 3": "examplemod.key.ability_3"
+    "GESTURE 2": "key.keyboard.keypad.2,
+    "GESTURE 3": "key.keyboard.g"
    }
    ```
 
