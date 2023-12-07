@@ -42,7 +42,6 @@ __Usage:__
         }
       ]
     },
-   ...
    ```
 3. Once your gestures are created, you can map them to key binds in `config/VRJesterAPI.cfg` by creating key value pairs under the field *"GESTURE_MAPPINGS"*. You can find the key bind names in `.minecraft/options.txt`.
    ```json
