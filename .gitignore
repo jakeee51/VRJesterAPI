@@ -18,4 +18,3 @@ classes/
 .settings
 *.launch
 .architectury-transformer/
-propagate_updates.sh
