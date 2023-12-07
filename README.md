@@ -50,7 +50,7 @@ __Usage:__
     "GESTURE 2": "examplemod.key.ability_2",
     "GESTURE 3": "examplemod.key.ability_3"
    }
-```
+   ```
 
 __Info:__
 
