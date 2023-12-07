@@ -1,15 +1,16 @@
-VR Jester API
-==============
+# Virtual Reality Gesture Recognition API for Minecraft VR
 
-A VR Gesture Recognition API for Vivecraft & QuestCraft.
+Play Vivecraft or QuestCraft? Love mods? Ever wish mods were more VR compatible? Wait no further. This is a solution for devs and players alike!
 
-Play Minecraft VR? Love mods? Ever wish mods were more VR compatible? Wait no further. This is a solution for devs and players alike!
-
-With this API, you may create **any** custom gestures that map to **any** key binds and trigger events.
+This API enables Minecraft mod developers to easily implement support for their mod to be more VR compatible. Create **any** custom gestures that map to **any** key binds and trigger events. No longer do you need to map controller keybindings to keyboard keys. With this API, your body is the controller.
 
 __Demos:__
 
 https://github.com/jakeee51/VRJesterAPI/assets/19763930/f88e1302-13d8-45bc-a716-3d49585590fe
+- https://imgur.com/a/sYXcike 
+- https://i.imgur.com/kBD1TIU.mp4 
+- https://imgur.com/a/0fpiQ9a 
+- https://i.imgur.com/6xUNF6k.mp4 
 
 __Installation:__
 
